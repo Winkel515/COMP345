@@ -1,3 +1,2 @@
-a.out
-/CppProperties.json
-/.vs
+# Ignore Build folder
+build
