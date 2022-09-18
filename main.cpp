@@ -1,7 +1,12 @@
 #include <iostream>
 
+#include "PlayerDriver.cpp"
+
 int main() {
-    std::cout << "Hello World\n";
-    
-    return 0;
-}
+  std::cout << "== Welcome to Warzone ==\n";
+
+  testPlayers();
+
+  std::cout << "== Exiting Game... ==\n";
+  return 0;
+}  //
