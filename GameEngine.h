@@ -20,6 +20,6 @@ class GameEngine {
   std::string command;
 
  public:
-  static void run();
-  GameEngine();
+  void run();
+  GameEngine();  // default constructor
 };

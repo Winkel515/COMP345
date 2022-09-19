@@ -55,6 +55,17 @@ void GameEngineUtils::listCommands(set<string> validCommands) {
   std::cout << "}.\n";
 }
 
+// Default Constructor for GameEngine
+GameEngine::GameEngine() {
+  this->state = "start";
+  this->command = "";
+}
+
+void GameEngine::run() {
+  std::cout << "GameEngine launched\n";
+  std::cout << this->state << "\n";
+}
+
 // Prompts for the correct command
 string GameEngineUtils::promptCommand(set<string> validCommands) {
   string command = "";
@@ -71,73 +82,73 @@ string GameEngineUtils::promptCommand(set<string> validCommands) {
   return command;
 }
 
-int main() {
-  std::cout << "STARTUP\n";
-  string state = "";
-  string command = "";
+// int main() {
+//   std::cout << "STARTUP\n";
+//   string state = "";
+//   string command = "";
 
-  do {
-    // start state
-    state = "start";
-    GameEngineUtils::displayState(state);
-    command = GameEngineUtils::promptCommand(
-        GameEngineAssets::validCommandsMap.at(state));
+//   do {
+//     // start state
+//     state = "start";
+//     GameEngineUtils::displayState(state);
+//     command = GameEngineUtils::promptCommand(
+//         GameEngineAssets::validCommandsMap.at(state));
 
-    // -> Entered loadmap
-    // map_loaded state
-    do {
-      state = "map_loaded";
-      GameEngineUtils::displayState(state);
-      command = GameEngineUtils::promptCommand(
-          GameEngineAssets::validCommandsMap.at(state));
-    } while (command == "loadmap");
+//     // -> Entered loadmap
+//     // map_loaded state
+//     do {
+//       state = "map_loaded";
+//       GameEngineUtils::displayState(state);
+//       command = GameEngineUtils::promptCommand(
+//           GameEngineAssets::validCommandsMap.at(state));
+//     } while (command == "loadmap");
 
-    // -> Entered validatemap
-    // map_validated state
-    state = "map_validated";
-    GameEngineUtils::displayState(state);
-    command = GameEngineUtils::promptCommand(
-        GameEngineAssets::validCommandsMap.at(state));
+//     // -> Entered validatemap
+//     // map_validated state
+//     state = "map_validated";
+//     GameEngineUtils::displayState(state);
+//     command = GameEngineUtils::promptCommand(
+//         GameEngineAssets::validCommandsMap.at(state));
 
-    // -> Entered addplayer
-    do {
-      state = "players_added";
-      GameEngineUtils::displayState(state);
-      command = GameEngineUtils::promptCommand(
-          GameEngineAssets::validCommandsMap.at(state));
-    } while (command == "addplayer");
+//     // -> Entered addplayer
+//     do {
+//       state = "players_added";
+//       GameEngineUtils::displayState(state);
+//       command = GameEngineUtils::promptCommand(
+//           GameEngineAssets::validCommandsMap.at(state));
+//     } while (command == "addplayer");
 
-    // -> From execute_orders, Entered endexecorders
-    do {
-      // -> Entered assigncountries
-      state = "assign_reinforcement";
-      GameEngineUtils::displayState(state);
-      command = GameEngineUtils::promptCommand(
-          GameEngineAssets::validCommandsMap.at(state));
+//     // -> From execute_orders, Entered endexecorders
+//     do {
+//       // -> Entered assigncountries
+//       state = "assign_reinforcement";
+//       GameEngineUtils::displayState(state);
+//       command = GameEngineUtils::promptCommand(
+//           GameEngineAssets::validCommandsMap.at(state));
 
-      // -> Entered issueorder
-      do {
-        state = "issue_orders";
-        GameEngineUtils::displayState(state);
-        command = GameEngineUtils::promptCommand(
-            GameEngineAssets::validCommandsMap.at(state));
-      } while (command == "issueorder");
+//       // -> Entered issueorder
+//       do {
+//         state = "issue_orders";
+//         GameEngineUtils::displayState(state);
+//         command = GameEngineUtils::promptCommand(
+//             GameEngineAssets::validCommandsMap.at(state));
+//       } while (command == "issueorder");
 
-      // -> Entered endissueorders
-      do {
-        state = "execute_orders";
-        GameEngineUtils::displayState(state);
-        command = GameEngineUtils::promptCommand(
-            GameEngineAssets::validCommandsMap.at(state));
-      } while (command == "execorder");
+//       // -> Entered endissueorders
+//       do {
+//         state = "execute_orders";
+//         GameEngineUtils::displayState(state);
+//         command = GameEngineUtils::promptCommand(
+//             GameEngineAssets::validCommandsMap.at(state));
+//       } while (command == "execorder");
 
-    } while (command == "endexecorders");
+//     } while (command == "endexecorders");
 
-    state = "win";
-    GameEngineUtils::displayState(state);
-    command = GameEngineUtils::promptCommand(
-        GameEngineAssets::validCommandsMap.at(state));
-  } while (command == "play");
+//     state = "win";
+//     GameEngineUtils::displayState(state);
+//     command = GameEngineUtils::promptCommand(
+//         GameEngineAssets::validCommandsMap.at(state));
+//   } while (command == "play");
 
-  std::cout << "GAME HAS ENDED\n";
-}
+//   std::cout << "GAME HAS ENDED\n";
+// }
