@@ -15,7 +15,9 @@ list<Fake::Territory*> getArbitraryTerritories(int size) {
   int counter = 0;
   while (counter <= size) {
     Fake::Territory* territory = new Fake::Territory;
-    territory->value = counter++;
+    territory->value = rand() % 100;
+
+    counter++;
 
     territories.push_back(territory);
   }
