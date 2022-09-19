@@ -2,19 +2,24 @@
 #include <set>
 #include <string>
 
-class GameEngineAssets {
- public:
-  static const std::map<std::string, std::set<std::string>> validCommandsMap;
-};
-
 namespace GameEngineUtils {
 std::string promptCommand(std::set<std::string>);
 void displayState(std::string);
 void listCommands(std::set<std::string>);
-
 }  // namespace GameEngineUtils
 
-class GameEngine {
+class GameEngineAssets {
  public:
-  // static std::string promptCommand(std::set<std::string> validCommands);
+  static const std::map<std::string, std::set<std::string>> validCommandsMap;
+  static const std::map<std::string, std::string> desiredStateMap;
+};
+
+class GameEngine {
+ private:
+  std::string state;
+  std::string command;
+
+ public:
+  static void run();
+  GameEngine();
 };

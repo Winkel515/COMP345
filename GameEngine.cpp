@@ -7,6 +7,31 @@
 
 using namespace std;
 
+const map<string, string> GameEngineAssets::desiredStateMap{
+    {"loadmap", "map_loaded"},
+    {"validatemap", "map_validated"},
+    {"addplayer", "players_added"},
+    {"assigncountries", "assign_reinforcement"},
+    {"issueorder", "issue_orders"},
+    {"endissueorders", "execute_orders"},
+    {"execorder", "execute_orders"},
+    {"endexecorders", "assign_reinforcement"},
+    {"win", "win"},
+    {"play", "start"},
+    {"end", "end"},
+};
+
+const map<string, set<string>> GameEngineAssets::validCommandsMap{
+    {"start", {"loadmap"}},
+    {"map_loaded", {"loadmap", "validatemap"}},
+    {"map_validated", {"addplayer"}},
+    {"players_added", {"addplayer", "assigncountries"}},
+    {"assign_reinforcement", {"issueorder"}},
+    {"issue_orders", {"issueorder", "endissueorders"}},
+    {"execute_orders", {"execorder", "endexecorders", "win"}},
+    {"win", {"play", "end"}},
+};
+
 void GameEngineUtils::displayState(string state) {
   std::cout << "State at: " << state << "\n";
 }
@@ -14,7 +39,6 @@ void GameEngineUtils::displayState(string state) {
 // Displays the list of valid commands
 void GameEngineUtils::listCommands(set<string> validCommands) {
   bool firstTime = true;
-
   std::cout << "List of available commands: {";
 
   for (set<string>::iterator i = validCommands.begin();
@@ -46,17 +70,6 @@ string GameEngineUtils::promptCommand(set<string> validCommands) {
 
   return command;
 }
-
-const map<string, set<string>> GameEngineAssets::validCommandsMap{
-    {"start", {"loadmap"}},
-    {"map_loaded", {"loadmap", "validatemap"}},
-    {"map_validated", {"addplayer"}},
-    {"players_added", {"addplayer", "assigncountries"}},
-    {"assign_reinforcement", {"issueorder"}},
-    {"issue_orders", {"issueorder", "endissueorders"}},
-    {"execute_orders", {"execorder", "endexecorders", "win"}},
-    {"win", {"play", "end"}},
-};
 
 int main() {
   std::cout << "STARTUP\n";
