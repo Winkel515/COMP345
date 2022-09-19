@@ -18,6 +18,16 @@ class GameEngine {
  private:
   std::string state;
   std::string command;
+  void runHelper(std::string);
+  void handleCommand(std::string);
+  void execStart();
+  void execMapLoaded();
+  void execMapValidated();
+  void execPlayersAdded();
+  void execAssignReinforcement();
+  void execIssueOrders();
+  void execExecuteOrders();
+  void execWin();
 
  public:
   void run();

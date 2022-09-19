@@ -1,14 +1,12 @@
+#include "GameEngineDriver.h"
+
 #include <iostream>
 
 #include "GameEngine.h"
 
-// Test the game States
-void testGameStates();
-int main() { testGameStates(); }
-
 // Implement testGameStates
 void testGameStates() {
-  std::cout << "Test";
+  std::cout << "Testing Game States\n";
   GameEngine gameEngine;
   gameEngine.run();
 }

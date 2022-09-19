@@ -32,6 +32,7 @@ const map<string, set<string>> GameEngineAssets::validCommandsMap{
     {"win", {"play", "end"}},
 };
 
+// Displays the current state
 void GameEngineUtils::displayState(string state) {
   std::cout << "State at: " << state << "\n";
 }
@@ -55,17 +56,6 @@ void GameEngineUtils::listCommands(set<string> validCommands) {
   std::cout << "}.\n";
 }
 
-// Default Constructor for GameEngine
-GameEngine::GameEngine() {
-  this->state = "start";
-  this->command = "";
-}
-
-void GameEngine::run() {
-  std::cout << "GameEngine launched\n";
-  std::cout << this->state << "\n";
-}
-
 // Prompts for the correct command
 string GameEngineUtils::promptCommand(set<string> validCommands) {
   string command = "";
@@ -82,73 +72,116 @@ string GameEngineUtils::promptCommand(set<string> validCommands) {
   return command;
 }
 
-// int main() {
-//   std::cout << "STARTUP\n";
-//   string state = "";
-//   string command = "";
+// Default Constructor for GameEngine
+GameEngine::GameEngine() {
+  this->state = "start";
+  this->command = "";
+}
 
-//   do {
-//     // start state
-//     state = "start";
-//     GameEngineUtils::displayState(state);
-//     command = GameEngineUtils::promptCommand(
-//         GameEngineAssets::validCommandsMap.at(state));
+// Runs the GameEngine
+void GameEngine::run() {
+  std::cout << "GameEngine launched\n";
 
-//     // -> Entered loadmap
-//     // map_loaded state
-//     do {
-//       state = "map_loaded";
-//       GameEngineUtils::displayState(state);
-//       command = GameEngineUtils::promptCommand(
-//           GameEngineAssets::validCommandsMap.at(state));
-//     } while (command == "loadmap");
+  this->runHelper(this->state);
+}
 
-//     // -> Entered validatemap
-//     // map_validated state
-//     state = "map_validated";
-//     GameEngineUtils::displayState(state);
-//     command = GameEngineUtils::promptCommand(
-//         GameEngineAssets::validCommandsMap.at(state));
+// Helps run the GameEngine by directing to the right function
+void GameEngine::runHelper(std::string state) {
+  if (state == "start") {
+    this->execStart();
+  } else if (state == "map_loaded") {
+    this->execMapLoaded();
+  } else if (state == "map_validated") {
+    this->execMapValidated();
+  } else if (state == "players_added") {
+    this->execPlayersAdded();
+  } else if (state == "assign_reinforcement") {
+    this->execAssignReinforcement();
+  } else if (state == "issue_orders") {
+    this->execIssueOrders();
+  } else if (state == "execute_orders") {
+    this->execExecuteOrders();
+  } else if (state == "win") {
+    this->execWin();
+  } else {
+    std::cout << "Game has ended.\n";
+  }
+}
 
-//     // -> Entered addplayer
-//     do {
-//       state = "players_added";
-//       GameEngineUtils::displayState(state);
-//       command = GameEngineUtils::promptCommand(
-//           GameEngineAssets::validCommandsMap.at(state));
-//     } while (command == "addplayer");
+// Handles the mapping between command and state
+void GameEngine::handleCommand(std::string command) {
+  string desiredState = GameEngineAssets::desiredStateMap.at(command);
+  this->runHelper(desiredState);
+}
 
-//     // -> From execute_orders, Entered endexecorders
-//     do {
-//       // -> Entered assigncountries
-//       state = "assign_reinforcement";
-//       GameEngineUtils::displayState(state);
-//       command = GameEngineUtils::promptCommand(
-//           GameEngineAssets::validCommandsMap.at(state));
+// Executes Start state
+void GameEngine::execStart() {
+  this->state = "start";
+  GameEngineUtils::displayState(this->state);
+  this->command = GameEngineUtils::promptCommand(
+      GameEngineAssets::validCommandsMap.at(this->state));
+  this->handleCommand(this->command);
+}
 
-//       // -> Entered issueorder
-//       do {
-//         state = "issue_orders";
-//         GameEngineUtils::displayState(state);
-//         command = GameEngineUtils::promptCommand(
-//             GameEngineAssets::validCommandsMap.at(state));
-//       } while (command == "issueorder");
+// Executes Map Loaded state
+void GameEngine::execMapLoaded() {
+  this->state = "map_loaded";
+  GameEngineUtils::displayState(this->state);
+  this->command = GameEngineUtils::promptCommand(
+      GameEngineAssets::validCommandsMap.at(this->state));
+  this->handleCommand(this->command);
+}
 
-//       // -> Entered endissueorders
-//       do {
-//         state = "execute_orders";
-//         GameEngineUtils::displayState(state);
-//         command = GameEngineUtils::promptCommand(
-//             GameEngineAssets::validCommandsMap.at(state));
-//       } while (command == "execorder");
+// Executes Map Validated state
+void GameEngine::execMapValidated() {
+  this->state = "map_validated";
+  GameEngineUtils::displayState(this->state);
+  this->command = GameEngineUtils::promptCommand(
+      GameEngineAssets::validCommandsMap.at(this->state));
+  this->handleCommand(this->command);
+}
 
-//     } while (command == "endexecorders");
+// Executes Players Added state
+void GameEngine::execPlayersAdded() {
+  this->state = "players_added";
+  GameEngineUtils::displayState(this->state);
+  this->command = GameEngineUtils::promptCommand(
+      GameEngineAssets::validCommandsMap.at(this->state));
+  this->handleCommand(this->command);
+}
 
-//     state = "win";
-//     GameEngineUtils::displayState(state);
-//     command = GameEngineUtils::promptCommand(
-//         GameEngineAssets::validCommandsMap.at(state));
-//   } while (command == "play");
+// Executes Assign Reinforcement state
+void GameEngine::execAssignReinforcement() {
+  this->state = "assign_reinforcement";
+  GameEngineUtils::displayState(this->state);
+  this->command = GameEngineUtils::promptCommand(
+      GameEngineAssets::validCommandsMap.at(this->state));
+  this->handleCommand(this->command);
+}
 
-//   std::cout << "GAME HAS ENDED\n";
-// }
+// Executes Issue Order state
+void GameEngine::execIssueOrders() {
+  this->state = "issue_orders";
+  GameEngineUtils::displayState(this->state);
+  this->command = GameEngineUtils::promptCommand(
+      GameEngineAssets::validCommandsMap.at(this->state));
+  this->handleCommand(this->command);
+}
+
+// Execute Execute Orders state
+void GameEngine::execExecuteOrders() {
+  this->state = "execute_orders";
+  GameEngineUtils::displayState(this->state);
+  this->command = GameEngineUtils::promptCommand(
+      GameEngineAssets::validCommandsMap.at(this->state));
+  this->handleCommand(this->command);
+}
+
+// Execute Win state
+void GameEngine::execWin() {
+  this->state = "win";
+  GameEngineUtils::displayState(this->state);
+  this->command = GameEngineUtils::promptCommand(
+      GameEngineAssets::validCommandsMap.at(this->state));
+  this->handleCommand(this->command);
+}

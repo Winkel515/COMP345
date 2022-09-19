@@ -1,6 +1,9 @@
-// #include <iostream>
+#include <iostream>
 
-// int main() {
-//   std::cout << "Hello World\n";
-//   return 0;
-// }
+#include "GameEngineDriver.h"
+
+int main() {
+  std::cout << "Hello World\n";
+  testGameStates();
+  return 0;
+}
