@@ -1,3 +1,5 @@
+#include "GameEngine.h"
+
 #include <iostream>
 #include <map>
 #include <set>
@@ -43,6 +45,17 @@ string promptCommand(set<string> validCommands) {
   return command;
 }
 
+// const map<string,set<string>> GameEngineAssets::validCommands {
+//   {"start", {"loadmap"}},
+//   {"map_loaded", {"loadmap", "validatemap"}},
+//   {"map_validated", {"addplayer"}},
+//   {},
+//   {},
+//   {},
+//   {},
+//   {},
+// }
+
 int main() {
   // Map to validate commands per state
   map<string, set<string>> validCommands;
@@ -62,9 +75,63 @@ int main() {
   validCommands.insert(pair<string, set<string>>("win", {"play", "end"}));
 
   std::cout << "STARTUP\n";
+  string state = "";
+  string command = "";
 
-  string state = "win";
-  displayState(state);
-  string command = promptCommand(validCommands.at(state));
-  std::cout << "You entered: " << command << " \n";
+  do {
+    // start state
+    state = "start";
+    displayState(state);
+    command = promptCommand(validCommands.at(state));
+
+    // -> Entered loadmap
+    // map_loaded state
+    do {
+      state = "map_loaded";
+      displayState(state);
+      command = promptCommand(validCommands.at(state));
+    } while (command == "loadmap");
+
+    // -> Entered validatemap
+    // map_validated state
+    state = "map_validated";
+    displayState(state);
+    command = promptCommand(validCommands.at(state));
+
+    // -> Entered addplayer
+    do {
+      state = "players_added";
+      displayState(state);
+      command = promptCommand(validCommands.at(state));
+    } while (command == "addplayer");
+
+    // -> From execute_orders, Entered endexecorders
+    do {
+      // -> Entered assigncountries
+      state = "assign_reinforcement";
+      displayState(state);
+      command = promptCommand(validCommands.at(state));
+
+      // -> Entered issueorder
+      do {
+        state = "issue_orders";
+        displayState(state);
+        command = promptCommand(validCommands.at(state));
+      } while (command == "issueorder");
+
+      // -> Entered endissueorders
+      do {
+        state = "execute_orders";
+        displayState(state);
+        command = promptCommand(validCommands.at(state));
+      } while (command == "execorder");
+
+    } while (command == "endexecorders");
+
+    state = "win";
+    displayState(state);
+    command = promptCommand(validCommands.at(state));
+  } while (command == "play");
+
+  std::cout << "GAME HAS ENDED\n";
 }
