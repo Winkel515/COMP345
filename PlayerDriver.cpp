@@ -1,13 +1,17 @@
+#include "PlayerDriver.h"
+
 #include <iostream>
 #include <list>
 
-#include "Player.cpp"
+#include "Player.h"
 
 using namespace std;
 
 namespace PlayerTests {
+
+// Testing toDefend()
 int test1() {
-  cout << "Starting test1(): testing toDefend()\n";
+  cout << "Starting PlayerTests.test1(): testing toDefend()\n";
 
   Player player1;
   list<Fake::Territory*> territories = player1.toDefend();
@@ -16,8 +20,9 @@ int test1() {
   return 0;
 }
 
+// Testing toAttack()
 int test2() {
-  cout << "Starting test2(): testing toAttack()\n";
+  cout << "Starting PlayerTests.test2(): testing toAttack()\n";
 
   Player player1;
   list<Fake::Territory*> territories = player1.toAttack();
@@ -26,8 +31,9 @@ int test2() {
   return 0;
 }
 
+// Testing issueOrder()
 int test3() {
-  cout << "Starting test3(): testing issueOrder()\n";
+  cout << "Starting PlayerTests.test3(): testing issueOrder()\n";
 
   Player player1;
   cout << "add 3 orders\n";
@@ -44,6 +50,7 @@ int test3() {
 }
 };  // namespace PlayerTests
 
+// Test Player class
 int testPlayers() {
   cout << "Running Player tests\n";
   PlayerTests::test1();

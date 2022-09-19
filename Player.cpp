@@ -51,6 +51,7 @@ list<Fake::Territory*> Player::toAttack() {
   return territories;
 };
 
+// Creates a new order in the Order List
 void Player::issueOrder() {
   Fake::Order* order = new Fake::Order;
   order->value = rand() % 100;
@@ -58,6 +59,7 @@ void Player::issueOrder() {
   this->orders.push_back(order);
 };
 
+// Lists all the orders in Order List
 void Player::testListOrder() {
   list<Fake::Order*> orders = this->orders;
   cout << "List orders: ";

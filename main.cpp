@@ -1,6 +1,6 @@
 #include <iostream>
 
-#include "PlayerDriver.cpp"
+#include "PlayerDriver.h"
 
 int main() {
   std::cout << "== Welcome to Warzone ==\n";
