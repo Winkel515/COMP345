@@ -4,9 +4,9 @@
 
 #include "GameEngine.h"
 
-// Implement testGameStates
+// Tests the GameEngine class
 void testGameStates() {
   std::cout << "Testing Game States\n";
-  GameEngine gameEngine;
-  gameEngine.run();
+  GameEngine* gameEngine = new GameEngine;
+  gameEngine->run();
 }
