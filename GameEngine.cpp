@@ -45,34 +45,34 @@ string promptCommand(set<string> validCommands) {
   return command;
 }
 
-// const map<string,set<string>> GameEngineAssets::validCommands {
-//   {"start", {"loadmap"}},
-//   {"map_loaded", {"loadmap", "validatemap"}},
-//   {"map_validated", {"addplayer"}},
-//   {},
-//   {},
-//   {},
-//   {},
-//   {},
-// }
+const map<string, set<string>> GameEngineAssets::validCommandsMap{
+    {"start", {"loadmap"}},
+    {"map_loaded", {"loadmap", "validatemap"}},
+    {"map_validated", {"addplayer"}},
+    {"players_added", {"addplayer", "assigncountries"}},
+    {"assign_reinforcement", {"issueorder"}},
+    {"issue_orders", {"issueorder", "endissueorders"}},
+    {"execute_orders", {"execorder", "endexecorders", "win"}},
+    {"win", {"play", "end"}},
+};
 
 int main() {
   // Map to validate commands per state
-  map<string, set<string>> validCommands;
-  validCommands.insert(pair<string, set<string>>("start", {"loadmap"}));
-  validCommands.insert(
-      pair<string, set<string>>("map_loaded", {"loadmap", "validatemap"}));
-  validCommands.insert(
-      pair<string, set<string>>("map_validated", {"addplayer"}));
-  validCommands.insert(pair<string, set<string>>(
-      "players_added", {"addplayer", "assigncountries"}));
-  validCommands.insert(
-      pair<string, set<string>>("assign_reinforcement", {"issueorder"}));
-  validCommands.insert(pair<string, set<string>>(
-      "issue_orders", {"issueorder", "endissueorders"}));
-  validCommands.insert(pair<string, set<string>>(
-      "execute_orders", {"execorder", "endexecorders", "win"}));
-  validCommands.insert(pair<string, set<string>>("win", {"play", "end"}));
+  // map<string, set<string>> validCommands;
+  // validCommands.insert(pair<string, set<string>>("start", {"loadmap"}));
+  // validCommands.insert(
+  //     pair<string, set<string>>("map_loaded", {"loadmap", "validatemap"}));
+  // validCommands.insert(
+  //     pair<string, set<string>>("map_validated", {"addplayer"}));
+  // validCommands.insert(pair<string, set<string>>(
+  //     "players_added", {"addplayer", "assigncountries"}));
+  // validCommands.insert(
+  //     pair<string, set<string>>("assign_reinforcement", {"issueorder"}));
+  // validCommands.insert(pair<string, set<string>>(
+  //     "issue_orders", {"issueorder", "endissueorders"}));
+  // validCommands.insert(pair<string, set<string>>(
+  //     "execute_orders", {"execorder", "endexecorders", "win"}));
+  // validCommands.insert(pair<string, set<string>>("win", {"play", "end"}));
 
   std::cout << "STARTUP\n";
   string state = "";
@@ -82,27 +82,27 @@ int main() {
     // start state
     state = "start";
     displayState(state);
-    command = promptCommand(validCommands.at(state));
+    command = promptCommand(GameEngineAssets::validCommandsMap.at(state));
 
     // -> Entered loadmap
     // map_loaded state
     do {
       state = "map_loaded";
       displayState(state);
-      command = promptCommand(validCommands.at(state));
+      command = promptCommand(GameEngineAssets::validCommandsMap.at(state));
     } while (command == "loadmap");
 
     // -> Entered validatemap
     // map_validated state
     state = "map_validated";
     displayState(state);
-    command = promptCommand(validCommands.at(state));
+    command = promptCommand(GameEngineAssets::validCommandsMap.at(state));
 
     // -> Entered addplayer
     do {
       state = "players_added";
       displayState(state);
-      command = promptCommand(validCommands.at(state));
+      command = promptCommand(GameEngineAssets::validCommandsMap.at(state));
     } while (command == "addplayer");
 
     // -> From execute_orders, Entered endexecorders
@@ -110,27 +110,27 @@ int main() {
       // -> Entered assigncountries
       state = "assign_reinforcement";
       displayState(state);
-      command = promptCommand(validCommands.at(state));
+      command = promptCommand(GameEngineAssets::validCommandsMap.at(state));
 
       // -> Entered issueorder
       do {
         state = "issue_orders";
         displayState(state);
-        command = promptCommand(validCommands.at(state));
+        command = promptCommand(GameEngineAssets::validCommandsMap.at(state));
       } while (command == "issueorder");
 
       // -> Entered endissueorders
       do {
         state = "execute_orders";
         displayState(state);
-        command = promptCommand(validCommands.at(state));
+        command = promptCommand(GameEngineAssets::validCommandsMap.at(state));
       } while (command == "execorder");
 
     } while (command == "endexecorders");
 
     state = "win";
     displayState(state);
-    command = promptCommand(validCommands.at(state));
+    command = promptCommand(GameEngineAssets::validCommandsMap.at(state));
   } while (command == "play");
 
   std::cout << "GAME HAS ENDED\n";

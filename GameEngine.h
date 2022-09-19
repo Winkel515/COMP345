@@ -4,5 +4,5 @@
 
 class GameEngineAssets {
  public:
-  static const std::map<std::string, std::set<std::string>> validCommands;
+  static const std::map<std::string, std::set<std::string>> validCommandsMap;
 };
