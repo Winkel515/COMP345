@@ -12,8 +12,6 @@ int test1() {
   Player player1;
   list<Fake::Territory*> territories = player1.toDefend();
 
-  PlayerUtils::printTerritories(territories);
-
   cout << "test1() has ran successfully\n";
   return 0;
 }
@@ -24,9 +22,24 @@ int test2() {
   Player player1;
   list<Fake::Territory*> territories = player1.toAttack();
 
-  PlayerUtils::printTerritories(territories);
-
   cout << "test2() has ran succesfully\n";
+  return 0;
+}
+
+int test3() {
+  cout << "Starting test3(): testing issueOrder()\n";
+
+  Player player1;
+  cout << "add 3 orders\n";
+  player1.issueOrder();
+  player1.issueOrder();
+  player1.issueOrder();
+  player1.testListOrder();
+  cout << "add 2 more orders\n";
+  player1.issueOrder();
+  player1.issueOrder();
+  player1.testListOrder();
+  cout << "test3() has ran succesfully\n";
   return 0;
 }
 };  // namespace PlayerTests
@@ -35,6 +48,7 @@ int testPlayers() {
   cout << "Running Player tests\n";
   PlayerTests::test1();
   PlayerTests::test2();
+  PlayerTests::test3();
   cout << "Done running Player tests\n";
   return 0;
 }

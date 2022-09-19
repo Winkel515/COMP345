@@ -26,4 +26,6 @@ class Player {
  public:
   std::list<Fake::Territory*> toDefend();
   std::list<Fake::Territory*> toAttack();
+  void issueOrder();
+  void testListOrder();
 };
