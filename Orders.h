@@ -20,4 +20,5 @@ class OrdersList {
   OrdersList(list<Orders> OrdersList);
   void move(list<Orders> OrdersList, int initial, int final);
   void remove(list<Orders> OrdersList, Orders order);
+  void add(list<Orders> OrdersLis, Orders order);
 };

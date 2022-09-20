@@ -10,15 +10,10 @@ class Orders {
   void execute();
 
   Orders(string type, int units, int source, int target) {
-    // Validate
-    validate();
-
     type = type;
     units = units;
     source = source;
     target = target;
-    // Execute
-    execute();
   };
 
  private:
@@ -43,6 +38,13 @@ class OrdersList {
 
   void remove(list<Orders> OrdersList, Orders order) {
     OrdersList.remove(order);
+  };
+
+  void add(list<Orders> OrdersList, Orders order) {
+    // Iterator at the end to add the order at the end of the list
+    // (Not sure if we should add at the start or at the end of the list)
+    list<Orders>::iterator end = OrdersList.end();
+    OrdersList.insert(end, order);
   };
 
  private:
