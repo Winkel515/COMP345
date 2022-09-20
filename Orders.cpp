@@ -41,10 +41,8 @@ class OrdersList {
   };
 
   void add(list<Orders> OrdersList, Orders order) {
-    // Iterator at the end to add the order at the end of the list
-    // (Not sure if we should add at the start or at the end of the list)
-    list<Orders>::iterator end = OrdersList.end();
-    OrdersList.insert(end, order);
+    // Not sure if we should push front or push back
+    OrdersList.push_back(order);
   };
 
  private:
