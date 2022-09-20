@@ -8,7 +8,9 @@ class Node {
     public:
       string name;
       vector<Node> adj;
-      Node(string name);
+      string continent;
+      string color;
+      Node(string name, string continent);
 };
 
 class Map {
@@ -17,6 +19,8 @@ class Map {
   public:
     Map(vector<Node> territories);
     void printMap();
+    void validate();
+    void dfs(int currentNode);
 };
 
 string convertAdjToString(vector<Node> adj);

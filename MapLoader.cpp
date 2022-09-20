@@ -13,35 +13,46 @@ MapLoader::MapLoader(string fileName) {
   unordered_map<string, vector<string>> adjMap;
   unordered_map<string, Node*> territoryMap;
   vector<Node> territories;
+  
+  
+  if (MyReadFile) {
+      while (getline (MyReadFile, myText)) {
+        //cout << "mytext " << myText;
+        if(myText.compare("[Territories]") == 0) {
+          type = "[Territories]";
+          continue;
+        }
+        if(type == "[Territories]") {
+          vector<string> territoryData = splitString(myText, ",");
+          vector<string> adjTerritories;
+          Node *n = new Node(territoryData[0], territoryData[3]);
+          territories.push_back(*n);
+          territoryMap[territoryData[0]] = n;
+          for(int i = 4; i < territoryData.size(); i++) {
+            adjTerritories.push_back(territoryData[i]);
+          }
 
-  while (getline (MyReadFile, myText)) {
-    if(myText.compare("[Territories]") == 0) {
-      type = "[Territories]";
-      continue;
-    }
-    if(type == "[Territories]") {
-      vector<string> territoryData = splitString(myText, ",");
-      vector<string> adjTerritories;
-      Node *n = new Node(territoryData[0]);
-      territories.push_back(*n);
-      territoryMap[territoryData[0]] = n;
-      for(int i = 4; i < territoryData.size(); i++) {
-        adjTerritories.push_back(territoryData[i]);
+          adjMap[territoryData[0]] = adjTerritories;
+        }
       }
-      adjMap[territoryData[0]] = adjTerritories;
-    }
+
+      for(int i = 0; i < territories.size(); i++) {
+        vector<string> adj = adjMap[territories[i].name];
+        for(int j = 0; j < adj.size(); j++) {
+          territories[i].adj.push_back(*territoryMap[adj[j]]);
+        }
+      }
+
+      this->map = new Map(territories);
+  
+      this->map->printMap();
+      this->map->validate();
+
   }
 
-  for(int i = 0; i < territories.size(); i++) {
-    vector<string> adj = adjMap[territories[i].name];
-    for(int j = 0; j < adj.size(); j++) {
-      territories[i].adj.push_back(*territoryMap[adj[j]]);
-    }
-  }
+  else cout << "Unable to open file" << endl;
+  
 
-  this->map = new Map(territories);
-
-  this->map->printMap();  
 };
 
 vector<string> splitString(string s, string delimiter) {
