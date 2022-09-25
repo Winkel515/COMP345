@@ -21,28 +21,33 @@ class Orders {
 
 class OrdersList {
  public:
-  OrdersList(list<Orders> OrdersList);
+  list<Orders*> OrdersList;
 
-  void move(list<Orders> OrdersList, int initial, int final) {
+  void move(list<Orders*> OrdersList, int initial, int final) {
     // Declare 2 iterators at the begining of the list
-    list<Orders>::iterator ptrInitial = OrdersList.begin();
-    list<Orders>::iterator ptrFinal = OrdersList.begin();
+    list<Orders*>::iterator itInitial = OrdersList.begin();
+    list<Orders*>::iterator itFinal = OrdersList.begin();
 
-    // Increment the iterators to the specified inital and final positions
-    advance(ptrInitial, initial);
-    advance(ptrFinal, final);
+    // Move the iterators to the inital and final positions
+    advance(itInitial, initial);
+    advance(itFinal, final);
 
     // Move the elements with splice function
-    OrdersList.splice(ptrFinal, OrdersList, ptrInitial);
+    OrdersList.splice(itFinal, OrdersList, itInitial);
   };
 
-  void remove(list<Orders> OrdersList, Orders order) {
-    OrdersList.remove(order);
+  void remove(list<Orders*> OrdersList, int index) {
+    list<Orders*>::iterator it = OrdersList.begin();
+
+    // Move interator to position
+    advance(it, index);
+
+    OrdersList.erase(it);
   };
 
-  void add(list<Orders> OrdersList, Orders order) {
-    // Not sure if we should push front or push back
-    OrdersList.push_back(order);
+  void add(list<Orders*> OrdersList, Orders order) {
+    // Not sure if we should add to the begining or the end
+    OrdersList.emplace_back(order);
   };
 
  private:
