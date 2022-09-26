@@ -3,30 +3,27 @@
 #include <iostream>
 #include <vector>
 
-enum CardType {
-  Bomb,
-  Reinforcement,
-  Blockade,
-  Airlift,
-  Diplomacy
-}
-
 class Card {
  public:
-  Card();
+  enum CardType { Bomb, Reinforcement, Blockade, Airlift, Diplomacy };
+  Card(Card::CardType type);
+
+  void SetType(Card::CardType type);
+  Card::CardType GetType() const;
+  void play();
 
  private:
-  Card play();
+  Card::CardType TypeOfCard;
 };
 
 class Deck {
  public:
   Deck();
+  Deck(int numOfCards);
 
  private:
   std::vector<Card*> cards;
-  Card draw();
-  void createDeck();
+  Card* draw();
 };
 
 class Hand {
@@ -35,7 +32,7 @@ class Hand {
 
  private:
   std::vector<Card*> cards;
-  std::vector<Card*> fillHand();
+  std::vector<Card*> drawCard(int numOfCards, Deck deck);
 };
 
 #endif
