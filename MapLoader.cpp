@@ -80,7 +80,7 @@ MapLoader::MapLoader(string fileName) {
 
 
       //makes graphs completely birdirectional
-      for(int i = 0; i < territories.size(); i++){
+      /*for(int i = 0; i < territories.size(); i++){
         for(int j = 0; j < (*territories[i]).adj.size(); j++){
           for(int k = 0; k < territories.size(); k++){
             if((*territories[k]).name == (*(*territories[i]).adj[j]).name){
@@ -97,7 +97,7 @@ MapLoader::MapLoader(string fileName) {
             }
           }
         }
-      }
+      }*/
 
 
       
