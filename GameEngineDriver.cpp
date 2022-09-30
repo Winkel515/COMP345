@@ -1,6 +1,7 @@
 #include "GameEngineDriver.h"
 
 #include <iostream>
+#include <string>
 
 #include "GameEngine.h"
 
@@ -8,6 +9,16 @@
 void testGameStates() {
   std::cout << "Testing Game States\n";
   GameEngine* gameEngine = new GameEngine;
-  gameEngine->run();
+  gameEngine->start();
+
+  while (gameEngine->getState() != State::S_END) {
+    GameEngineUtils::displayState(State::getLabel(gameEngine->getState()));
+
+    std::string command = GameEngineUtils::promptCommand(
+        GameEngineAssets::validCommandsMap.at(gameEngine->getState()));
+
+    gameEngine->handleCommand(command);
+  }
+
   delete gameEngine;
 }

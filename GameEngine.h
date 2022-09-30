@@ -36,7 +36,6 @@ class GameEngine {
   State::StateEnum state;
   std::string command;
   void runHelper(State::StateEnum);
-  void handleCommand(std::string);
   void execStart();
   void execMapLoaded();
   void execMapValidated();
@@ -45,8 +44,11 @@ class GameEngine {
   void execIssueOrders();
   void execExecuteOrders();
   void execWin();
+  void execEnd();
 
  public:
-  void run();
+  void start();
+  State::StateEnum getState();
+  void handleCommand(std::string);
   GameEngine();  // default constructor
 };
