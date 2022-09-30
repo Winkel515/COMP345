@@ -2,8 +2,8 @@
 #include <set>
 #include <string>
 
-namespace State {
-enum StateEnum {
+namespace GameState {
+enum GameStateEnum {
   S_START,
   S_MAP_LOADED,
   S_MAP_VALIDATED,
@@ -15,8 +15,8 @@ enum StateEnum {
   S_END
 };
 
-std::string getLabel(StateEnum);
-};  // namespace State
+std::string getLabel(GameStateEnum);
+};  // namespace GameState
 
 namespace GameEngineUtils {
 std::string promptCommand(std::set<std::string>);
@@ -26,16 +26,17 @@ void listCommands(std::set<std::string>);
 
 class GameEngineAssets {
  public:
-  static const std::map<State::StateEnum, std::set<std::string>>
+  static const std::map<GameState::GameStateEnum, std::set<std::string>>
       validCommandsMap;
-  static const std::map<std::string, State::StateEnum> desiredStateMap;
+  static const std::map<std::string, GameState::GameStateEnum> desiredStateMap;
 };
 
 class GameEngine {
  private:
-  State::StateEnum state;
-  std::string command;
-  void runHelper(State::StateEnum);
+  GameState::GameStateEnum state;
+  std::set<std::string> validCommands;
+  void runHelper(GameState::GameStateEnum);
+  void transition(GameState::GameStateEnum);
   void execStart();
   void execMapLoaded();
   void execMapValidated();
@@ -48,7 +49,9 @@ class GameEngine {
 
  public:
   void start();
-  State::StateEnum getState();
-  void handleCommand(std::string);
+  void run();
+  GameState::GameStateEnum getState();
+  std::set<std::string> getValidCommands();
+  bool handleCommand(std::string);
   GameEngine();  // default constructor
 };

@@ -11,11 +11,11 @@ void testGameStates() {
   GameEngine* gameEngine = new GameEngine;
   gameEngine->start();
 
-  while (gameEngine->getState() != State::S_END) {
-    GameEngineUtils::displayState(State::getLabel(gameEngine->getState()));
+  while (gameEngine->getState() != GameState::S_END) {
+    GameEngineUtils::displayState(GameState::getLabel(gameEngine->getState()));
 
-    std::string command = GameEngineUtils::promptCommand(
-        GameEngineAssets::validCommandsMap.at(gameEngine->getState()));
+    std::string command =
+        GameEngineUtils::promptCommand(gameEngine->getValidCommands());
 
     gameEngine->handleCommand(command);
   }
