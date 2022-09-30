@@ -6,32 +6,68 @@
 #include <string>
 
 using namespace std;
+using namespace State;
 
 // Map from command to desired state
-const map<string, string> GameEngineAssets::desiredStateMap{
-    {"loadmap", "map_loaded"},
-    {"validatemap", "map_validated"},
-    {"addplayer", "players_added"},
-    {"assigncountries", "assign_reinforcement"},
-    {"issueorder", "issue_orders"},
-    {"endissueorders", "execute_orders"},
-    {"execorder", "execute_orders"},
-    {"endexecorders", "assign_reinforcement"},
-    {"win", "win"},
-    {"play", "start"},
-    {"end", "end"},
+const map<string, StateEnum> GameEngineAssets::desiredStateMap{
+    {"loadmap", S_MAP_LOADED},
+    {"validatemap", S_MAP_VALIDATED},
+    {"addplayer", S_PLAYERS_ADDED},
+    {"assigncountries", S_ASSIGN_REINFORCEMENT},
+    {"issueorder", S_ISSUE_ORDERS},
+    {"endissueorders", S_EXECUTE_ORDERS},
+    {"execorder", S_EXECUTE_ORDERS},
+    {"endexecorders", S_ASSIGN_REINFORCEMENT},
+    {"win", S_WIN},
+    {"play", S_START},
+    {"end", S_END},
 };
 
 // Map from state to set of valid commands
-const map<string, set<string>> GameEngineAssets::validCommandsMap{
-    {"start", {"loadmap"}},
-    {"map_loaded", {"loadmap", "validatemap"}},
-    {"map_validated", {"addplayer"}},
-    {"players_added", {"addplayer", "assigncountries"}},
-    {"assign_reinforcement", {"issueorder"}},
-    {"issue_orders", {"issueorder", "endissueorders"}},
-    {"execute_orders", {"execorder", "endexecorders", "win"}},
-    {"win", {"play", "end"}},
+const map<StateEnum, set<string>> GameEngineAssets::validCommandsMap{
+    {S_START, {"loadmap"}},
+    {S_MAP_LOADED, {"loadmap", "validatemap"}},
+    {S_MAP_VALIDATED, {"addplayer"}},
+    {S_PLAYERS_ADDED, {"addplayer", "assigncountries"}},
+    {S_ASSIGN_REINFORCEMENT, {"issueorder"}},
+    {S_ISSUE_ORDERS, {"issueorder", "endissueorders"}},
+    {S_EXECUTE_ORDERS, {"execorder", "endexecorders", "win"}},
+    {S_WIN, {"play", "end"}},
+};
+
+string State::getLabel(StateEnum state) {
+  switch (state) {
+    case S_START:
+      return "Start";
+      break;
+    case S_MAP_LOADED:
+      return "Map Loaded";
+      break;
+    case S_MAP_VALIDATED:
+      return "Map Validated";
+      break;
+    case S_PLAYERS_ADDED:
+      return "Players Added";
+      break;
+    case S_ASSIGN_REINFORCEMENT:
+      return "Assign Reinforcement";
+      break;
+    case S_ISSUE_ORDERS:
+      return "Issue Orders";
+      break;
+    case S_EXECUTE_ORDERS:
+      return "Execute Orders";
+      break;
+    case S_WIN:
+      return "Win";
+      break;
+    case S_END:
+      return "End";
+      break;
+    default:
+      return "Unknown State";
+      break;
+  }
 };
 
 // Displays the current state
@@ -76,7 +112,7 @@ string GameEngineUtils::promptCommand(set<string> validCommandsSet) {
 
 // Default Constructor for GameEngine
 GameEngine::GameEngine() {
-  this->state = "start";
+  this->state = S_START;
   this->command = "";
 }
 
@@ -88,38 +124,50 @@ void GameEngine::run() {
 }
 
 // Helps run the GameEngine by directing to the right function
-void GameEngine::runHelper(std::string state) {
-  if (state == "start") {
-    this->execStart();
-  } else if (state == "map_loaded") {
-    this->execMapLoaded();
-  } else if (state == "map_validated") {
-    this->execMapValidated();
-  } else if (state == "players_added") {
-    this->execPlayersAdded();
-  } else if (state == "assign_reinforcement") {
-    this->execAssignReinforcement();
-  } else if (state == "issue_orders") {
-    this->execIssueOrders();
-  } else if (state == "execute_orders") {
-    this->execExecuteOrders();
-  } else if (state == "win") {
-    this->execWin();
-  } else {
-    std::cout << "Game has ended.\n";
+void GameEngine::runHelper(StateEnum state) {
+  switch (state) {
+    case S_START:
+      this->execStart();
+      break;
+    case S_MAP_LOADED:
+      this->execMapLoaded();
+      break;
+    case S_MAP_VALIDATED:
+      this->execMapValidated();
+      break;
+    case S_PLAYERS_ADDED:
+      this->execPlayersAdded();
+      break;
+    case S_ASSIGN_REINFORCEMENT:
+      this->execAssignReinforcement();
+      break;
+    case S_ISSUE_ORDERS:
+      this->execIssueOrders();
+      break;
+    case S_EXECUTE_ORDERS:
+      this->execExecuteOrders();
+      break;
+    case S_WIN:
+      this->execWin();
+      break;
+    case S_END:
+      std::cout << "Game has ended.\n";
+      break;
+    default:
+      break;
   }
 }
 
 // Handles the mapping between command and state
 void GameEngine::handleCommand(std::string command) {
-  string desiredState = GameEngineAssets::desiredStateMap.at(command);
+  StateEnum desiredState = GameEngineAssets::desiredStateMap.at(command);
   this->runHelper(desiredState);
 }
 
 // Executes Start state
 void GameEngine::execStart() {
-  this->state = "start";
-  GameEngineUtils::displayState(this->state);
+  this->state = S_START;
+  GameEngineUtils::displayState(getLabel(this->state));
   // Exec Start here
   this->command = GameEngineUtils::promptCommand(
       GameEngineAssets::validCommandsMap.at(this->state));
@@ -128,8 +176,8 @@ void GameEngine::execStart() {
 
 // Executes Map Loaded state
 void GameEngine::execMapLoaded() {
-  this->state = "map_loaded";
-  GameEngineUtils::displayState(this->state);
+  this->state = S_MAP_LOADED;
+  GameEngineUtils::displayState(getLabel(this->state));
   // Exec Map loaded here
   this->command = GameEngineUtils::promptCommand(
       GameEngineAssets::validCommandsMap.at(this->state));
@@ -138,8 +186,8 @@ void GameEngine::execMapLoaded() {
 
 // Executes Map Validated state
 void GameEngine::execMapValidated() {
-  this->state = "map_validated";
-  GameEngineUtils::displayState(this->state);
+  this->state = S_MAP_VALIDATED;
+  GameEngineUtils::displayState(getLabel(this->state));
   // Exec Map Validated here
   this->command = GameEngineUtils::promptCommand(
       GameEngineAssets::validCommandsMap.at(this->state));
@@ -148,8 +196,8 @@ void GameEngine::execMapValidated() {
 
 // Executes Players Added state
 void GameEngine::execPlayersAdded() {
-  this->state = "players_added";
-  GameEngineUtils::displayState(this->state);
+  this->state = S_PLAYERS_ADDED;
+  GameEngineUtils::displayState(getLabel(this->state));
   // Exec Players Added here
   this->command = GameEngineUtils::promptCommand(
       GameEngineAssets::validCommandsMap.at(this->state));
@@ -158,8 +206,8 @@ void GameEngine::execPlayersAdded() {
 
 // Executes Assign Reinforcement state
 void GameEngine::execAssignReinforcement() {
-  this->state = "assign_reinforcement";
-  GameEngineUtils::displayState(this->state);
+  this->state = S_ASSIGN_REINFORCEMENT;
+  GameEngineUtils::displayState(getLabel(this->state));
   // Exec Assign Reinforcement here
   this->command = GameEngineUtils::promptCommand(
       GameEngineAssets::validCommandsMap.at(this->state));
@@ -168,8 +216,8 @@ void GameEngine::execAssignReinforcement() {
 
 // Executes Issue Order state
 void GameEngine::execIssueOrders() {
-  this->state = "issue_orders";
-  GameEngineUtils::displayState(this->state);
+  this->state = S_ISSUE_ORDERS;
+  GameEngineUtils::displayState(getLabel(this->state));
   // Exec Issue order here
   this->command = GameEngineUtils::promptCommand(
       GameEngineAssets::validCommandsMap.at(this->state));
@@ -178,8 +226,8 @@ void GameEngine::execIssueOrders() {
 
 // Execute Execute Orders state
 void GameEngine::execExecuteOrders() {
-  this->state = "execute_orders";
-  GameEngineUtils::displayState(this->state);
+  this->state = S_EXECUTE_ORDERS;
+  GameEngineUtils::displayState(getLabel(this->state));
   // Exec Execute Orders here
   this->command = GameEngineUtils::promptCommand(
       GameEngineAssets::validCommandsMap.at(this->state));
@@ -188,8 +236,8 @@ void GameEngine::execExecuteOrders() {
 
 // Execute Win state
 void GameEngine::execWin() {
-  this->state = "win";
-  GameEngineUtils::displayState(this->state);
+  this->state = S_WIN;
+  GameEngineUtils::displayState(getLabel(this->state));
   // Exec Win here
   this->command = GameEngineUtils::promptCommand(
       GameEngineAssets::validCommandsMap.at(this->state));

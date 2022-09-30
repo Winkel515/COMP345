@@ -9,4 +9,5 @@ void testGameStates() {
   std::cout << "Testing Game States\n";
   GameEngine* gameEngine = new GameEngine;
   gameEngine->run();
+  delete gameEngine;
 }
