@@ -5,20 +5,29 @@
 using namespace std;
 
 class Orders {
- public:
+ private:
   string type;
   int units;
   int source;  // will change to node once territories are implemented
   int target;  // same here
+  string orderDescription;
+  string orderEffect;
+  enum validTypes {};
+
+ public:
+  Orders(string oType, int oUnits, int oSource, int oTarget);
+  void setsetOrder(string oType, int oUnits, int oSource, int oTarget);
+  void describeOrder();
   void validate();
   void execute();
-  Orders(string type, int units, int source, int target);
 };
 
 class OrdersList {
+ private:
+  list<Orders*> OrdersList;
+
  public:
-  OrdersList(list<Orders*> OrdersList);
-  void move(list<Orders*> OrdersList, int initial, int final);
-  void remove(list<Orders*> OrdersList, Orders order);
-  void add(list<Orders*> OrdersLis, Orders order);
+  void move(int initial, int final);
+  void remove(Orders order);
+  void add(Orders order);
 };

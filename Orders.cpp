@@ -1,29 +1,55 @@
 #include "Orders.h"
 
 class Orders {
- public:
+ private:
   string type;
   int units;
   int source;  // will change to node once territories are implemented
   int target;  // same here
-  void validate();
-  void execute();
+  string orderDescription;
+  string orderEffect;
+  enum validTypes { deploy, advance, bomb, blockade, airlift, negotiate };
 
-  Orders(string type, int units, int source, int target) {
-    type = type;
-    units = units;
-    source = source;
-    target = target;
+ public:
+  // Order constructor
+  Orders::Orders(string oType, int oUnits, int oSource, int oTarget) {
+    setOrder(oType, oUnits, oSource, oTarget);
   };
 
- private:
+  // Order member function
+  void Orders::setOrder(string oType, int oUnits, int oSource, int oTarget) {
+    type = oType;
+    units = oUnits;
+    source = oSource;
+    target = oTarget;
+  };
+
+  void Orders::describeOrder() {
+    // Will need to change for different kinds of orders
+    orderDescription = "Order " + type + " from " + to_string(source) + " to " +
+                       to_string(target) +
+                       " number of units: " + to_string(units);
+
+    cout << orderDescription << endl;
+  };
+
+  void Orders::validate(){
+      // Will need territories to check if order is valid
+  };
+
+  void Orders::execute() {
+    orderEffect = "Order successful/unsuccessful";
+
+    cout << orderEffect << endl;
+  };
 };
 
 class OrdersList {
- public:
+ private:
   list<Orders*> OrdersList;
 
-  void move(list<Orders*> OrdersList, int initial, int final) {
+ public:
+  void OrdersList::move(int initial, int final) {
     // Declare 2 iterators at the begining of the list
     list<Orders*>::iterator itInitial = OrdersList.begin();
     list<Orders*>::iterator itFinal = OrdersList.begin();
@@ -36,7 +62,7 @@ class OrdersList {
     OrdersList.splice(itFinal, OrdersList, itInitial);
   };
 
-  void remove(list<Orders*> OrdersList, int index) {
+  void OrdersList::remove(int index) {
     list<Orders*>::iterator it = OrdersList.begin();
 
     // Move interator to position
@@ -45,10 +71,8 @@ class OrdersList {
     OrdersList.erase(it);
   };
 
-  void add(list<Orders*> OrdersList, Orders order) {
+  void OrdersList::add(Orders order) {
     // Not sure if we should add to the begining or the end
     OrdersList.emplace_back(order);
   };
-
- private:
 };
