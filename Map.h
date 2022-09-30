@@ -15,6 +15,7 @@ class Node {
       bool belongsToContinent;
       Node(string name, string continent);
       Node(const Node& n);
+      ~Node();
       Node& operator=(const Node& n);
       friend ostream& operator<<(ostream &strm, const Node &n);
 };
@@ -27,12 +28,15 @@ class Map {
   public:
     Map(vector<Node*> territories); //change Node to Node*
     Map(const Map& m);
+    ~Map();
     Map& operator=(const Map& m);
     void printMap();
-    void validate(vector <string> continentsNames, unordered_map<string, vector<Node*>> continents);
-    void dfs(int currentNode);
+    void validate(vector <string> continentsNames);
+    void dfs(int currentNode, vector<Node*> territoriesCopy);
     void dfs_sub(int currentNode, vector<Node*> continents);
-    void setWhite();
+    void setWhite(vector<Node*> territoriesCopy);
+    void makeBidirectional(vector<Node*> territories);
+    unordered_map<string, vector<Node*>> copyContinents(vector <string> continentsNames, vector<Node*> territoriesCopy);
 };
 
 string convertAdjToString(vector<Node*> adj);

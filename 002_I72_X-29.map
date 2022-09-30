@@ -1,0 +1,76 @@
+[Map]
+author=Iceworm72
+image=002_I72_X-29.bmp
+wrap=no
+scroll=horizontal
+warn=no
+
+[Continents]
+Left Wing=5
+Right Wing=5
+Tail=1
+Engine=6
+Cockpit=5
+Fuselage=10
+Left Canard=4
+Right Canard=4
+Nose=4
+
+[Territories]
+Left_Wing1,700,700,Left Wing,Left_Wing2,Territory06
+Left_Wing2,750,615,Left Wing,Left_Wing1,Territory03,Territory07
+Territory03,785,528,Left Wing,Territory04,Territory08,Left_Wing2
+Territory04,808,459,Left Wing,Territory05,Territory46,Territory27,Territory28,Territory09,Territory03
+Territory05,737,448,Left Wing,Territory51,Territory04
+Territory06,772,704,Left Wing,Territory07,Left_Wing1
+Territory07,838,614,Left Wing,Territory08,Left_Wing2,Territory06
+Territory08,902,529,Left Wing,Territory03,Territory09,Territory07
+Territory09,938,485,Left Wing,Territory04,Territory08,Territory28
+Territory10,715,76,Right Wing,Territory11,Territory15
+Territory11,754,163,Right Wing,Territory12,Territory16,Territory10
+Territory12,799,246,Right Wing,Territory13,Territory17,Territory11
+Territory13,825,310,Right Wing,Territory14,Territory47,Territory20,Territory21,Territory12,Territory18
+Territory14,737,318,Right Wing,Territory48,Territory13
+Territory15,778,68,Right Wing,Territory10,Territory16
+Territory16,842,156,Right Wing,Territory17,Territory11,Territory15
+Territory17,901,235,Right Wing,Territory18,Territory12,Territory16
+Territory18,938,282,Right Wing,Territory13,Territory17,Territory20
+Territory19,996,383,Tail,Territory24
+Territory20,976,313,Engine,Territory13,Territory22,Territory18,Territory21
+Territory21,1008,338,Engine,Territory13,Territory22,Territory24,Territory20
+Territory22,1068,325,Engine,Territory23,Territory21,Territory20,Territory24
+Territory23,1098,326,Engine,Territory22,Territory24
+Territory24,908,381,Engine,Territory45,Territory44,Territory19,Territory26,Territory21,Territory22,Territory23
+Territory25,1102,440,Engine,Territory26,Territory24
+Territory26,1068,444,Engine,Territory25,Territory27,Territory28,Territory24
+Territory27,1013,430,Engine,Territory04,Territory26,Territory24,Territory28
+Territory28,977,454,Engine,Territory04,Territory26,Territory09,Territory27
+Territory29,361,373,Cockpit,Territory37,Territory30
+Territory30,399,382,Cockpit,Territory29,Territory53,Territory54,Territory31
+Territory31,425,382,Cockpit,Territory30,Territory53,Territory54,Territory32
+Territory32,461,384,Cockpit,Territory31,Territory53,Territory54,Territory33
+Territory33,504,384,Cockpit,Territory32,Territory53,Territory54,Territory34
+Territory34,521,383,Cockpit,Territory33,Territory53,Territory54,Territory55
+Territory35,125,384,Nose,Territory36
+Territory36,181,383,Nose,Territory35,Territory57
+Territory37,311,383,Nose,Territory53,Territory29,Territory54,Territory57
+Territory38,617,272,Right Canard,Territory39,Territory40
+Territory39,664,314,Right Canard,Territory48,Territory38
+Territory40,561,302,Right Canard,Territory38
+Territory41,613,493,Left Canard,Territory43,Territory42
+Territory42,667,453,Left Canard,Territory41,Territory51
+Territory43,563,465,Left Canard,Territory41
+Territory44,862,366,Fuselage,Territory52,Territory24,Territory47,Territory45
+Territory45,860,398,Fuselage,Territory52,Territory46,Territory24,Territory44
+Territory46,768,424,Fuselage,Territory51,Territory45,Territory04
+Territory47,767,341,Fuselage,Territory48,Territory44,Territory13
+Territory48,674,330,Fuselage,Territory39,Territory49,Territory47,Territory14
+Territory49,528,333,Fuselage,Territory55,Territory56,Territory48
+Territory50,524,435,Fuselage,Territory55,Territory56,Territory51
+Territory51,678,438,Fuselage,Territory42,Territory50,Territory46,Territory05
+Territory52,773,384,Fuselage,Territory56,Territory44,Territory45
+Territory53,388,353,Fuselage,Territory37,Territory30,Territory31,Territory32,Territory33,Territory34,Territory55
+Territory54,387,414,Fuselage,Territory37,Territory30,Territory31,Territory32,Territory33,Territory34,Territory55
+Territory55,574,382,Fuselage,Territory34,Territory50,Territory49,Territory56,Territory54,Territory53
+Territory56,676,383,Fuselage,Territory55,Territory49,Territory50,Territory52
+Territory57,242,384,Nose,Territory37,Territory36

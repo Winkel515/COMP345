@@ -1,0 +1,135 @@
+[Map]
+author=Iceworm72
+image=005_I72_V-22.bmp
+wrap=no
+scroll=horizontal
+warn=no
+
+[Continents]
+Cockpit=7
+Nose=6
+Fuselage=10
+Left Wing=7
+Right Wing=7
+Tail=5
+Left Rotor=6
+Right Rotor=6
+Refueling=2
+Landing Gear=4
+Light=1
+
+[Territories]
+Territory02,616,190,Cockpit,Territory114,Territory85,Territory45,Territory113
+Territory03,623,138,Cockpit,Territory112,Territory87,Territory85,Territory47,Territory113
+Territory04,576,141,Cockpit,Territory112,Territory88,Territory86!,Territory49,Territory113
+Territory05,603,90,Nose,Territory88,Territory87,Territory112
+Territory06,580,80,Nose,Territory111,Territory88
+Territory07,626,41,Refueling,Territory90
+Territory08,450,364,Left Wing,Territory14,Territory91,Territory11,Territory10,Territory59,Territory64,Territory09,Territory15
+Territory09,363,394,Left Wing,Territory10,Territory12,Territory59,Territory39,Territory08
+Territory10,424,398,Left Wing,Territory11,Territory09,Territory12,Territory13,Territory08
+Territory11,482,405,Left Wing,Territory15,Territory13,Territory08,Territory10
+Territory12,362,421,Left Wing,Territory10,Territory13,Territory09,Territory63,Territory39
+Territory13,481,433,Left Wing,Territory15,Territory11,Territory10,Territory12,Territory44,Territory74
+Territory14,548,372,Left Wing,Territory91,Territory23,Territory08,Territory25,Territory65,Territory15
+Territory15,543,412,Left Wing,Territory26,Territory65,Territory14,Territory13,Territory74,Territory11,Territory08
+Territory16,519,804,Tail,Territory17,Territory97,Territory93,Territory99
+Territory17,602,789,Tail,Territory20,Territory97,Territory18,Territory16,Territory21,Territory19
+Territory18,686,805,Tail,Territory17,Territory97,Territory94,Territory95
+Territory19,562,650,Tail,Territory20,Territory17,Territory83,Territory32,Territory35
+Territory20,602,692,Tail,Territory33,Territory21,Territory19,Territory17,Territory82,Territory83
+Territory21,643,650,Tail,Territory20,Territory17,Territory82,Territory81,Territory34
+Territory22,603,255,Cockpit,Territory69,Territory46,Territory48,Territory67,Territory68,Territory23
+Territory23,603,299,Fuselage,Territory22,Territory68,Territory67,Territory24,Territory25,Territory14,Territory52,Territory51
+Territory24,602,325,Fuselage,Territory23,Territory66,Territory25
+Territory25,602,368,Fuselage,Territory66,Territory24,Territory23,Territory52,Territory14,Territory70,Territory71,Territory65
+Territory26,603,445,Fuselage,Territory29,Territory15,Territory72,Territory70,Territory71,Territory65,Territory74,Territory73
+Territory27,527,508,Fuselage,Territory35,Territory75,Territory74,Territory44,Territory31
+Territory28,672,512,Fuselage,Territory43,Territory73,Territory79,Territory34,Territory80
+Territory29,603,472,Fuselage,Territory78,Territory74,Territory26,Territory73,Territory77,Territory76
+Territory30,603,525,Fuselage,Territory80,Territory84,Territory31,Territory77,Territory78,Territory76,Territory33
+Territory31,571,540,Fuselage,Territory30,Territory32,Territory75,Territory76,Territory27,Territory73
+Territory32,567,591,Fuselage,Territory33,Territory19,Territory83,Territory31,Territory35
+Territory33,602,586,Fuselage,Territory84,Territory81,Territory32,Territory20,Territory30
+Territory34,665,580,Fuselage,Territory28,Territory21,Territory81
+Territory35,538,585,Fuselage,Territory19,Territory32,Territory27
+Territory36,128,302,Left Rotor,Territory60
+Territory37,275,523,Left Rotor,Territory62
+Territory38,388,304,Left Rotor,Territory61
+Territory39,271,379,Left Rotor,Territory62,Territory61,Territory60,Territory40,Territory63,Territory09,Territory12,Territory08
+Territory40,265,338,Left Rotor,Territory39,Territory63,Territory64
+Territory41,494,473,Landing Gear,Territory44
+Territory42,710,474,Landing Gear,Territory43
+Territory43,690,463,Fuselage,Territory42,Territory28,Territory57
+Territory44,516,462,Fuselage,Territory27,Territory41,Territory13
+Territory45,602,212,Cockpit,Territory114,Territory02,Territory86,Territory69,Territory46,Territory48,Territory86!,Territory85
+Territory46,635,248,Cockpit,Territory45,Territory69,Territory22,Territory68,Territory47,Territory51,Territory85
+Territory47,655,225,Cockpit,Territory03,Territory85,Territory46,Territory51
+Territory48,568,243,Cockpit,Territory45,Territory69,Territory22,Territory49,Territory86!,Territory50,Territory67
+Territory49,551,226,Cockpit,Territory04,Territory86!,Territory48,Territory50
+Territory50,555,292,Fuselage,Territory48,Territory49,Territory67,Territory91,Territory23
+Territory51,651,292,Fuselage,Territory46,Territory68,Territory47,Territory92,Territory23
+Territory52,658,374,Right Wing,Territory92,Territory53,Territory25,Territory23,Territory72,Territory71
+Territory53,742,364,Right Wing,Territory92,Territory52,Territory108,Territory100,Territory55,Territory54,Territory56,Territory72
+Territory54,717,403,Right Wing,Territory55,Territory57,Territory53,Territory72
+Territory55,778,398,Right Wing,Territory56,Territory53,Territory57,Territory54,Territory58
+Territory56,845,395,Right Wing,Territory101,Territory100,Territory58,Territory55,Territory53
+Territory57,724,433,Right Wing,Territory55,Territory54,Territory72,Territory58,Territory43,Territory73
+Territory58,835,422,Right Wing,Territory110,Territory101,Territory56,Territory55,Territory57
+Territory59,384,380,Left Wing,Territory09,Territory08
+Territory60,236,362,Left Rotor,Territory39,Territory36
+Territory61,303,355,Left Rotor,Territory39,Territory38
+Territory62,275,415,Left Rotor,Territory39,Territory37
+Territory63,255,411,Left Rotor,Territory12,Territory39,Territory40
+Territory64,298,323,Left Wing,Territory08,Territory40
+Territory65,567,403,Fuselage,Territory26,Territory25,Territory14,Territory15
+Territory66,595,349,Fuselage,Territory24,Territory25,Territory23
+Territory67,572,280,Fuselage,Territory22,Territory48,Territory50,Territory23
+Territory68,634,280,Fuselage,Territory22,Territory46,Territory51,Territory23
+Territory69,602,227,Cockpit,Territory45,Territory48,Territory46,Territory22
+Territory70,604,392,Fuselage,Territory26,Territory25
+Territory71,640,403,Fuselage,Territory72,Territory26,Territory25,Territory52
+Territory72,661,409,Right Wing,Territory54,Territory57,Territory52,Territory71,Territory73,Territory26,Territory53
+Territory73,651,467,Right Wing,Territory72,Territory28,Territory78,Territory29,Territory26,Territory57,Territory31,Territory79
+Territory74,554,467,Left Wing,Territory27,Territory76,Territory29,Territory15,Territory26,Territory13,Territory75
+Territory75,551,504,Fuselage,Territory27,Territory31,Territory76,Territory74
+Territory76,565,487,Fuselage,Territory30,Territory75,Territory74,Territory31,Territory77,Territory29
+Territory77,602,490,Fuselage,Territory78,Territory30,Territory76,Territory29
+Territory78,641,489,Fuselage,Territory73,Territory79,Territory29,Territory80,Territory77,Territory30
+Territory79,656,506,Fuselage,Territory28,Territory78,Territory80,Territory73
+Territory80,637,540,Fuselage,Territory28,Territory78,Territory30,Territory81,Territory79
+Territory81,638,595,Fuselage,Territory33,Territory21,Territory82,Territory34,Territory80
+Territory82,628,629,Fuselage,Territory21,Territory81,Territory20
+Territory83,579,628,Fuselage,Territory19,Territory20,Territory32
+Territory84,599,559,Light,Territory30,Territory33
+Territory85,634,178,Cockpit,Territory03,Territory02,Territory47,Territory46,Territory113,Territory45
+Territory86,591,189,Cockpit,Territory114,Territory86!,Territory45,Territory113
+Territory86!,570,177,Cockpit,Territory04,Territory86,Territory49,Territory48,Territory113,Territory45
+Territory87,625,110,Nose,Territory05,Territory89,Territory03,Territory112
+Territory88,581,111,Nose,Territory111,Territory06,Territory05,Territory04,Territory112
+Territory89,626,84,Nose,Territory90,Territory87
+Territory90,626,71,Refueling,Territory07,Territory89
+Territory91,536,323,Fuselage,Territory50,Territory14,Territory08
+Territory92,670,323,Fuselage,Territory51,Territory52,Territory53
+Territory93,479,779,Tail,Territory16,Territory99
+Territory94,728,777,Tail,Territory18,Territory95
+Territory95,686,852,Tail,Territory97,Territory18,Territory94
+Territory96,639,854,Tail,Territory97
+Territory97,602,855,Tail,Territory17,Territory96,Territory98,Territory95,Territory99,Territory18,Territory16
+Territory98,567,854,Tail,Territory97
+Territory99,522,854,Tail,Territory97,Territory16,Territory93
+Territory100,822,379,Right Wing,Territory53,Territory56
+Territory101,935,378,Right Rotor,Territory102,Territory103,Territory104,Territory110,Territory109,Territory56,Territory58,Territory53
+Territory102,972,361,Right Rotor,Territory101,Territory106
+Territory103,933,419,Right Rotor,Territory101,Territory107
+Territory104,900,355,Right Rotor,Territory105,Territory101
+Territory105,813,302,Right Rotor,Territory104
+Territory106,1069,308,Right Rotor,Territory102
+Territory107,930,536,Right Rotor,Territory103
+Territory108,908,323,Right Wing,Territory109,Territory53
+Territory109,942,339,Right Rotor,Territory110,Territory108,Territory101
+Territory110,952,413,Right Rotor,Territory109,Territory58,Territory101
+Territory111,575,91,Nose,Territory06,Territory88
+Territory112,605,139,Cockpit,Territory03,Territory04,Territory113,Territory05,Territory87,Territory88
+Territory113,605,166,Cockpit,Territory112,Territory114,Territory85,Territory86!,Territory86,Territory02,Territory03,Territory04
+Territory114,605,195,Cockpit,Territory113,Territory86,Territory02,Territory45

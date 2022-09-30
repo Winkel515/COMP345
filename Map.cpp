@@ -1,6 +1,7 @@
 #include "Map.h"
 #include <vector>
 #include <unordered_map>
+#include <set>
 
 using namespace std;
 
@@ -10,24 +11,24 @@ Node::Node(string name, string continent) { // node constructor, each node repre
   this->continent = continent;
   this->color = "WHITE";
   this->belongsToContinent = false;
-  
-
 }
-/*
+
 Node& Node::operator=(const Node& n){ // overloading assignment operator for node
-  this->name = new string((*n.name));
-  this->adj = vector<Node*>((*n.adj));
-  this->continent = new string(*(n.continent));
-  this->color = new string(*(n.continent));
+  this->name = n.name;
+  this->adj = {}; //does not copy adjacency list -> populate in copy constructor of map
+  this->continent = n.continent;
+  this->color = n.color;
+  this->belongsToContinent = n.belongsToContinent;
   return *this;
 }
 
 Node::Node(const Node& n){ // node copy constructor
-  this->name = new string((*n.name));
-  this->adj = vector<Node*>((*n.adj));
-  this->continent = new string(*(n.continent));
-  this->color = new string(*(n.continent));
-}*/
+  this->name = n.name;
+  this->adj = {}; //
+  this->continent = n.continent;
+  this->color = n.color; //does not copy adjacency list -> populate in copy constructor of map
+  this->belongsToContinent = n.belongsToContinent;
+}
 
 ostream& operator<<(ostream &strm, const Node &n){ //overloading stream insertion operator
   return strm << /*"Node name: " <<*/ n.name;// << "continent: " << n.continent << endl << "color: " << n.color << endl;
@@ -37,16 +38,60 @@ Map::Map(vector<Node*> territories) { // Map constructor
   this->territories = territories;
 }
 
-/*
+
 Map& Map::operator=(const Map& m){ // overloading assignment operator for map
-  this->territories = vector<Node*>(*(m.territories));
+  unordered_map<string, Node*> territoryMap;
+  unordered_map<string, vector<string>> adjMap;
+
+  // generating copied nodes
+  this->territories = {};
+  for(int i = 0; i < m.territories.size(); i++){
+    Node *copyTerritory = new Node(*(m.territories[i]));
+    territoryMap[copyTerritory->name] = copyTerritory;
+    territories.push_back(copyTerritory);
+    vector<string> adjTerritories;
+    for(int j = 0; j < m.territories[i]->adj.size(); j++){
+      adjTerritories.push_back(m.territories[i]->adj[j]->name);
+    }
+    adjMap[m.territories[i]->name] = adjTerritories;
+  }
+
+  // connecting copied nodes together
+  for(int i = 0; i < territories.size(); i++) {
+    vector<string> adj = adjMap[territories[i]->name];
+    for(int j = 0; j < adj.size(); j++) {
+      territories[i]->adj.push_back(territoryMap[adj[i]]);
+    }
+  }
   return *this;
 }
 
 Map::Map(const Map& m){ // map copy constructor
-  this->territories = vector<Node*>(*(m.territories));
+  unordered_map<string, Node*> territoryMap;
+  unordered_map<string, vector<string>> adjMap;
+  
+  // generating copied nodes
+  this->territories = {};
+  for(int i = 0; i < m.territories.size(); i++){
+    Node *copyTerritory = new Node(*(m.territories[i]));
+    territoryMap[copyTerritory->name] = copyTerritory;
+    territories.push_back(copyTerritory);
+    vector<string> adjTerritories;
+    for(int j = 0; j < m.territories[i]->adj.size(); j++){
+      adjTerritories.push_back(m.territories[i]->adj[j]->name);
+    }
+    adjMap[m.territories[i]->name] = adjTerritories;
+  }
+
+  // connecting copied nodes together
+  for(int i = 0; i < territories.size(); i++) {
+    vector<string> adj = adjMap[territories[i]->name];
+    for(int j = 0; j < adj.size(); j++) {
+      territories[i]->adj.push_back(territoryMap[adj[j]]);
+    }
+  }
 }
-*/
+
 void Map::printMap() { // prints the map indicating for each territory the continent, and adjacent territories
     
   for(int i = 0; i < territories.size(); i++) {
@@ -56,43 +101,88 @@ void Map::printMap() { // prints the map indicating for each territory the conti
   
 }
 
-void Map::setWhite(){
-
-  for(int i = 0; i < territories.size(); i++){ //set color of all territory to white
-    if((*territories[i]).color != "WHITE"){
-      (*territories[i]).color = "WHITE";
+void Map::setWhite(vector<Node*> territoriesCopy){
+  for(int i = 0; i < territoriesCopy.size(); i++){ //set color of all territory to white
+    if(territoriesCopy[i]->color != "WHITE"){
+      territoriesCopy[i]->color = "WHITE";
     }
-
   }
+}
+
+void Map::makeBidirectional(vector<Node*> territoriesCopy){
+      
+      for(int i = 0; i < territoriesCopy.size(); i++){
+        for(int j = 0; j < (*territoriesCopy[i]).adj.size(); j++){
+          for(int k = 0; k < territoriesCopy.size(); k++){
+            if((*territoriesCopy[k]).name == (*(*territoriesCopy[i]).adj[j]).name){
+              for(int l = 0; l < (*territoriesCopy[k]).adj.size(); l++){
+                if((*territoriesCopy[i]).name == (*(*territoriesCopy[k]).adj[l]).name){
+                  break;
+                }
+
+                if( l == ((*territoriesCopy[k]).adj.size() - 1) && (*territoriesCopy[i]).name != (*(*territoriesCopy[k]).adj[l]).name){
+                  (*territoriesCopy[k]).adj.push_back(territoriesCopy[i]);
+                }
+
+              }
+            }
+          }
+        }
+      }
+}
+
+unordered_map<string, vector<Node*>> Map::copyContinents(vector <string> continentsNames, vector<Node*> territoriesCopy){
+
+  unordered_map<string, vector<Node*>> continentsCopy;
+
+  for(int i = 0; i < continentsNames.size(); i++){
+        continentsCopy[continentsNames[i]] = {};
+  }
+
+  for(int i = 0; i < territoriesCopy.size(); i++){
+        continentsCopy[territoriesCopy[i]->continent].push_back(territoriesCopy[i]);
+  }
+
+  return continentsCopy;
 
 }
 
-void Map::validate(vector <string> continentsNames, unordered_map<string, vector<Node*>> continents) { // checks the map and continents are connected graphs and ensures each territory belongs to one and only one continent
+void Map::validate(vector <string> continentsNames) { // checks the map and continents are connected graphs and ensures each territory belongs to one and only one continent
+  Map *copyMap = new Map(*this);
+  makeBidirectional(copyMap->territories);
+  unordered_map<string, vector<Node*>> continentsCopy = copyContinents(continentsNames, copyMap->territories);
+
+  //delete copyMap;
+  //1 do the copy
+  //2 make the copy bidirectional
+  //cout << (*territories[0]).color << endl;
   
   bool incorrectMap = false;
   int count = 0;
-  for(int i = 0; i < territories.size(); i++){ // runs dfs from each node in territories
+  for(int i = 0; i < copyMap->territories.size(); i++){ // runs dfs from each node in territories
+    
     count = 0;
-    dfs(i);
-
-    for(int j = 0; j < territories.size(); j++){ //checks if all nodes can be visited from node i
+    dfs(i, copyMap->territories);
+    
+    for(int j = 0; j < copyMap->territories.size(); j++){ //checks if all nodes can be visited from node i
       //cout << (*territories[j]).color << endl;
-      if((*territories[j]).color == "BLACK"){
+      if(copyMap->territories[j]->color == "BLACK"){
         count += 1;
       }
     }
 
-    if(count == territories.size()){ // if all nodes can be visited from node i all nodes color is set to white to start over with node i + 1
-      setWhite();
-      continue;
+    if(count == copyMap->territories.size()){ // if all nodes can be visited from node i all nodes color is set to white to start over with node i + 1
+      break;
     }
-    else{ // otherwise the map does not have the proper format and the loop stops
-      cout << "The map is not a connected graph or is a weakly connected graph." << endl;
+    else if(count != copyMap->territories.size() && i == copyMap->territories.size() - 1){
+      cout << "The map is not a weakly connected graph." << endl;
       incorrectMap = true;
       break;
     }
-
-
+    else{ // otherwise the map does not have the proper format and the loop stops
+      setWhite(copyMap->territories);
+      continue;
+    }
   }
 
   if(incorrectMap){
@@ -101,27 +191,31 @@ void Map::validate(vector <string> continentsNames, unordered_map<string, vector
   else{
     cout << "The map has the correct format" << endl;
   }
-
+  
   bool correctContinent = false;
   for(int i = 0; i < continentsNames.size(); i++){ // runs dfs on each node of each continent
-    for(int j = 0; j < continents[continentsNames[i]].size(); j++){
+    for(int j = 0; j < continentsCopy[continentsNames[i]].size(); j++){
       count = 0;
-      dfs_sub(j, continents[continentsNames[i]]);
+      dfs_sub(j, continentsCopy[continentsNames[i]]);
 
-      for(int k = 0; k < continents[continentsNames[i]].size(); k++){
+      for(int k = 0; k < continentsCopy[continentsNames[i]].size(); k++){
         //cout << (*continents[continentsNames[i]][k]).color << endl;
-        if((*continents[continentsNames[i]][k]).color == "BLACK"){ //checks if all nodes can be visited from j
+        if(continentsCopy[continentsNames[i]][k]->color == "BLACK"){ //checks if all nodes can be visited from j
           count += 1;
         }
       }
 
-      if(count == continents[continentsNames[i]].size()){  // if all nodes can be visited from k it starts over on another continent
+      if(count == continentsCopy[continentsNames[i]].size()){  // if all nodes can be visited from k it starts over on another continent
         correctContinent = true;
         break;
       }
-      else{ // otherwise the loop exits
+      else if(count != continentsCopy[continentsNames[i]].size() && j == continentsCopy[continentsNames[i]].size() - 1){
         correctContinent = false;
         break;
+      }
+      else{ // otherwise the loop exits
+        setWhite(continentsCopy[continentsNames[i]]);
+        continue;
       }
     }
     if(!correctContinent){
@@ -136,12 +230,13 @@ void Map::validate(vector <string> continentsNames, unordered_map<string, vector
     cout << "Continents do not have the proper format" << endl;
   }
 
+  
   int index = 0;
-  for(int i = 0; i < territories.size(); i++){ // checks that all territories belong to one and only one continent
+  for(int i = 0; i < copyMap->territories.size(); i++){ // checks that all territories belong to one and only one continent
     for(int j = 0; j < continentsNames.size(); j++){
-      for(int k = 0; k < continents[continentsNames[j]].size(); k++){
-        if((*continents[continentsNames[j]][k]).name == (*territories[i]).name){
-          (*territories[i]).belongsToContinent = true;
+      for(int k = 0; k < continentsCopy[continentsNames[j]].size(); k++){
+        if(continentsCopy[continentsNames[j]][k]->name == copyMap->territories[i]->name){
+          copyMap->territories[i]->belongsToContinent = true;
           index++;
         }
       }
@@ -150,58 +245,63 @@ void Map::validate(vector <string> continentsNames, unordered_map<string, vector
 
   bool allBelong = false;
 
-  for(int i = 0; i < territories.size(); i++){ // checks that all territories have a continents
-    if((*territories[i]).belongsToContinent != true){
+  for(int i = 0; i < copyMap->territories.size(); i++){ // checks that all territories have a continents
+    if(copyMap->territories[i]->belongsToContinent != true){
       break;
     }
 
-    if(i == territories.size() - 1 && (*territories[i]).belongsToContinent == true){
+    if(i == copyMap->territories.size() - 1 && copyMap->territories[i]->belongsToContinent == true){
       allBelong = true;
     }
 
   }
 
-  if(territories.size() == index && allBelong){
+  if(copyMap->territories.size() == index && allBelong){
     cout << "Each territory belongs to one and only one continent." << endl;
   }
   else{
     cout << "Each territory does not belong to one and only one continent." << endl;
   }
+  //delete copyMap;
 }
 
-void Map::dfs(int currentNode){ // dfs algorithm used for the complete map
-    (*territories[currentNode]).color = "GRAY";
-
-    for(int i = 0; i < (*territories[currentNode]).adj.size(); i++){      
-      if((*(*territories[currentNode]).adj[i]).color == "WHITE"){
-        for(int j = 0; j < territories.size(); j++){
-          if((*territories[j]).name == (*(*territories[currentNode]).adj[i]).name){
-            dfs(j);
-            break;
-          }
-        }
-      }
-    }
+void Map::dfs(int currentNode, vector<Node*> territoriesCopy){ // dfs algorithm used for the complete map
   
-    (*territories[currentNode]).color = "BLACK";
-
-}
-
-void Map::dfs_sub(int currentNode, vector<Node*> continents){ // dfs algorithm used for the continents
-    (*continents[currentNode]).color = "GRAY";
+    territoriesCopy[currentNode]->color = "GRAY";
     
-    for(int i = 0; i < (*continents[currentNode]).adj.size(); i++){      
-      if((*(*continents[currentNode]).adj[i]).color == "WHITE"){
-        for(int j = 0; j < continents.size(); j++){
-          if((*continents[j]).name == (*(*continents[currentNode]).adj[i]).name){
-            dfs_sub(j, continents);
+    for(int i = 0; i < territoriesCopy[currentNode]->adj.size(); i++){      
+      if(territoriesCopy[currentNode]->adj[i]->color == "WHITE"){
+        for(int j = 0; j < territoriesCopy.size(); j++){
+          if(territoriesCopy[j]->name == territoriesCopy[currentNode]->adj[i]->name){
+            //cout << "bla" << endl;
+            dfs(j, territoriesCopy);
+            
+            break;
+          }
+        }
+      }
+    }
+    
+    territoriesCopy[currentNode]->color = "BLACK";
+
+
+}
+
+void Map::dfs_sub(int currentNode, vector<Node*> continentsCopy){ // dfs algorithm used for the continents
+    continentsCopy[currentNode]->color = "GRAY";
+    
+    for(int i = 0; i < continentsCopy[currentNode]->adj.size(); i++){      
+      if(continentsCopy[currentNode]->adj[i]->color == "WHITE"){
+        for(int j = 0; j < continentsCopy.size(); j++){
+          if(continentsCopy[j]->name == continentsCopy[currentNode]->adj[i]->name){
+            dfs_sub(j, continentsCopy);
             break;
           }
         }
       }
     }
   
-    (*continents[currentNode]).color = "BLACK";
+    continentsCopy[currentNode]->color = "BLACK";
 
 }
 

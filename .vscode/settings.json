@@ -6,6 +6,7 @@
     "xstring": "cpp",
     "ostream": "cpp",
     "unordered_map": "cpp",
-    "vector": "cpp"
+    "vector": "cpp",
+    "xhash": "cpp"
   }
 }
