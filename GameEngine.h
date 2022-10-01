@@ -35,8 +35,6 @@ class GameEngine {
  private:
   GameState::GameStateEnum state;
   std::set<std::string> commands;
-  friend std::ostream& operator<<(std::ostream&, const GameEngine&);
-  bool handleCommand(std::string);
   void execSelector(GameState::GameStateEnum);
   void execStart();
   void execMapLoaded();
@@ -51,10 +49,15 @@ class GameEngine {
  public:
   void start();
   void run();
+  bool handleCommand(std::string);
   void promptCommand();
   void printCommands();
   std::set<std::string> getCommands();
   void setState(GameState::GameStateEnum);
   GameState::GameStateEnum getState();
-  GameEngine();  // default constructor
+  GameEngine& operator=(const GameEngine&);
+  GameEngine();                   // default constructor
+  GameEngine(const GameEngine&);  // copy constructor
+  friend std::ostream& operator<<(std::ostream&,
+                                  const GameEngine&);  // stream insertion
 };
