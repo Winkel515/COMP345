@@ -10,12 +10,12 @@ class Orders {
   int units;
   int source;  // will change to node once territories are implemented
   int target;  // same here
-  string orderDescription;
   string orderEffect;
   enum validTypes {};
 
  public:
   Orders(string oType, int oUnits, int oSource, int oTarget);
+  friend ostream &operator<<(ostream &output, const Orders &o);
   void setsetOrder(string oType, int oUnits, int oSource, int oTarget);
   void describeOrder();
   void validate();
@@ -24,7 +24,7 @@ class Orders {
 
 class OrdersList {
  private:
-  list<Orders*> OrdersList;
+  list<Orders *> OrdersList;
 
  public:
   void move(int initial, int final);

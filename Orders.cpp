@@ -6,7 +6,6 @@ class Orders {
   int units;
   int source;  // will change to node once territories are implemented
   int target;  // same here
-  string orderDescription;
   string orderEffect;
   enum validTypes { deploy, advance, bomb, blockade, airlift, negotiate };
 
@@ -16,21 +15,20 @@ class Orders {
     setOrder(oType, oUnits, oSource, oTarget);
   };
 
+  friend ostream &operator<<(ostream &output, const Orders &o) {
+    // Will need to change for different kinds of orders
+    output << "Order " + o.type + " from " + to_string(o.source) + " to " +
+                  to_string(o.target) +
+                  " number of units: " + to_string(o.units);
+    return output;
+  }
+
   // Order member function
   void Orders::setOrder(string oType, int oUnits, int oSource, int oTarget) {
     type = oType;
     units = oUnits;
     source = oSource;
     target = oTarget;
-  };
-
-  void Orders::describeOrder() {
-    // Will need to change for different kinds of orders
-    orderDescription = "Order " + type + " from " + to_string(source) + " to " +
-                       to_string(target) +
-                       " number of units: " + to_string(units);
-
-    cout << orderDescription << endl;
   };
 
   void Orders::validate(){
@@ -46,13 +44,13 @@ class Orders {
 
 class OrdersList {
  private:
-  list<Orders*> OrdersList;
+  list<Orders *> OrdersList;
 
  public:
   void OrdersList::move(int initial, int final) {
     // Declare 2 iterators at the begining of the list
-    list<Orders*>::iterator itInitial = OrdersList.begin();
-    list<Orders*>::iterator itFinal = OrdersList.begin();
+    list<Orders *>::iterator itInitial = OrdersList.begin();
+    list<Orders *>::iterator itFinal = OrdersList.begin();
 
     // Move the iterators to the inital and final positions
     advance(itInitial, initial);
@@ -63,7 +61,7 @@ class OrdersList {
   };
 
   void OrdersList::remove(int index) {
-    list<Orders*>::iterator it = OrdersList.begin();
+    list<Orders *>::iterator it = OrdersList.begin();
 
     // Move interator to position
     advance(it, index);
