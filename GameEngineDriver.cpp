@@ -7,18 +7,15 @@
 
 // Tests the GameEngine class
 void testGameStates() {
-  std::cout << "Testing Game States\n";
-  GameEngine* gameEngine = new GameEngine;
-  gameEngine->start();
+  std::cout << "Testing Running Game States\n";
+  GameEngine* runningGameEngine = new GameEngine;
+  runningGameEngine->start();
 
-  while (gameEngine->getState() != GameState::S_END) {
-    GameEngineUtils::displayState(GameState::getLabel(gameEngine->getState()));
-
-    std::string command =
-        GameEngineUtils::promptCommand(gameEngine->getValidCommands());
-
-    gameEngine->handleCommand(command);
+  // Running prompt here:
+  while (runningGameEngine->getState() != GameState::S_END) {
+    std::cout << *runningGameEngine;
+    runningGameEngine->promptCommand();
   }
 
-  delete gameEngine;
+  delete runningGameEngine;
 }

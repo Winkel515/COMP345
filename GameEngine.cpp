@@ -8,13 +8,14 @@
 using std::cin;
 using std::cout;
 using std::map;
+using std::ostream;
 using std::set;
 using std::string;
 
 using namespace GameState;
 
 // Map from command to desired state
-const map<string, GameStateEnum> GameEngineAssets::desiredStateMap{
+const map<string, GameStateEnum> GameEngineFSA::commandToStateMap{
     {"loadmap", S_MAP_LOADED},
     {"validatemap", S_MAP_VALIDATED},
     {"addplayer", S_PLAYERS_ADDED},
@@ -29,7 +30,7 @@ const map<string, GameStateEnum> GameEngineAssets::desiredStateMap{
 };
 
 // Map from state to set of valid commands
-const map<GameStateEnum, set<string>> GameEngineAssets::validCommandsMap{
+const map<GameStateEnum, set<string>> GameEngineFSA::commandsPerStateMap{
     {S_START, {"loadmap"}},
     {S_MAP_LOADED, {"loadmap", "validatemap"}},
     {S_MAP_VALIDATED, {"addplayer"}},
@@ -80,51 +81,16 @@ void GameEngineUtils::displayState(string state) {
   cout << "State at: " << state << "\n";
 }
 
-// Displays the list of valid commands
-void GameEngineUtils::listCommands(set<string> validCommandsSet) {
-  bool firstTime = true;
-  std::cout << "List of available commands: {";
-
-  for (set<string>::iterator i = validCommandsSet.begin();
-       i != validCommandsSet.end(); i++) {
-    if (!firstTime) {
-      cout << ", ";
-    } else {
-      firstTime = false;
-    }
-    cout << *i;
-  }
-
-  cout << "}.\n";
-}
-
-// Prompts for the correct command
-string GameEngineUtils::promptCommand(set<string> validCommandsSet) {
-  string command = "";
-  GameEngineUtils::listCommands(validCommandsSet);
-
-  do {
-    if (command != "" &&
-        validCommandsSet.find(command) == validCommandsSet.end()) {
-      cout << "Wrong command. Try again. \n";
-    }
-    cout << "Please enter a command: ";
-    cin >> command;
-  } while (validCommandsSet.find(command) == validCommandsSet.end());
-
-  return command;
-}
-
 // Getter for state
 GameStateEnum GameEngine::getState() { return this->state; }
 
 // Default Constructor for GameEngine
-GameEngine::GameEngine() { this->transition(S_START); }
+GameEngine::GameEngine() { this->setState(S_START); }
 
 // Change the values of the class according to new state
-void GameEngine::transition(GameState::GameStateEnum state) {
+void GameEngine::setState(GameState::GameStateEnum state) {
   this->state = state;
-  this->validCommands = GameEngineAssets::validCommandsMap.at(this->state);
+  this->commands = GameEngineFSA::commandsPerStateMap.at(this->state);
 }
 
 // Runs the GameEngine
@@ -135,10 +101,10 @@ void GameEngine::start() {
 }
 
 // Single method to run the right function according to self state
-void GameEngine::run() { this->runHelper(this->state); }
+void GameEngine::run() { this->execSelector(this->state); }
 
 // Helps run the GameEngine by cascading to the right function
-void GameEngine::runHelper(GameStateEnum state) {
+void GameEngine::execSelector(GameStateEnum state) {
   switch (state) {
     case S_START:
       this->execStart();
@@ -172,72 +138,119 @@ void GameEngine::runHelper(GameStateEnum state) {
   }
 }
 
+// Prompts for the command
+void GameEngine::promptCommand() {
+  string command = "";
+  // this->printCommands();
+
+  do {
+    if (command != "" && this->commands.find(command) == this->commands.end()) {
+      cout << "Wrong command. Try again. \n";
+    }
+    cout << "Please enter a command: ";
+    cin >> command;
+  } while (!handleCommand(command));
+}
+
+// Displays the list of valid commands
+void GameEngine::printCommands() {
+  bool firstTime_noComma = true;
+  std::cout << "List of available commands: ";
+
+  for (set<string>::iterator i = this->commands.begin();
+       i != this->commands.end(); i++) {
+    if (!firstTime_noComma) {
+      cout << ", ";
+    } else {
+      firstTime_noComma = false;
+    }
+    cout << *i;
+  }
+
+  cout << ".\n";
+}
+
 // Handles the mapping between command and state
 bool GameEngine::handleCommand(string command) {
   // Checks if valid command
-  // set<string> validCommands =
-  // GameEngineAssets::validCommandsMap.at(this->state);
+  if (this->commands.find(command) == this->commands.end()) {
+    return false;
+  }
 
   // Transition the state
-  GameStateEnum desiredState = GameEngineAssets::desiredStateMap.at(command);
-  this->runHelper(desiredState);
+  GameStateEnum desiredState = GameEngineFSA::commandToStateMap.at(command);
+  this->setState(desiredState);
 
   return true;
 }
 
 // Returns the list of valid commands
-set<string> GameEngine::getValidCommands() { return this->validCommands; }
+set<string> GameEngine::getCommands() { return this->commands; }
+
+// Overload Stream insertion
+ostream &operator<<(ostream &out, const GameEngine &gameEngine) {
+  out << "Game Engine ";
+  out << "State: " << GameState::getLabel(gameEngine.state) << "\n";
+  out << "Available commands: ";
+
+  bool firstTime_noComma = true;
+
+  for (set<string>::iterator i = gameEngine.commands.begin();
+       i != gameEngine.commands.end(); i++) {
+    if (!firstTime_noComma) {
+      out << ", ";
+    } else {
+      firstTime_noComma = false;
+    }
+    out << *i;
+  }
+
+  out << ".\n";
+
+  return out;
+}
 
 // Executes Start state
 void GameEngine::execStart() {
-  this->transition(S_START);
   // // Exec Start here
 }
 
 // Executes Map Loaded state
 void GameEngine::execMapLoaded() {
-  this->transition(S_MAP_LOADED);
   // // Exec Map loaded here
 }
 
 // Executes Map Validated state
 void GameEngine::execMapValidated() {
-  this->transition(S_MAP_VALIDATED);
   // // Exec Map Validated here
 }
 
 // Executes Players Added state
 void GameEngine::execPlayersAdded() {
-  this->transition(S_PLAYERS_ADDED);
   // // Exec Players Added here
 }
 
 // Executes Assign Reinforcement state
 void GameEngine::execAssignReinforcement() {
-  this->transition(S_ASSIGN_REINFORCEMENT);
   // // Exec Assign Reinforcement here
 }
 
 // Executes Issue Order state
 void GameEngine::execIssueOrders() {
-  this->transition(S_ISSUE_ORDERS);
   // // Exec Issue order here
 }
 
 // Execute Execute Orders state
 void GameEngine::execExecuteOrders() {
-  this->transition(S_EXECUTE_ORDERS);
   // // Exec Execute Orders here
 }
 
 // Execute Win state
 void GameEngine::execWin() {
-  this->transition(S_WIN);
   // // Exec Win here
 }
 
 void GameEngine::execEnd() {
-  this->transition(S_END);
   // // Exec End here
   cout << "Game has ended.\n";
 }
