@@ -41,6 +41,7 @@ const map<GameStateEnum, set<string>> GameEngineFSA::commandsPerStateMap{
     {S_WIN, {"play", "end"}},
 };
 
+// Returns a string label from a GameStateEnum
 string GameState::getLabel(GameStateEnum state) {
   switch (state) {
     case S_START:
@@ -175,7 +176,7 @@ void GameEngine::promptCommand() {
 
   do {
     if (command != "" && commands.find(command) == commands.end()) {
-      cout << "Wrong command. Try again. \n";
+      cout << "Try again.\n";
     }
     cout << "Please enter a command: ";
     cin >> command;
@@ -203,6 +204,7 @@ void GameEngine::printCommands() {
 bool GameEngine::handleCommand(string command) {
   // Checks if valid command
   if (commands.find(command) == commands.end()) {
+    cout << "Invalid Command.\n";
     return false;
   }
 
@@ -256,6 +258,7 @@ void GameEngine::execWin() {
   // // Exec Win here
 }
 
+// Execute End state
 void GameEngine::execEnd() {
   // // Exec End here
   cout << "Game has ended.\n";

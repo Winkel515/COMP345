@@ -33,8 +33,10 @@ class GameEngineFSA {
 
 class GameEngine {
  private:
+  // Attributes
   GameState::GameStateEnum state;
   std::set<std::string> commands;
+  // Methods
   void execSelector(GameState::GameStateEnum);
   void execStart();
   void execMapLoaded();

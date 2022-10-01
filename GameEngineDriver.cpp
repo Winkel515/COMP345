@@ -24,6 +24,9 @@ void testGameStates() {
   std::cout << "New Copy Engine\n";
   std::cout << *copyEngine;
 
+  std::cout << "- Testing GameEngine: Bad Command\n";
+  copyEngine->handleCommand("extremely-bad-command-omg");
+
   delete copyEngine;
 
   std::cout << "- Testing GameEngine: Running Game States\n";
