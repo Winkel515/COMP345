@@ -94,7 +94,7 @@ Map::Map(const Map& m){ // map copy constructor
 
 ostream& operator<<(ostream &strm, const Map &m){ //overloading stream insertion operator
 
-  return strm << m.territories << endl;
+  return strm << m.territories[0] << endl;
 }
 
 void Map::printMap() { // prints the map indicating for each territory the continent, and adjacent territories
