@@ -49,7 +49,9 @@ Card::CardType Card::GetType() const { return TypeOfCard; }
 // mutator methods
 void Card::SetType(Card::CardType type) { TypeOfCard = type; }
 
-// each card has a play() method that enables a player to use it during the game
+// each card has a play() method that enables a player to use it during the
+// game, must give a reference to a deck to put the card back into after the
+// method is called
 void Card::play() {
   switch (TypeOfCard) {
     case Bomb:
@@ -119,7 +121,11 @@ std::ostream& operator<<(std::ostream& out, const Deck& d) {
 }
 
 // deck destructor class
-Deck::~Deck() { std::cout << "Deck destroyed!" << std::endl; }
+Deck::~Deck() {
+  std::cout << "Destroying deck!" << std::endl;
+  for (Card* obj : cards) delete obj;
+  cards.clear();
+}
 
 // draws a random card from the deck
 Card* Deck::draw() {
@@ -138,16 +144,27 @@ void Deck::addCard(Card* card) { cards.push_back(card); }
 void Deck::showCards() {
   std::cout << "Current cards in deck:\n";
   int size = cards.size();
-  for (int i = 0; i < size; i++) {
-    std::cout << "Card " << i + 1 << ": " << *cards[i] << std::endl;
+  if (size > 0) {
+    for (int i = 0; i < size; i++) {
+      std::cout << "Card " << i + 1 << ": " << *cards[i] << std::endl;
+    }
+  } else {
+    std::cout << "No cards left in deck" << std::endl;
   }
 }
+
+// getter method for cards
+std::vector<Card*> Deck::getCards() { return this->cards; }
 
 // hand constructor
 Hand::Hand() {}
 
 //  destructor
-Hand::~Hand() { std::cout << "Hand Destroyed!" << std::endl; }
+Hand::~Hand() {
+  std::cout << "Hand Destroyed!" << std::endl;
+  for (Card* obj : cards) delete obj;
+  cards.clear();
+}
 
 // copy constructor
 Hand::Hand(const Hand& copy) {
@@ -188,25 +205,20 @@ void Hand::drawCard(Deck& deck) { cards.push_back(deck.draw()); }
 void Hand::showCards() {
   std::cout << "Current cards in hand:\n";
   int size = cards.size();
-  for (int i = 0; i < size; i++) {
-    std::cout << "Card " << i + 1 << ": " << *cards[i] << std::endl;
+  if (size > 0) {
+    for (int i = 0; i < size; i++) {
+      std::cout << "Card " << i + 1 << ": " << *cards[i] << std::endl;
+    }
+  } else {
+    std::cout << "No cards left in hand" << std::endl;
   }
 }
 
-// play a card from your hand, must specify which deck to put the card back in
-// once it is used.
-void Hand::playCard(Deck& deck) {
-  std::cout << "Choose a card from your deck that you would like to play by "
-               "entering the number of the card:"
-            << std::endl;
-  this->showCards();
+// get cards method
+std::vector<Card*> Hand::getCards() { return cards; }
 
-  int cardNum;
-  std::cin >> cardNum;
-  std::cout << "playing card number: " << cardNum << std::endl;
-  Card* pickedCard = cards.at(cardNum - 1);
-  cards.erase(cards.begin() + cardNum - 1);
-  pickedCard->play();
-  std::cout << "Placing card back in deck" << std::endl;
-  deck.addCard(pickedCard);
+void Hand::swapCardToDeck(Deck& deck, int indexOfCard) {
+  Card* cardP = cards.at(indexOfCard);
+  cards.erase(cards.begin() + indexOfCard);
+  deck.addCard(cardP);
 }

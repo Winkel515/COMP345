@@ -33,6 +33,7 @@ class Deck {
   void addCardsToDeck();
   void addCard(Card* card);
   void showCards();
+  std::vector<Card*> getCards();
 
  private:
   std::vector<Card*> cards;
@@ -47,7 +48,8 @@ class Hand {
   friend std::ostream& operator<<(std::ostream& out, const Hand& h);
   void drawCard(Deck& deck);
   void showCards();
-  void playCard(Deck& deck);
+  std::vector<Card*> getCards();
+  void swapCardToDeck(Deck& deck, int indexOfCard);
 
  private:
   std::vector<Card*> cards;
