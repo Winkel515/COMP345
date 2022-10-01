@@ -37,6 +37,7 @@ class Map {
     void setWhite(vector<Node*> territoriesCopy);
     void makeBidirectional(vector<Node*> territories);
     unordered_map<string, vector<Node*>> copyContinents(vector <string> continentsNames, vector<Node*> territoriesCopy);
+    friend ostream& operator<<(ostream &strm, const Map &m);
 };
 
 string convertAdjToString(vector<Node*> adj);
