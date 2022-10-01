@@ -19,10 +19,6 @@ enum GameStateEnum {
 std::string getLabel(GameStateEnum);
 };  // namespace GameState
 
-namespace GameEngineUtils {
-void displayState(std::string);
-}  // namespace GameEngineUtils
-
 class GameEngineFSA {
  public:
   static const std::map<GameState::GameStateEnum, std::set<std::string>>
