@@ -1,6 +1,7 @@
 #ifndef CARDS_H
 #define CARDS_H
 #include <iostream>
+#include <string>
 #include <vector>
 
 class Card {
@@ -9,8 +10,9 @@ class Card {
   Card(Card::CardType type);
   Card(const Card& other);
   ~Card();
-  Card& operator= (const Card& copy);
+  Card& operator=(const Card& copy);
   friend std::ostream& operator<<(std::ostream& out, const Card& c);
+  friend std::ostream& operator<<(std::ostream& out, const Card::CardType c);
 
   void SetType(Card::CardType type);
   Card::CardType GetType() const;
@@ -25,10 +27,12 @@ class Deck {
   Deck(int numOfCards);
   Deck(const Deck& other);
   ~Deck();
-  Deck& operator= (const Deck& copy);
+  Deck& operator=(const Deck& copy);
   friend std::ostream& operator<<(std::ostream& out, const Deck& d);
   Card* draw();
-
+  void addCardsToDeck();
+  void addCard(Card* card);
+  void showCards();
 
  private:
   std::vector<Card*> cards;
@@ -36,11 +40,14 @@ class Deck {
 
 class Hand {
  public:
+  Hand();
   ~Hand();
   Hand(const Hand& other);
   Hand& operator=(const Hand& copy);
   friend std::ostream& operator<<(std::ostream& out, const Hand& h);
-  std::vector<Card*> drawCard(Deck deck);
+  void drawCard(Deck& deck);
+  void showCards();
+  void playCard(Deck& deck);
 
  private:
   std::vector<Card*> cards;
