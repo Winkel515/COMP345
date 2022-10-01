@@ -9,13 +9,12 @@ using namespace std;
 class Node {
     public:
       string name;
-      vector<Node*> adj; //need to be pointer to nodes -> Node to Node*
+      vector<Node*> adj;
       string continent;
       string color;
       bool belongsToContinent;
       Node(string name, string continent);
       Node(const Node& n);
-      ~Node();
       Node& operator=(const Node& n);
       friend ostream& operator<<(ostream &strm, const Node &n);
 };
@@ -24,9 +23,9 @@ class Node {
 
 class Map {
   private:
-    vector<Node*> territories; //change Node to Node*
+    vector<Node*> territories;
   public:
-    Map(vector<Node*> territories); //change Node to Node*
+    Map(vector<Node*> territories);
     Map(const Map& m);
     ~Map();
     Map& operator=(const Map& m);

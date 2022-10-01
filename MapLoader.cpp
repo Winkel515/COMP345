@@ -1,3 +1,4 @@
+#include "MapDriver.h"
 #include "MapLoader.h"
 #include <fstream>
 #include <iostream>
@@ -9,6 +10,7 @@ using namespace std;
 
 MapLoader::MapLoader(string fileName) {
   string myText;
+  this->fileName = fileName;
   ifstream MyReadFile(fileName);
   string type;
   unordered_map<string, vector<string>> adjMap;
@@ -17,12 +19,19 @@ MapLoader::MapLoader(string fileName) {
   vector <string> continentsNames;
   vector<Node*> territories;
   vector<Node*> territoriesCopy;
-  
+
+  //parse files data
   if (MyReadFile) {
+    try
+    {
+      bool foundTerritory = false;
       while (getline (MyReadFile, myText)) {
-        //cout << "mytext " << myText;
+        if(myText.empty()){
+          continue;
+        }
         if(myText.compare("[Territories]") == 0) {
           type = "[Territories]";
+          foundTerritory = true;
           continue;
         }
         if(type == "[Territories]") {
@@ -34,13 +43,15 @@ MapLoader::MapLoader(string fileName) {
           
           continentsNames.push_back(territoryData[3]);
 
-
           for(int i = 4; i < territoryData.size(); i++) {
             adjTerritories.push_back(territoryData[i]);
           }
-
           adjMap[territoryData[0]] = adjTerritories;
         }
+      }
+        
+      if(!foundTerritory){
+        throw exception();
       }
 
       //fills adjacency list of each territory
@@ -61,16 +72,31 @@ MapLoader::MapLoader(string fileName) {
         }
       }
 
+      //creates and validates created map
       this->map = new Map(territories);
-      //this->map->printMap();
       this->map->validate(continentsNames);
+    }
+    catch(const std::exception& e)
+    {
+      cout << "The map does not have a correct format" << endl;
+      this->map = NULL;
+    }
   }
-
   else cout << "Unable to open file" << endl;
-  
-
 };
 
+//overload << operator for MapLoader
+ostream& operator<<(ostream &strm, const MapLoader &ml){ //overloading stream insertion operator
+  
+  return strm << ml.fileName << endl;
+}
+
+//MapLoader destructor
+MapLoader::~MapLoader(){
+  delete this->map;
+}
+
+//helper function for parsing
 vector<string> splitString(string s, string delimiter) {
   vector<string> split;
   int start = 0;
@@ -91,53 +117,8 @@ vector<string> splitString(string s, string delimiter) {
   return split;
 }
 
-int main() {
-  
-  cout << "001_I72_Ghtroc 720.map" << endl;
-  new MapLoader("001_I72_Ghtroc 720.map");
-  cout << endl << endl;
 
-  cout << "002_I72_X-29.map" << endl;
-  new MapLoader("002_I72_X-29.map");
-  cout << endl << endl;
-
-  cout << "003_I72_Fairchild T-31.map" << endl;
-  new MapLoader("003_I72_Fairchild T-31.map");
-  cout << endl << endl;
-
-  cout << "004_I72_Cobra.map" << endl;
-  new MapLoader("004_I72_Cobra.map");
-  cout << endl << endl;
-
-  cout << "005_I72_V-22.map" << endl;
-  new MapLoader("005_I72_V-22.map");
-  cout << endl << endl;
-  /*
-  cout << "4D_Hypercube.map" << endl;
-  new MapLoader("4D_Hypercube.map");
-  cout << endl << endl;
-*/
-  cout << "99 Mens Morris.map" << endl;
-  new MapLoader("99 Mens Morris.map");
-  cout << endl << endl;
-
-  cout << "_62_ small - CASTLE MOONBAT.map" << endl;
-  new MapLoader("_62_ small - CASTLE MOONBAT.map");
-  cout << endl << endl;
-/*
-  cout << "3D.map" << endl;
-  new MapLoader("3D.map");
-  cout << endl << endl;
-
-  cout << "3D Cliff.map" << endl;
-  new MapLoader("3D Cliff.map");
-  cout << endl << endl;
-*/
-  cout << "_61_ CASTLE MOONBAT.map" << endl;
-  new MapLoader("_61_ CASTLE MOONBAT.map");
-  cout << endl << endl;
-
-
-
+int main() {  
+  testLoadMaps();
   return 0;
 }
