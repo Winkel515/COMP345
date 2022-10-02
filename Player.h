@@ -35,7 +35,7 @@ class Player {
   std::list<Fake::Territory*> getTeritories();
   std::list<Fake::Order*> getOrders();
   std::list<Fake::Card*> getCards();
+  Player& operator=(const Player& player);
 };
 
-// Overload stream insertion operator
 std::ostream& operator<<(std::ostream& strm, Player& pl);

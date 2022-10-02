@@ -24,6 +24,28 @@ Player(const Player& player) {
   }
 }
 
+// Overloaded Assignment Operator
+Player& Player::operator=(const Player& player) {
+  if (this == &player) return *this;
+
+  tsize = player.getTerritories.size();
+  for (int i = 0; i < tsize; i++) {
+    territories.push_back(new Territory(player.territories[i]));
+  }
+
+  osize = player.getOrders.size();
+  for (int i = 0; i < osize; i++) {
+    orders.push_back(new Order(player.orders[i]));
+  }
+
+  csize = player.getCards().size();
+  for (int i = 0; i < csize; i++) {
+    cards.push_back(new Card(player.cards[i]));
+  }
+
+  return *this;
+}
+
 // Overloaded stream insertion operator
 std::ostream& operator<<(std::ostream& strm, Player& p) {
   strm << "This is the overloaded stream insertion operator" << endl;
