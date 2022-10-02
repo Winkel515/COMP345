@@ -1,5 +1,8 @@
-#include <list>
 #pragma once
+
+#include <iostream>
+#include <list>
+using namespace std;
 
 namespace Fake {
 class Territory {
@@ -29,3 +32,6 @@ class Player {
   void issueOrder();
   void testListOrder();
 };
+
+// Overload stream insertion operator
+std::ostream& operator<<(std::ostream& strm, Player& pl);

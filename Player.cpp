@@ -6,6 +6,13 @@
 
 using namespace std;
 
+// Overload stream insertion operator
+std::ostream& operator<<(std::ostream& strm, Player& p) {
+  strm << "This is the overloaded stream insertion operator" << endl;
+
+  return strm;
+}
+
 namespace PlayerUtils {
 
 // Populate a list of arbitrary territories
