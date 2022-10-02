@@ -36,6 +36,5 @@ class Player {
   std::list<Fake::Order*> getOrders();
   std::list<Fake::Card*> getCards();
   Player& operator=(const Player& player);
+  friend std::ostream& operator<<(std::ostream& strm, Player& pl);
 };
-
-std::ostream& operator<<(std::ostream& strm, Player& pl);
