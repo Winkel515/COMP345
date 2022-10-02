@@ -1,3 +1,4 @@
 # Ignore Build folder
 build
 .vscode/tasks.json
+*.exe
