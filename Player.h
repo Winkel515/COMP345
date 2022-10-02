@@ -31,6 +31,9 @@ class Player {
   std::list<Fake::Territory*> toAttack();
   void issueOrder();
   void testListOrder();
+  std::list<Fake::Territory*> getTeritories();
+  std::list<Fake::Order*> getOrders();
+  std::list<Fake::Card*> getCards();
 };
 
 // Overload stream insertion operator

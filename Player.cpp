@@ -76,3 +76,8 @@ void Player::testListOrder() {
   }
   cout << "\n";
 }
+
+// Getters
+std::list<Fake::Territory*> Player::getTeritories() { return territories; }
+std::list<Fake::Order*> Player::getOrders() { return orders; }
+std::list<Fake::Card*> Player::getCards() { return cards; }
