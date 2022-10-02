@@ -1,76 +1,122 @@
 #include "Orders.h"
 
-class Orders {
- private:
-  string type;
-  int units;
-  int source;  // will change to node once territories are implemented
-  int target;  // same here
-  string orderEffect;
-  enum validTypes { deploy, advance, bomb, blockade, airlift, negotiate };
+#include <sstream>
 
- public:
-  // Order constructor
-  Orders::Orders(string oType, int oUnits, int oSource, int oTarget) {
-    setOrder(oType, oUnits, oSource, oTarget);
-  };
+using namespace std;
 
-  friend ostream &operator<<(ostream &output, const Orders &o) {
-    // Will need to change for different kinds of orders
-    output << "Order " + o.type + " from " + to_string(o.source) + " to " +
-                  to_string(o.target) +
-                  " number of units: " + to_string(o.units);
-    return output;
+// Order constructor
+Order::Order(Order::OrderType type) {
+  cout << type << " Order created with default constructor" << endl;
+  TypeOfOrder = type;
+}
+
+// Order copy constructor
+Order::Order(const Order &order) : TypeOfOrder{order.TypeOfOrder} {
+  cout << order.TypeOfOrder << " Order created with copy constructor" << endl;
+}
+
+// Order assignment operator
+Order &Order::operator=(const Order &order) {
+  TypeOfOrder = order.TypeOfOrder;
+  return *this;
+}
+
+// Order destructor
+Order::~Order() { cout << "Destroyed " << this->GetType() << " Order" << endl; }
+
+// Order insertion stream operator
+ostream &operator<<(ostream &out, const Order &o) {
+  out << o.GetType() << endl;
+  return out;
+}
+
+// Order::OrderType insertion stream operator
+ostream &operator<<(ostream &out, const Order::OrderType ot) {
+  const string orderTypes[] = {"Deploy",   "Advance", "Bomb",
+                               "Blockade", "Airlift", "Negotiate"};
+  return out << orderTypes[ot];
+}
+
+// Validate function
+void Order::validate() {
+  // Will need to check player territories to see if order is valid
+  cout << "Order validated" << endl;
+};
+
+// Execute function
+void Order::execute() {
+  validate();
+  orderEffect = "Order did this";
+  cout << orderEffect << endl;
+};
+
+// Accessor methods
+Order::OrderType Order::GetType() const { return TypeOfOrder; }
+
+// Mutator methods
+void Order::SetType(Order::OrderType type) { TypeOfOrder = type; }
+
+// Default OrderList constructor
+OrdersList::OrdersList() {
+  vector<Order *> o;
+  this->ListOfOrders = o;
+}
+
+// Orderlist copy constructor
+OrdersList::OrdersList(const OrdersList &oL) { ListOfOrders = oL.ListOfOrders; }
+
+// Assignment operator
+OrdersList &OrdersList::operator=(const OrdersList &oL) {
+  if (&oL != this) {
+    this->ListOfOrders = oL.ListOfOrders;
+  }
+  return *this;
+}
+
+void OrdersList::move(int initial, int final) {
+  // Intial index must be lower than size
+  if (initial >= ListOfOrders.size() || initial < 0) return;
+
+  // If final index is out of bounds, use list size as index
+  int newIndex = min(max(final, 0), (int)ListOfOrders.size());
+
+  Order *movedOrder = ListOfOrders[initial];
+  ListOfOrders.erase(ListOfOrders.begin() + initial);
+  ListOfOrders.insert(ListOfOrders.begin() + newIndex, movedOrder);
+};
+
+void OrdersList::remove(int index) {
+  // Index must be lower than size
+  if (index >= ListOfOrders.size() || index < 0) return;
+
+  ListOfOrders.erase(ListOfOrders.begin() + index);
+};
+
+void OrdersList::add(Order *order) {
+  // Not sure if we should add to the begining or the end
+  ListOfOrders.push_back(order);
+};
+
+// OrderList destructor
+OrdersList::~OrdersList() {
+  // Remove all the pointers in the vector
+  for (int i = 0; i < this->ListOfOrders.size(); i++) {
+    delete this->ListOfOrders[i];
+    this->ListOfOrders[i] = nullptr;
+  }
+  this->ListOfOrders.clear();
+}
+
+// Stream insertion operator
+ostream &operator<<(ostream &o, const OrdersList &ol) {
+  stringstream ss;
+
+  ss << "Order list:" << endl;
+
+  for (Order *order : ol.ListOfOrders) {
+    ss << "\t"
+       << "Order " << order->GetType() << " is present in the list,\n";
   }
 
-  // Order member function
-  void Orders::setOrder(string oType, int oUnits, int oSource, int oTarget) {
-    type = oType;
-    units = oUnits;
-    source = oSource;
-    target = oTarget;
-  };
-
-  void Orders::validate(){
-      // Will need territories to check if order is valid
-  };
-
-  void Orders::execute() {
-    orderEffect = "Order successful/unsuccessful";
-
-    cout << orderEffect << endl;
-  };
-};
-
-class OrdersList {
- private:
-  list<Orders *> OrdersList;
-
- public:
-  void OrdersList::move(int initial, int final) {
-    // Declare 2 iterators at the begining of the list
-    list<Orders *>::iterator itInitial = OrdersList.begin();
-    list<Orders *>::iterator itFinal = OrdersList.begin();
-
-    // Move the iterators to the inital and final positions
-    advance(itInitial, initial);
-    advance(itFinal, final);
-
-    // Move the elements with splice function
-    OrdersList.splice(itFinal, OrdersList, itInitial);
-  };
-
-  void OrdersList::remove(int index) {
-    list<Orders *>::iterator it = OrdersList.begin();
-
-    // Move interator to position
-    advance(it, index);
-
-    OrdersList.erase(it);
-  };
-
-  void OrdersList::add(Orders order) {
-    // Not sure if we should add to the begining or the end
-    OrdersList.emplace_back(order);
-  };
-};
+  return o << ss.str() << endl;
+}
