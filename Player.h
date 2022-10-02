@@ -27,6 +27,7 @@ class Player {
   std::list<Fake::Card*> cards;
 
  public:
+  Player(const Player& p);
   std::list<Fake::Territory*> toDefend();
   std::list<Fake::Territory*> toAttack();
   void issueOrder();
