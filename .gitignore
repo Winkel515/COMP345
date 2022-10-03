@@ -1,2 +1,5 @@
 # Ignore Build folder
 build
+
+# Ignore tasks.json
+.vscode/tasks.json
