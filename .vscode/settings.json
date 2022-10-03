@@ -1,13 +1,3 @@
 {
-  "files.associations": {
-    "system_error": "cpp",
-    "new": "cpp",
-    "iostream": "cpp",
-    "xstring": "cpp",
-    "ostream": "cpp",
-    "unordered_map": "cpp",
-    "vector": "cpp",
-    "xhash": "cpp",
-    "iosfwd": "cpp"
-  }
+  "editor.formatOnSave": true,
 }

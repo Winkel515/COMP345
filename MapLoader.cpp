@@ -117,8 +117,3 @@ vector<string> splitString(string s, string delimiter) {
   return split;
 }
 
-
-int main() {  
-  testLoadMaps();
-  return 0;
-}
