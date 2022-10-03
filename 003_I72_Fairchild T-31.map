@@ -1,0 +1,72 @@
+[Map]
+author=Iceworm72
+image=003_I72_Fairchild T-31.bmp
+wrap=no
+scroll=horizontal
+warn=no
+
+[Continents]
+Left Wing=4
+Right Wing=4
+Tail=5
+Engine=3
+Cockpit=6
+Fuselage=8
+
+[Territories]
+Territory01,490,275,Left Wing,Territory09,Territory02,Territory13,Territory53
+Territory02,347,271,Left Wing,Territory03,Territory08,Territory11,Territory01
+Territory03,216,264,Left Wing,Territory04,Territory45,Territory07,Territory02
+Territory04,85,256,Left Wing,Territory05,Territory06,Territory45,Territory03
+Territory05,19,224,Left Wing,Territory06,Territory04,Territory45,Territory10
+Territory06,83,217,Left Wing,Territory05,Territory10,Territory07,Territory04
+Territory07,213,214,Left Wing,Territory06,Territory03,Territory10,Territory08
+Territory08,350,214,Left Wing,Territory07,Territory02,Territory10,Territory09
+Territory09,492,211,Left Wing,Territory10,Territory01,Territory08,Territory53
+Territory10,291,189,Left Wing,Territory05,Territory06,Territory07,Territory08,Territory09,Territory53
+Territory11,402,319,Left Wing,Territory02,Territory13,Territory12
+Territory12,423,350,Left Wing,Territory11,Territory13,Territory45,Territory53
+Territory13,508,325,Left Wing,Territory01,Territory11,Territory12,Territory53
+Territory14,906,189,Right Wing,Territory15,Territory54,Territory16,Territory19,Territory17,Territory18
+Territory15,707,212,Right Wing,Territory54,Territory23,Territory16,Territory14
+Territory16,853,215,Right Wing,Territory15,Territory17,Territory14,Territory22
+Territory17,979,216,Right Wing,Territory16,Territory21,Territory18,Territory14
+Territory18,1115,218,Right Wing,Territory20,Territory19,Territory17,Territory14
+Territory19,1181,218,Right Wing,Territory20,Territory46,Territory18,Territory14
+Territory20,1110,257,Right Wing,Territory46,Territory18,Territory19,Territory21
+Territory21,980,264,Right Wing,Territory22,Territory17,Territory46,Territory20
+Territory22,842,270,Right Wing,Territory25,Territory23,Territory16,Territory21
+Territory23,704,271,Right Wing,Territory54,Territory22,Territory15,Territory24
+Territory24,700,327,Right Wing,Territory54,Territory26,Territory25,Territory23
+Territory25,799,317,Right Wing,Territory26,Territory24,Territory22
+Territory26,775,351,Right Wing,Territory54,Territory25,Territory46,Territory24
+Territory27,668,723,Tail,Territory31,Territory30,Territory28,Territory33
+Territory28,772,673,Tail,Territory27,Territory29,Territory30
+Territory29,721,655,Tail,Territory28,Territory30,Territory32
+Territory30,720,685,Tail,Territory27,Territory31,Territory29,Territory28
+Territory31,644,680,Tail,Territory27,Territory33,Territory32,Territory30
+Territory32,652,643,Tail,Territory31,Territory29,Territory33
+Territory33,611,641,Tail,Territory27,Territory31,Territory32,Territory34,Territory56
+Territory34,593,641,Tail,Territory40,Territory35,Territory36,Territory33,Territory55
+Territory35,548,645,Tail,Territory38,Territory36,Territory34
+Territory36,555,680,Tail,Territory40,Territory37,Territory35,Territory34
+Territory37,478,687,Tail,Territory39,Territory40,Territory36,Territory38
+Territory38,473,657,Tail,Territory39,Territory37,Territory35
+Territory39,430,673,Tail,Territory38,Territory37,Territory40
+Territory40,530,728,Tail,Territory39,Territory37,Territory36,Territory34
+Territory41,578,25,Engine,Territory42,Territory43
+Territory42,621,25,Engine,Territory41,Territory44
+Territory43,573,77,Engine,Territory41,Territory44,Territory53
+Territory44,629,76,Engine,Territory42,Territory43,Territory54
+Territory45,144,311,Left Wing,Territory05,Territory04,Territory03,Territory12
+Territory46,1052,311,Right Wing,Territory26,Territory21,Territory20,Territory19
+Territory47,581,160,Cockpit,Territory49,Territory48,Territory53
+Territory48,618,162,Cockpit,Territory50,Territory47,Territory54
+Territory49,582,273,Cockpit,Territory50,Territory51,Territory47,Territory53
+Territory50,624,272,Cockpit,Territory52,Territory49,Territory48,Territory54
+Territory51,581,403,Cockpit,Territory53,Territory52,Territory49
+Territory52,618,405,Cockpit,Territory54,Territory51,Territory50
+Territory53,577,431,Fuselage,Territory43,Territory54,Territory51,Territory12,Territory13,Territory01,Territory09,Territory10
+Territory54,628,431,Fuselage,Territory44,Territory53,Territory52,Territory56,Territory26,Territory24,Territory23,Territory15
+Territory55,583,510,Fuselage,Territory56,Territory53,Territory34
+Territory56,617,510,Fuselage,Territory33,Territory55,Territory54

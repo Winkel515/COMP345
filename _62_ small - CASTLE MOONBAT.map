@@ -1,0 +1,85 @@
+[Map]
+author=_ MIKE CRUSH _
+image=_62_ small - CASTLE MOONBAT.bmp
+wrap=yes
+scroll=horizontal
+warn=yes
+
+[Continents]
+TOWER LEFT TOP=1
+TOWER LEFT MIDDLE=2
+TOWER LEFT BOTTOM=1
+FLAG=1
+CASTLE TURRETS=1
+DOOR=1
+LEFT OF DOOR=1
+RIGHT OF DOOR=1
+TOWER RIGHT TOP=1
+TOWER RIGHT MIDDLE=2
+TOWER RIGHT BOTTOM=1
+
+[Territories]
+Territory01,95,31,TOWER LEFT TOP,Territory03,Territory02
+Territory02,84,51,TOWER LEFT TOP,Territory03,Territory01,Territory04,Territory05,Territory44
+Territory03,106,52,TOWER LEFT TOP,Territory01,Territory02,Territory05,Territory06
+Territory04,71,78,TOWER LEFT TOP,Territory02,Territory05,Territory07
+Territory05,95,76,TOWER LEFT TOP,Territory02,Territory03,Territory06,Territory04,Territory08
+Territory06,121,76,TOWER LEFT TOP,Territory03,Territory05,Territory09
+Territory07,65,104,TOWER LEFT MIDDLE,Territory04,Territory10,Territory08
+Territory08,96,106,TOWER LEFT MIDDLE,Territory05,Territory11,Territory07,Territory09
+Territory09,126,105,TOWER LEFT MIDDLE,Territory06,Territory12,Territory08
+Territory10,63,136,TOWER LEFT MIDDLE,Territory07,Territory13,Territory53
+Territory11,95,138,TOWER LEFT MIDDLE,Territory08,Territory14
+Territory12,130,135,TOWER LEFT MIDDLE,Territory09,Territory15,Territory26
+Territory13,70,166,TOWER LEFT MIDDLE,Territory10,Territory14,Territory16
+Territory14,97,167,TOWER LEFT MIDDLE,Territory11,Territory13,Territory15,Territory17
+Territory15,125,166,TOWER LEFT MIDDLE,Territory12,Territory14,Territory18,Territory26
+Territory16,68,194,TOWER LEFT BOTTOM,Territory17,Territory13,Territory19
+Territory17,96,196,TOWER LEFT BOTTOM,Territory16,Territory18,Territory14,Territory19,Territory20
+Territory18,123,196,TOWER LEFT BOTTOM,Territory17,Territory15,Territory20,Territory35
+Territory19,78,219,TOWER LEFT BOTTOM,Territory16,Territory17,Territory20,Territory21,Territory22,Territory60
+Territory20,117,219,TOWER LEFT BOTTOM,Territory17,Territory18,Territory19,Territory22,Territory23,Territory34
+Territory21,69,238,TOWER LEFT BOTTOM,Territory19,Territory22
+Territory22,97,240,TOWER LEFT BOTTOM,Territory19,Territory21,Territory20,Territory23
+Territory23,124,238,TOWER LEFT BOTTOM,Territory20,Territory22,Territory37
+Territory24,263,73,FLAG,Territory25
+Territory25,240,78,FLAG,Territory28,Territory24
+Territory26,155,156,CASTLE TURRETS,Territory27,Territory12,Territory15,Territory35
+Territory27,196,159,CASTLE TURRETS,Territory26,Territory28,Territory35,Territory31
+Territory28,241,148,CASTLE TURRETS,Territory27,Territory29,Territory25,Territory31,Territory32,Territory33
+Territory29,290,159,CASTLE TURRETS,Territory28,Territory30,Territory39,Territory32
+Territory30,333,155,CASTLE TURRETS,Territory29,Territory51,Territory54,Territory39
+Territory31,222,215,DOOR,Territory37,Territory36,Territory35,Territory27,Territory28,Territory33
+Territory32,261,216,DOOR,Territory41,Territory38,Territory39,Territory29,Territory28,Territory33
+Territory33,240,204,DOOR,Territory31,Territory32,Territory28
+Territory34,154,217,LEFT OF DOOR,Territory35,Territory37,Territory20
+Territory35,173,193,LEFT OF DOOR,Territory34,Territory36,Territory18,Territory26,Territory27,Territory31
+Territory36,189,218,LEFT OF DOOR,Territory37,Territory35,Territory31
+Territory37,171,240,LEFT OF DOOR,Territory34,Territory36,Territory23,Territory31
+Territory38,292,216,RIGHT OF DOOR,Territory39,Territory41,Territory32
+Territory39,312,192,RIGHT OF DOOR,Territory38,Territory40,Territory57,Territory30,Territory29,Territory32
+Territory40,333,219,RIGHT OF DOOR,Territory39,Territory41,Territory61
+Territory41,312,240,RIGHT OF DOOR,Territory40,Territory38,Territory62,Territory32
+Territory42,392,29,TOWER RIGHT TOP,Territory44,Territory43
+Territory43,381,51,TOWER RIGHT TOP,Territory46,Territory45,Territory44,Territory42
+Territory44,402,51,TOWER RIGHT TOP,Territory47,Territory46,Territory43,Territory42,Territory02
+Territory45,367,75,TOWER RIGHT TOP,Territory48,Territory46,Territory43
+Territory46,393,75,TOWER RIGHT TOP,Territory49,Territory45,Territory47,Territory44,Territory43
+Territory47,418,75,TOWER RIGHT TOP,Territory50,Territory46,Territory44
+Territory48,361,104,TOWER RIGHT MIDDLE,Territory51,Territory49,Territory45
+Territory49,393,105,TOWER RIGHT MIDDLE,Territory52,Territory48,Territory50,Territory46
+Territory50,422,104,TOWER RIGHT MIDDLE,Territory53,Territory49,Territory47
+Territory51,359,136,TOWER RIGHT MIDDLE,Territory54,Territory48,Territory30
+Territory52,391,134,TOWER RIGHT MIDDLE,Territory55,Territory49
+Territory53,426,136,TOWER RIGHT MIDDLE,Territory56,Territory50,Territory10
+Territory54,364,166,TOWER RIGHT MIDDLE,Territory57,Territory55,Territory51,Territory30
+Territory55,392,165,TOWER RIGHT MIDDLE,Territory58,Territory56,Territory54,Territory52
+Territory56,420,167,TOWER RIGHT MIDDLE,Territory59,Territory55,Territory53
+Territory57,365,195,TOWER RIGHT BOTTOM,Territory61,Territory58,Territory54,Territory39
+Territory58,392,195,TOWER RIGHT BOTTOM,Territory60,Territory61,Territory57,Territory59,Territory55
+Territory59,417,195,TOWER RIGHT BOTTOM,Territory60,Territory58,Territory56
+Territory60,413,217,TOWER RIGHT BOTTOM,Territory64,Territory63,Territory59,Territory58,Territory61,Territory19
+Territory61,369,218,TOWER RIGHT BOTTOM,Territory63,Territory62,Territory58,Territory57,Territory60,Territory40
+Territory62,366,238,TOWER RIGHT BOTTOM,Territory63,Territory61,Territory41
+Territory63,393,239,TOWER RIGHT BOTTOM,Territory62,Territory64,Territory60,Territory61
+Territory64,419,239,TOWER RIGHT BOTTOM,Territory63,Territory60

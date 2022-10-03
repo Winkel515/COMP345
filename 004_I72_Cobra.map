@@ -1,0 +1,138 @@
+[Map]
+author=Iceworm72
+image=004_I72_Cobra.bmp
+wrap=no
+scroll=none
+warn=yes
+
+[Continents]
+Eyes=3
+Head=7
+Left Hood=5
+Right Hood=5
+Fangs=2
+Standing Torso=7
+Middle Torso Right=2
+Middle Torso Left=2
+Tail=1
+
+[Territories]
+Territory01,560,50,Left Hood,Territory03,Territory02
+Territory02,553,70,Left Hood,Territory01,Territory14,Territory04,Territory03
+Territory03,572,31,Left Hood,Territory13,Territory06,Territory01,Territory04,Territory02
+Territory04,524,63,Left Hood,Territory03,Territory15,Territory14,Territory02
+Territory05,629,12,Left Hood,Territory26,Territory06
+Territory06,609,32,Left Hood,Territory05,Territory27,Territory13,Territory03
+Territory07,588,157,Head,Territory08,Territory47,Territory11,Territory41
+Territory08,579,123,Eyes,Territory07
+Territory09,604,175,Head,Territory10,Territory47,Territory41,Territory49
+Territory10,612,148,Head,Territory09,Territory11,Territory40,Territory47
+Territory11,607,113,Head,Territory41,Territory10,Territory40,Territory12,Territory07
+Territory12,608,80,Head,Territory11,Territory29,Territory13,Territory41
+Territory13,602,52,Head,Territory12,Territory28,Territory06,Territory03,Territory41
+Territory14,547,92,Left Hood,Territory02,Territory04,Territory16,Territory15
+Territory15,515,102,Left Hood,Territory04,Territory18,Territory16,Territory17,Territory14
+Territory16,545,111,Left Hood,Territory15,Territory14,Territory17
+Territory17,544,133,Left Hood,Territory16,Territory18,Territory20,Territory15
+Territory18,512,127,Left Hood,Territory15,Territory17,Territory20,Territory19
+Territory19,521,166,Left Hood,Territory20,Territory18,Territory23,Territory21
+Territory20,552,162,Left Hood,Territory17,Territory19,Territory18,Territory21
+Territory21,561,186,Left Hood,Territory20,Territory23,Territory19,Territory22
+Territory22,568,211,Left Hood,Territory23,Territory24,Territory21,Territory25
+Territory23,531,202,Left Hood,Territory19,Territory21,Territory22,Territory24
+Territory24,543,231,Left Hood,Territory22,Territory23,Territory37,Territory36,Territory25
+Territory25,577,243,Left Hood,Territory22,Territory24,Territory36
+Territory26,695,17,Right Hood,Territory05,Territory27,Territory44
+Territory27,676,46,Right Hood,Territory26,Territory06,Territory28,Territory45
+Territory28,676,65,Head,Territory27,Territory48,Territory29,Territory13
+Territory29,658,88,Head,Territory48,Territory12,Territory28,Territory40
+Territory30,584,604,Tail,Territory96
+Territory31,320,645,Tail,Territory97,Territory98
+Territory32,380,726,Middle Torso Left,Territory102,Territory101
+Territory33,959,620,Middle Torso Right,Territory107,Territory106
+Territory34,1031,720,Middle Torso Right,Territory111,Territory110
+Territory35,610,206,Fangs,Territory50
+Territory36,590,273,Left Hood,Territory24,Territory25,Territory37,Territory39
+Territory37,576,283,Left Hood,Territory24,Territory36,Territory38,Territory39
+Territory38,596,322,Left Hood,Territory37,Territory39,Territory67,Territory66,Territory72
+Territory39,599,294,Left Hood,Territory36,Territory38,Territory67,Territory66,Territory37
+Territory40,646,119,Head,Territory48,Territory11,Territory29,Territory10,Territory47
+Territory41,579,99,Head,Territory11,Territory09,Territory13,Territory12,Territory07
+Territory42,689,130,Eyes,Territory47,Territory43
+Territory43,715,102,Eyes,Territory47,Territory42,Territory48
+Territory44,758,33,Right Hood,Territory26,Territory45,Territory51,Territory64
+Territory45,739,56,Right Hood,Territory27,Territory44,Territory52,Territory51,Territory48,Territory49
+Territory46,666,210,Fangs,Territory50
+Territory47,669,138,Head,Territory09,Territory42,Territory43,Territory40,Territory07,Territory49,Territory48,Territory10
+Territory48,723,79,Head,Territory43,Territory28,Territory29,Territory40,Territory49,Territory45,Territory47
+Territory49,639,282,Head,Territory50,Territory48,Territory09,Territory47,Territory45
+Territory50,634,223,Fangs,Territory46,Territory35,Territory49
+Territory51,772,59,Right Hood,Territory44,Territory52,Territory45
+Territory52,778,89,Right Hood,Territory51,Territory64,Territory45,Territory53,Territory71
+Territory53,786,123,Right Hood,Territory52,Territory54,Territory63,Territory64,Territory71
+Territory54,783,164,Right Hood,Territory53,Territory63,Territory55,Territory71
+Territory55,771,203,Right Hood,Territory62,Territory54,Territory56,Territory71
+Territory56,751,240,Right Hood,Territory55,Territory60,Territory61,Territory70
+Territory57,728,303,Right Hood,Territory67,Territory61,Territory58,Territory68
+Territory58,728,343,Right Hood,Territory61,Territory57,Territory59,Territory73,Territory66,Territory67
+Territory59,764,290,Right Hood,Territory60,Territory61,Territory58
+Territory60,801,247,Right Hood,Territory62,Territory56,Territory59,Territory61
+Territory61,738,270,Right Hood,Territory60,Territory56,Territory59,Territory58,Territory57,Territory69
+Territory62,817,223,Right Hood,Territory63,Territory60,Territory55
+Territory63,841,123,Right Hood,Territory53,Territory64,Territory62,Territory54
+Territory64,828,76,Right Hood,Territory52,Territory53,Territory44,Territory63
+Territory65,661,401,Standing Torso,Territory66,Territory72,Territory74,Territory76,Territory75,Territory73
+Territory66,660,360,Standing Torso,Territory58,Territory38,Territory72,Territory73,Territory65,Territory67,Territory39
+Territory67,662,319,Standing Torso,Territory38,Territory39,Territory57,Territory68,Territory58,Territory66
+Territory68,702,286,Head,Territory67,Territory69,Territory57
+Territory69,707,255,Head,Territory68,Territory61,Territory70
+Territory70,712,221,Head,Territory56,Territory69,Territory71
+Territory71,725,192,Head,Territory70,Territory55,Territory54,Territory53,Territory52
+Territory72,602,376,Standing Torso,Territory66,Territory65,Territory75,Territory38
+Territory73,725,361,Standing Torso,Territory58,Territory66,Territory74,Territory65
+Territory74,733,408,Standing Torso,Territory65,Territory73,Territory77,Territory76
+Territory75,609,433,Standing Torso,Territory65,Territory72,Territory78,Territory76
+Territory76,676,442,Standing Torso,Territory65,Territory78,Territory77,Territory79,Territory74,Territory75
+Territory77,743,435,Standing Torso,Territory74,Territory76,Territory79,Territory83
+Territory78,622,468,Standing Torso,Territory76,Territory79,Territory75,Territory80
+Territory79,686,472,Standing Torso,Territory77,Territory78,Territory80,Territory76,Territory81
+Territory80,633,493,Standing Torso,Territory79,Territory78,Territory81
+Territory81,704,510,Standing Torso,Territory79,Territory82,Territory80,Territory83
+Territory82,722,551,Standing Torso,Territory81,Territory84,Territory86
+Territory83,760,465,Standing Torso,Territory77,Territory84,Territory81
+Territory84,790,520,Standing Torso,Territory83,Territory82,Territory85
+Territory85,804,566,Standing Torso,Territory84,Territory86,Territory88,Territory87
+Territory86,737,587,Standing Torso,Territory82,Territory85,Territory87,Territory119
+Territory87,745,634,Standing Torso,Territory88,Territory85,Territory86,Territory119,Territory89
+Territory88,815,610,Standing Torso,Territory85,Territory87,Territory89,Territory90
+Territory89,743,684,Standing Torso,Territory119,Territory87,Territory91,Territory90,Territory88
+Territory90,814,691,Standing Torso,Territory89,Territory88,Territory92,Territory91
+Territory91,733,734,Standing Torso,Territory118,Territory119,Territory89,Territory92,Territory93,Territory90
+Territory92,793,746,Standing Torso,Territory90,Territory91,Territory95,Territory93
+Territory93,706,767,Standing Torso,Territory117,Territory118,Territory91,Territory95,Territory94,Territory92
+Territory94,668,787,Standing Torso,Territory117,Territory95,Territory93
+Territory95,768,780,Standing Torso,Territory92,Territory94,Territory93
+Territory96,571,625,Tail,Territory97,Territory30
+Territory97,378,652,Tail,Territory31,Territory96
+Territory98,268,637,Tail,Territory99,Territory31
+Territory99,206,662,Tail,Territory100,Territory98
+Territory100,227,698,Tail,Territory101,Territory99
+Territory101,303,721,Tail,Territory32,Territory100
+Territory102,446,723,Middle Torso Left,Territory103,Territory32
+Territory103,514,705,Middle Torso Left,Territory104,Territory102
+Territory104,574,685,Middle Torso Left,Territory105,Territory103
+Territory105,602,646,Middle Torso Left,Territory106,Territory104
+Territory106,897,613,Middle Torso Right,Territory33,Territory105
+Territory107,1013,628,Middle Torso Right,Territory108,Territory33
+Territory108,1063,632,Middle Torso Right,Territory109,Territory107
+Territory109,1104,646,Middle Torso Right,Territory110,Territory108
+Territory110,1095,712,Middle Torso Right,Territory34,Territory109
+Territory111,960,702,Middle Torso Right,Territory112,Territory34
+Territory112,904,677,Middle Torso Right,Territory113,Territory111
+Territory113,840,654,Middle Torso Right,Territory114,Territory112
+Territory114,666,617,Standing Torso,Territory113,Territory115
+Territory115,635,665,Standing Torso,Territory114,Territory116
+Territory116,629,709,Standing Torso,Territory115,Territory117,Territory118,Territory119
+Territory117,618,743,Standing Torso,Territory116,Territory94,Territory93,Territory118
+Territory118,650,718,Standing Torso,Territory116,Territory93,Territory91,Territory117,Territory119
+Territory119,669,677,Standing Torso,Territory116,Territory91,Territory89,Territory87,Territory86,Territory118

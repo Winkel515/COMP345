@@ -1,3 +1,5 @@
+#include "CardsDriver.h"
+
 #include <iostream>
 
 #include "Cards.h"
@@ -29,4 +31,3 @@ void testCards() {
 
   d1.showCards();
 }
-int main() { testCards(); }
