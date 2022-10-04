@@ -3,8 +3,8 @@
 #include <iostream>
 #include <list>
 
-#include "Cards.h"
-#include "Map.h"
+class Card;
+class Node;
 using namespace std;
 
 class Player {

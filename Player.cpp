@@ -4,6 +4,9 @@
 #include <iostream>
 #include <list>
 
+#include "Cards.h"
+#include "Map.h"
+
 using namespace std;
 
 // Overloaded stream insertion operator
@@ -19,12 +22,15 @@ Player::Player(int nTerritories) {
   int i = 0;
   while (i < nTerritories) {
     territories.push_back(new Node("Territory" + i, "Some Continent"));
+    i++;
   }
 }
 
 int main() {
   Player* p1 = new Player(3);
-  cout << p1;
+  cout << *p1 << endl;
+
+  cout << "Hello from main";
   return 0;
 }
 

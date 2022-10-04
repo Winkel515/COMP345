@@ -1,6 +1,7 @@
 {
   "editor.formatOnSave": true,
   "files.associations": {
-    "list": "cpp"
+    "list": "cpp",
+    "iostream": "cpp"
   }
 }
