@@ -14,30 +14,46 @@ std::ostream& operator<<(std::ostream& strm, Player& player) {
   strm << "This is the overloaded stream insertion operator" << endl;
   strm << endl << "List of player's territories: " << endl << endl;
 
-  std::list<Node*>::iterator it;
-  for (it = player.territories.begin(); it != player.territories.end(); ++it) {
-    strm << **it << endl;
+  // Insert Territory list to stream
+  std::list<Node*>::iterator it1;
+  for (it1 = player.territories.begin(); it1 != player.territories.end();
+       ++it1) {
+    strm << **it1 << endl;
+    ;
+  }
+
+  // Insert Card list to stream
+  std::list<Card*>::iterator it2;
+  for (it2 = player.cards.begin(); it2 != player.cards.end(); ++it2) {
+    strm << **it2 << endl;
     ;
   }
 
   return strm;
 }
 
-// Default constructor creating arbitrary list of Terriotires
-Player::Player(int nTerritories) {
-  // Populate list of Territories randomly.
+// Constructor to create player with arbitrary list of Territories and Cards.
+Player::Player(int nTerritories, int nCards) {
+  // Populate list of Territories.
   int i = 0;
   while (i < nTerritories) {
-    territories.push_back(new Node("Territory" + i, "Some Continent"));
+    territories.push_back(
+        new Node("Territory " + to_string(i + 1), "Some Continent"));
+    i++;
+  }
+
+  // Populate list of Cards randomly.
+  i = 0;
+  while (i < nCards) {
+    cards.push_back(new Card(static_cast<Card::CardType>(rand() % 5)));
     i++;
   }
 }
 
 int main() {
-  Player* p1 = new Player(3);
-  cout << *p1 << endl;
+  Player* p1 = new Player(5, 4);
+  cout << *p1;
 
-  cout << "Hello from main";
   return 0;
 }
 

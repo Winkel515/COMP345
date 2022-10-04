@@ -13,7 +13,7 @@ class Player {
   std::list<Card*> cards;
 
  public:
-  Player(int nTerritories);
+  Player(int nTerritories, int nCards);
   Player(const Player& p);
   std::list<Node*> toDefend();
   std::list<Node*> toAttack();
