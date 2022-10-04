@@ -2,39 +2,23 @@
 
 #include <iostream>
 #include <list>
+
+#include "Cards.h"
+#include "Map.h"
 using namespace std;
 
-namespace Fake {
-class Territory {
- public:
-  int value;
-};
-
-class Order {
- public:
-  int value;
-};
-
-class Card {
- public:
-  int value;
-};
-};  // namespace Fake
-
 class Player {
-  std::list<Fake::Territory*> territories;
-  std::list<Fake::Order*> orders;
-  std::list<Fake::Card*> cards;
+  std::list<Node*> territories;
+  // std::list<Order*> orders;
+  std::list<Card*> cards;
 
  public:
+  Player(int nTerritories);
   Player(const Player& p);
-  std::list<Fake::Territory*> toDefend();
-  std::list<Fake::Territory*> toAttack();
+  std::list<Node*> toDefend();
+  std::list<Node*> toAttack();
   void issueOrder();
   void testListOrder();
-  std::list<Fake::Territory*> getTeritories();
-  std::list<Fake::Order*> getOrders();
-  std::list<Fake::Card*> getCards();
   Player& operator=(const Player& player);
   friend std::ostream& operator<<(std::ostream& strm, Player& pl);
 };
