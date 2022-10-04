@@ -50,12 +50,12 @@ Player::Player(int nTerritories, int nCards) {
   }
 }
 
-int main() {
-  Player* p1 = new Player(5, 4);
-  cout << *p1;
+// int main() {
+//   Player* p1 = new Player(5, 4);
+//   cout << *p1;
 
-  return 0;
-}
+//   return 0;
+// }
 
 // Copy Constructor
 
