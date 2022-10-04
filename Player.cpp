@@ -10,8 +10,15 @@
 using namespace std;
 
 // Overloaded stream insertion operator
-std::ostream& operator<<(std::ostream& strm, Player& p) {
+std::ostream& operator<<(std::ostream& strm, Player& player) {
   strm << "This is the overloaded stream insertion operator" << endl;
+  strm << endl << "List of player's territories: " << endl << endl;
+
+  std::list<Node*>::iterator it;
+  for (it = player.territories.begin(); it != player.territories.end(); ++it) {
+    strm << **it << endl;
+    ;
+  }
 
   return strm;
 }
