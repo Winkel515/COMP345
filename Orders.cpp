@@ -11,7 +11,7 @@ Order::Order(Order::OrderType type) {
 }
 
 // Order copy constructor
-Order::Order(const Order &order) : TypeOfOrder{order.TypeOfOrder} {
+Order::Order(const Order &order) : TypeOfOrder(order.TypeOfOrder) {
   cout << order.TypeOfOrder << " Order created with copy constructor" << endl;
 }
 
@@ -89,6 +89,8 @@ void OrdersList::remove(int index) {
   // Index must be lower than size
   if (index >= ListOfOrders.size() || index < 0) return;
 
+  // Delete the pointer
+  delete ListOfOrders[index];
   ListOfOrders.erase(ListOfOrders.begin() + index);
 };
 

@@ -18,6 +18,9 @@ void testOrdersList() {
   std::cout << testList;
 
   testList.move(0, 5);
+
+  std::cout << testList;
+
   testList.remove(2);
 
   std::cout << testList;
