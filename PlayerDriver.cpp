@@ -17,7 +17,7 @@ void testPlayers() {
 
   // issue arbitrary order
   (*p1).issueOrder();
-  cout << *p1;
+  cout << (*p1);
 
   cout << endl << "====================================" << endl;
   cout << endl << "Demonstrating toAttack() method" << endl;

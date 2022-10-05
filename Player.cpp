@@ -3,6 +3,7 @@
 #include <cstdlib>
 #include <iostream>
 #include <list>
+#include <vector>
 
 #include "Cards.h"
 #include "Map.h"
@@ -33,10 +34,7 @@ std::ostream& operator<<(std::ostream& strm, Player& player) {
   }
 
   strm << endl << "List of player's orders: " << endl;
-  for (std::list<Order*>::iterator it3 = player.orders.begin();
-       it3 != player.orders.end(); ++it3) {
-    strm << **it3;
-  }
+  strm << *player.orders;
 
   return strm;
 }
@@ -54,10 +52,11 @@ Player::Player(int nTerritories, int nCards, int nOrders) {
     i++;
   }
 
-  // Populate list of Orders randomly.
+  // Populate OrdersList with random Orders
+  orders = new OrdersList();
   i = 0;
   while (i < nOrders) {
-    orders.push_back(new Order(static_cast<Order::OrderType>(rand() % 6)));
+    (*orders).add(new Order(static_cast<Order::OrderType>(rand() % 5)));
     i++;
   }
 }
@@ -75,8 +74,9 @@ list<Node*> Player::toAttack() {
 list<Node*> Player::toDefend() { return territories; };
 
 void Player::issueOrder() {
-  // Adds a random order.
-  orders.push_back(new Order(static_cast<Order::OrderType>(rand() % 6)));
+  // Create and add random order to List of Orders
+  Order* newOrder = new Order(static_cast<Order::OrderType>(rand() % 6));
+  (*orders).add(newOrder);
 }
 
 //=======================================================

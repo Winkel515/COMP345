@@ -5,12 +5,13 @@
 
 class Card;
 class Node;
-class Order;
+class OrdersList;
+class Orders;
 using namespace std;
 
 class Player {
   std::list<Node*> territories;
-  std::list<Order*> orders;
+  OrdersList* orders;
   std::list<Card*> cards;
 
  public:
