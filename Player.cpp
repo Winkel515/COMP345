@@ -19,23 +19,6 @@ using namespace std;
 //   return 0;
 // }
 
-// Overloaded stream insertion operator
-std::ostream& operator<<(std::ostream& strm, Player& player) {
-  strm << endl << "List of player's territories: " << endl;
-  for (std::list<Node*>::iterator it1 = player.territories.begin();
-       it1 != player.territories.end(); ++it1) {
-    strm << **it1;
-  }
-
-  // strm << endl << "List of player's cards: " << endl;
-  // strm << *player.cards;
-
-  strm << endl << "List of player's orders: " << endl;
-  strm << *player.orders;
-
-  return strm;
-}
-
 // Constructor to create player with arbitrary list of Territory, Card and
 // Order pointers.
 Player::Player(int nTerritories, int nCards, int nOrders) {
@@ -63,6 +46,19 @@ Player::Player(int nTerritories, int nCards, int nOrders) {
     i++;
   }
 }
+
+// //TODO: Decide whether to make deep or shallow copies of lists.
+// // Copy Constructor
+// Player::Player(const Player& player) {
+//   // Making new pointers to all territories in player's territory list.
+//   territories = player.territories;
+
+//   // Overloaded = in Hand class creates deep copy
+//   *cards = *player.cards;
+
+//   // Overloaded = in OrdersList class creates shallow copy
+//   *orders = *player.orders;
+// }
 
 // Returns a list of Territories to Attack
 list<Node*> Player::toAttack() {
@@ -100,63 +96,35 @@ list<Node*> createTerritoryList(int nTerritories) {
 
 //=========================================================
 
-// Copy Constructor
+// Overloaded stream insertion operator
+std::ostream& operator<<(std::ostream& strm, Player& player) {
+  strm << endl << "List of player's territories: " << endl;
+  for (std::list<Node*>::iterator it1 = player.territories.begin();
+       it1 != player.territories.end(); ++it1) {
+    strm << **it1;
+  }
 
-// Player(const Player& player) {
-//   int tsize = player.getTerritories.size();
-//   for (int i = 0; i < tsize; i++) {
-//     territories.push_back(new Territory(player.territories[i]));
-//   }
+  // strm << endl << "List of player's cards: " << endl;
+  // strm << *player.cards;
 
-//   int osize = player.getOrders.size();
-//   for (int i = 0; i < osize; i++) {
-//     orders.push_back(new Order(player.orders[i]));
-//   }
+  strm << endl << "List of player's orders: " << endl;
+  strm << *player.orders;
 
-//   int csize = player.getCards().size();
-//   for (int i = 0; i < csize; i++) {
-//     cards.push_back(new Card(player.cards[i]));
-//   }
-// }
+  return strm;
+}
 
 // Overloaded Assignment Operator
+Player& Player::operator=(const Player& player) {
+  if (this == &player) return *this;
 
-// Player& Player::operator=(const Player& player) {
-//   if (this == &player) return *this;
+  // Shallow copy of territory list
+  territories = player.territories;
 
-//   tsize = player.getTerritories.size();
-//   for (int i = 0; i < tsize; i++) {
-//     territories.push_back(new Territory(player.territories[i]));
-//   }
+  // Overloaded = in Hand class creates deep copy
+  *cards = *player.cards;
 
-//   osize = player.getOrders.size();
-//   for (int i = 0; i < osize; i++) {
-//     orders.push_back(new Order(player.orders[i]));
-//   }
+  // Overloaded = in OrdersList class creates shallow copy
+  *orders = *player.orders;
 
-//   csize = player.getCards().size();
-//   for (int i = 0; i < csize; i++) {
-//     cards.push_back(new Card(player.cards[i]));
-//   }
-
-//   return *this;
-// }
-
-// // Creates a new order in the Order List
-// void Player::issueOrder() {
-//   Fake::Order* order = new Fake::Order;
-//   order->value = rand() % 100;
-
-//   this->orders.push_back(order);
-// };
-
-// // Lists all the orders in Order List
-// void Player::testListOrder() {
-//   list<Fake::Order*> orders = this->orders;
-//   cout << "List orders: ";
-//   for (list<Fake::Order*>::iterator i = orders.begin(); i != orders.end();
-//        i++) {
-//     cout << "Order " << ((Fake::Order*)*i)->value << " ";
-//   }
-//   cout << "\n";
-// }
+  return *this;
+}

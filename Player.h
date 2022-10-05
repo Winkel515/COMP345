@@ -16,7 +16,7 @@ class Player {
 
  public:
   Player(int nTerritories, int nCards, int nOrders);
-  Player(const Player& p);
+  Player(const Player& player);
   std::list<Node*> toDefend();
   std::list<Node*> toAttack();
   void issueOrder();
