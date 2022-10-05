@@ -6,35 +6,46 @@
 
 #include "Cards.h"
 #include "Map.h"
+#include "Orders.h"
 #include "PlayerDriver.h"
 
 using namespace std;
 
 // Overloaded stream insertion operator
 std::ostream& operator<<(std::ostream& strm, Player& player) {
-  strm << "This is the overloaded stream insertion operator" << endl;
-  strm << endl << "List of player's territories: " << endl << endl;
+  strm << endl
+       << "Using overloaded Stream Insertion Operator for Player" << endl;
+  strm << endl << "List of player's territories: " << endl;
 
   // Insert Territory list to stream
   std::list<Node*>::iterator it1;
   for (it1 = player.territories.begin(); it1 != player.territories.end();
        ++it1) {
-    strm << **it1 << endl;
-    ;
+    strm << **it1;
   }
+
+  strm << endl << "List of player's cards: " << endl;
 
   // Insert Card list to stream
   std::list<Card*>::iterator it2;
   for (it2 = player.cards.begin(); it2 != player.cards.end(); ++it2) {
-    strm << **it2 << endl;
-    ;
+    strm << **it2;
+  }
+
+  strm << endl << "List of player's orders: " << endl;
+
+  // Insert Order list to stream
+  std::list<Order*>::iterator it3;
+  for (it3 = player.orders.begin(); it3 != player.orders.end(); ++it3) {
+    strm << **it3;
   }
 
   return strm;
 }
 
-// Constructor to create player with arbitrary list of Territories and Cards.
-Player::Player(int nTerritories, int nCards) {
+// Constructor to create player with arbitrary list of Territory, Card and
+// Order pointers.
+Player::Player(int nTerritories, int nCards, int nOrders) {
   // Populate list of Territories.
   territories = createTerritoryList(nTerritories);
 
@@ -42,6 +53,13 @@ Player::Player(int nTerritories, int nCards) {
   int i = 0;
   while (i < nCards) {
     cards.push_back(new Card(static_cast<Card::CardType>(rand() % 5)));
+    i++;
+  }
+
+  // Populate list of Orders randomly.
+  i = 0;
+  while (i < nOrders) {
+    orders.push_back(new Order(static_cast<Order::OrderType>(rand() % 6)));
     i++;
   }
 }
@@ -54,16 +72,17 @@ list<Node*> Player::toAttack() {
   return territoriesToAttack;
 };
 
-// int main() {
-//   testPlayers();
+int main() {
+  testPlayers();
 
-//   return 0;
-// }
+  return 0;
+}
 
 // Helper method to create territory list
 list<Node*> createTerritoryList(int nTerritories) {
-  int i = 0;
   list<Node*> territories;
+
+  int i = 0;
   while (i < nTerritories) {
     territories.push_back(
         new Node("Territory " + to_string(i + 1), "Some Continent"));

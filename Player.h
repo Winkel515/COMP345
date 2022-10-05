@@ -5,15 +5,16 @@
 
 class Card;
 class Node;
+class Order;
 using namespace std;
 
 class Player {
   std::list<Node*> territories;
-  // std::list<Order*> orders;
+  std::list<Order*> orders;
   std::list<Card*> cards;
 
  public:
-  Player(int nTerritories, int nCards);
+  Player(int nTerritories, int nCards, int nOrders);
   Player(const Player& p);
   std::list<Node*> toDefend();
   std::list<Node*> toAttack();
