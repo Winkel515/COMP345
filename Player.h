@@ -6,13 +6,13 @@
 class Card;
 class Node;
 class OrdersList;
-class Orders;
+class Hand;
 using namespace std;
 
 class Player {
   std::list<Node*> territories;
   OrdersList* orders;
-  std::list<Card*> cards;
+  Hand* cards;
 
  public:
   Player(int nTerritories, int nCards, int nOrders);

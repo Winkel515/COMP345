@@ -27,11 +27,8 @@ std::ostream& operator<<(std::ostream& strm, Player& player) {
     strm << **it1;
   }
 
-  strm << endl << "List of player's cards: " << endl;
-  for (std::list<Card*>::iterator it2 = player.cards.begin();
-       it2 != player.cards.end(); ++it2) {
-    strm << **it2;
-  }
+  // strm << endl << "List of player's cards: " << endl;
+  // strm << *player.cards;
 
   strm << endl << "List of player's orders: " << endl;
   strm << *player.orders;
@@ -45,18 +42,24 @@ Player::Player(int nTerritories, int nCards, int nOrders) {
   // Populate list of Territories.
   territories = createTerritoryList(nTerritories);
 
-  // Populate list of Cards randomly.
+  // ***********Populate list of Cards randomly.*****************
   int i = 0;
-  while (i < nCards) {
-    cards.push_back(new Card(static_cast<Card::CardType>(rand() % 5)));
-    i++;
-  }
+  // Deck* fakeDeck = new Deck(3);
+  // cout << "Finished creating deck, now draw cards " << endl;
+  // while (i < nCards) {
+  //   cout << "Drawing cards, i = " + to_string(i) << endl;
+  //   (*cards).drawCard(*fakeDeck);
+  //   i++;
+  //   cout << "end of while loop, i = " + to_string(i) << endl;
+  // }
+
+  cout << "Finished adding cards, soon to create orders" << endl;
 
   // Populate OrdersList with random Orders
   orders = new OrdersList();
   i = 0;
   while (i < nOrders) {
-    (*orders).add(new Order(static_cast<Order::OrderType>(rand() % 5)));
+    (*orders).add(new Order(static_cast<Order::OrderType>(rand() % 6)));
     i++;
   }
 }
