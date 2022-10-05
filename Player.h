@@ -22,3 +22,5 @@ class Player {
   Player& operator=(const Player& player);
   friend std::ostream& operator<<(std::ostream& strm, Player& pl);
 };
+
+list<Node*> createTerritoryList(int nTerritories);

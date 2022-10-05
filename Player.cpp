@@ -6,6 +6,7 @@
 
 #include "Cards.h"
 #include "Map.h"
+#include "PlayerDriver.h"
 
 using namespace std;
 
@@ -35,27 +36,44 @@ std::ostream& operator<<(std::ostream& strm, Player& player) {
 // Constructor to create player with arbitrary list of Territories and Cards.
 Player::Player(int nTerritories, int nCards) {
   // Populate list of Territories.
-  int i = 0;
-  while (i < nTerritories) {
-    territories.push_back(
-        new Node("Territory " + to_string(i + 1), "Some Continent"));
-    i++;
-  }
+  territories = createTerritoryList(nTerritories);
 
   // Populate list of Cards randomly.
-  i = 0;
+  int i = 0;
   while (i < nCards) {
     cards.push_back(new Card(static_cast<Card::CardType>(rand() % 5)));
     i++;
   }
 }
 
+// // Returns a list of Territories to Attack
+list<Node*> Player::toAttack() {
+  // Populate list of Territories.
+  list<Node*> territoriesToAttack = createTerritoryList(5);
+
+  return territoriesToAttack;
+};
+
 // int main() {
-//   Player* p1 = new Player(5, 4);
-//   cout << *p1;
+//   testPlayers();
 
 //   return 0;
 // }
+
+// Helper method to create territory list
+list<Node*> createTerritoryList(int nTerritories) {
+  int i = 0;
+  list<Node*> territories;
+  while (i < nTerritories) {
+    territories.push_back(
+        new Node("Territory " + to_string(i + 1), "Some Continent"));
+    i++;
+  }
+
+  return territories;
+}
+
+//=========================================================
 
 // Copy Constructor
 
