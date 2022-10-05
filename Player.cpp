@@ -74,6 +74,13 @@ list<Node*> Player::toAttack() {
 // territories)
 list<Node*> Player::toDefend() { return territories; };
 
+void Player::issueOrder() {
+  // Adds a random order.
+  orders.push_back(new Order(static_cast<Order::OrderType>(rand() % 6)));
+}
+
+//=======================================================
+
 // Helper method to create territory list
 list<Node*> createTerritoryList(int nTerritories) {
   list<Node*> territories;
@@ -131,51 +138,6 @@ list<Node*> createTerritoryList(int nTerritories) {
 
 //   return *this;
 // }
-
-// namespace PlayerUtils {
-
-// // Populate a list of arbitrary territories
-// list<Fake::Territory*> getArbitraryTerritories(int size) {
-//   list<Fake::Territory*> territories;
-
-//   int counter = 0;
-//   while (counter <= size) {
-//     Fake::Territory* territory = new Fake::Territory;
-//     territory->value = rand() % 100;
-
-//     counter++;
-
-//     territories.push_back(territory);
-//   }
-//   return territories;
-// }
-
-// // Outputs a list of Fake Territories
-// void printTerritories(list<Fake::Territory*> territories) {
-//   for (list<Fake::Territory*>::iterator i = territories.begin();
-//        i != territories.end(); i++) {
-//     cout << "Territory " << ((Fake::Territory*)*i)->value << " ";
-//   }
-
-//   cout << "\n";
-// }
-// }  // namespace PlayerUtils
-
-// // Returns a list of Territories to Defend
-// list<Fake::Territory*> Player::toDefend() {
-//   list<Fake::Territory*> territories =
-//   PlayerUtils::getArbitraryTerritories(3); cout << "Defending ";
-//   PlayerUtils::printTerritories(territories);
-//   return territories;
-// };
-
-// // Returns a list of Territories to Attack
-// list<Fake::Territory*> Player::toAttack() {
-//   list<Fake::Territory*> territories =
-//   PlayerUtils::getArbitraryTerritories(4); cout << "Attacking ";
-//   PlayerUtils::printTerritories(territories);
-//   return territories;
-// };
 
 // // Creates a new order in the Order List
 // void Player::issueOrder() {

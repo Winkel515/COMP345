@@ -13,6 +13,13 @@ void testPlayers() {
   cout << *p1;
 
   cout << endl << "====================================" << endl;
+  cout << endl << "Demonstrating issueOrder() method for Player 1" << endl;
+
+  // issue arbitrary order
+  (*p1).issueOrder();
+  cout << *p1;
+
+  cout << endl << "====================================" << endl;
   cout << endl << "Demonstrating toAttack() method" << endl;
   list<Node*> toAttack = (*p1).toAttack();
   for (std::list<Node*>::iterator it1 = toAttack.begin(); it1 != toAttack.end();
