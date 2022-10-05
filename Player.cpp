@@ -11,32 +11,30 @@
 
 using namespace std;
 
+// // Test main for Player Functionality
+// int main() {
+//   testPlayers();
+
+//   return 0;
+// }
+
 // Overloaded stream insertion operator
 std::ostream& operator<<(std::ostream& strm, Player& player) {
-  strm << endl
-       << "Using overloaded Stream Insertion Operator for Player" << endl;
   strm << endl << "List of player's territories: " << endl;
-
-  // Insert Territory list to stream
-  std::list<Node*>::iterator it1;
-  for (it1 = player.territories.begin(); it1 != player.territories.end();
-       ++it1) {
+  for (std::list<Node*>::iterator it1 = player.territories.begin();
+       it1 != player.territories.end(); ++it1) {
     strm << **it1;
   }
 
   strm << endl << "List of player's cards: " << endl;
-
-  // Insert Card list to stream
-  std::list<Card*>::iterator it2;
-  for (it2 = player.cards.begin(); it2 != player.cards.end(); ++it2) {
+  for (std::list<Card*>::iterator it2 = player.cards.begin();
+       it2 != player.cards.end(); ++it2) {
     strm << **it2;
   }
 
   strm << endl << "List of player's orders: " << endl;
-
-  // Insert Order list to stream
-  std::list<Order*>::iterator it3;
-  for (it3 = player.orders.begin(); it3 != player.orders.end(); ++it3) {
+  for (std::list<Order*>::iterator it3 = player.orders.begin();
+       it3 != player.orders.end(); ++it3) {
     strm << **it3;
   }
 
@@ -64,7 +62,7 @@ Player::Player(int nTerritories, int nCards, int nOrders) {
   }
 }
 
-// // Returns a list of Territories to Attack
+// Returns a list of Territories to Attack
 list<Node*> Player::toAttack() {
   // Populate list of Territories.
   list<Node*> territoriesToAttack = createTerritoryList(5);
@@ -72,11 +70,9 @@ list<Node*> Player::toAttack() {
   return territoriesToAttack;
 };
 
-int main() {
-  testPlayers();
-
-  return 0;
-}
+// Returns a list of Territories to Defend (All of the player's currently owned
+// territories)
+list<Node*> Player::toDefend() { return territories; };
 
 // Helper method to create territory list
 list<Node*> createTerritoryList(int nTerritories) {
