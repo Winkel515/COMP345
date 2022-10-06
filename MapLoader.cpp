@@ -1,108 +1,106 @@
-#include "MapDriver.h"
 #include "MapLoader.h"
+
 #include <fstream>
 #include <iostream>
 #include <string>
 #include <unordered_map>
 
+#include "MapDriver.h"
 
 using namespace std;
 
-MapLoader::MapLoader(string fileName) {
+MapLoader::MapLoader(string fileName) {  // TODO: Put this into Map.cpp
   string myText;
   this->fileName = fileName;
   ifstream MyReadFile(fileName);
   string type;
   unordered_map<string, vector<string>> adjMap;
-  unordered_map<string, Node*> territoryMap;
-  unordered_map<string, vector<Node*>> continentsCopy;
-  vector <string> continentsNames;
-  vector<Node*> territories;
-  vector<Node*> territoriesCopy;
+  unordered_map<string, Node *> territoryMap;
+  unordered_map<string, vector<Node *>> continentsCopy;
+  vector<string> continentsNames;
+  vector<Node *> territories;
+  vector<Node *> territoriesCopy;
 
-  //parse files data
+  // parse files data
   if (MyReadFile) {
-    try
-    {
+    try {
       bool foundTerritory = false;
-      while (getline (MyReadFile, myText)) {
-        if(myText.empty()){
+      while (getline(MyReadFile, myText)) {
+        if (myText.empty()) {
           continue;
         }
-        if(myText.compare("[Territories]") == 0) {
+        if (myText.compare("[Territories]") == 0) {
           type = "[Territories]";
           foundTerritory = true;
           continue;
         }
-        if(type == "[Territories]") {
+        if (type == "[Territories]") {
           vector<string> territoryData = splitString(myText, ",");
           vector<string> adjTerritories;
           Node *n = new Node(territoryData[0], territoryData[3]);
           territories.push_back(n);
           territoryMap[territoryData[0]] = n;
-          
+
           continentsNames.push_back(territoryData[3]);
 
-          for(int i = 4; i < territoryData.size(); i++) {
+          for (int i = 4; i < territoryData.size(); i++) {
             adjTerritories.push_back(territoryData[i]);
           }
           adjMap[territoryData[0]] = adjTerritories;
         }
       }
-        
-      if(!foundTerritory){
+
+      if (!foundTerritory) {
         throw exception();
       }
 
-      //fills adjacency list of each territory
-      for(int i = 0; i < territories.size(); i++) {
-        vector<string> adj = adjMap[(*territories[i]).name]; 
-        for(int j = 0; j < adj.size(); j++) {
+      // fills adjacency list of each territory
+      for (int i = 0; i < territories.size(); i++) {
+        vector<string> adj = adjMap[(*territories[i]).name];
+        for (int j = 0; j < adj.size(); j++) {
           (*territories[i]).adj.push_back(territoryMap[adj[j]]);
         }
       }
 
-      //remove duplicates continents name -> change to set if time
-      for(int i = 0; i < continentsNames.size(); i++){
-        for(int j = i + 1; j < continentsNames.size(); j++){
-           if(continentsNames[i] == continentsNames[j]){
-            continentsNames.erase(continentsNames.begin()+j);
+      // remove duplicates continents name -> change to set if time
+      for (int i = 0; i < continentsNames.size(); i++) {
+        for (int j = i + 1; j < continentsNames.size(); j++) {
+          if (continentsNames[i] == continentsNames[j]) {
+            continentsNames.erase(continentsNames.begin() + j);
             j--;
-           }
+          }
         }
       }
 
-      //creates and validates created map
+      // creates and validates created map
       this->map = new Map(territories);
       this->map->validate(continentsNames);
-    }
-    catch(const std::exception& e)
-    {
+    } catch (const std::exception &e) {
       cout << "The map does not have a correct format" << endl;
       this->map = NULL;
     }
-  }
-  else cout << "Unable to open file" << endl;
+  } else
+    cout << "Unable to open file" << endl;
 };
 
-//overload << operator for MapLoader
-ostream& operator<<(ostream &strm, const MapLoader &ml){ //overloading stream insertion operator
-  
+// overload << operator for MapLoader
+ostream &operator<<(
+    ostream &strm,
+    const MapLoader &ml) {  // overloading stream insertion operator
+
   return strm << ml.fileName << endl;
 }
 
-//MapLoader destructor
-MapLoader::~MapLoader(){
-  delete this->map;
-}
+// MapLoader destructor
+MapLoader::~MapLoader() { delete this->map; }
 
-//helper function for parsing
+// helper function for parsing
 vector<string> splitString(string s, string delimiter) {
   vector<string> split;
   int start = 0;
-  for(int i = 0; i < s.size() - delimiter.size();) {
-    if(delimiter.compare(s.substr(i,delimiter.size())) == 0) {
-      split.push_back(s.substr(start, i-start));
+  for (int i = 0; i < s.size() - delimiter.size();) {
+    if (delimiter.compare(s.substr(i, delimiter.size())) == 0) {
+      split.push_back(s.substr(start, i - start));
       i = i + delimiter.size();
       start = i;
     } else {
@@ -110,10 +108,9 @@ vector<string> splitString(string s, string delimiter) {
     }
   }
 
-  if(start < s.size()) {
-    split.push_back(s.substr(start, s.size()-start));
+  if (start < s.size()) {
+    split.push_back(s.substr(start, s.size() - start));
   }
 
   return split;
 }
-

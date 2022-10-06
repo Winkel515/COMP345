@@ -142,8 +142,7 @@ void Map::printMap() {
   for (int i = 0; i < territories.size(); i++) {
     cout << "Continent: " << (*territories[i]).continent << " Territory "
          << (*territories[i]).name << " -> "
-         << convertAdjToString((*territories[i]).adj)
-         << endl;  //<< convertAdjToString((*territories[i]).(*adj)) << endl;
+         << convertAdjToString((*territories[i]).adj) << endl;
   }
 }
 

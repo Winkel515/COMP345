@@ -6,7 +6,7 @@
 class Player;
 using namespace std;
 
-class Node {
+class Node {  // TODO: Change Node to Territory
  public:
   string name;
   vector<Node*> adj;

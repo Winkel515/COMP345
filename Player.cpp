@@ -12,15 +12,18 @@
 
 using namespace std;
 
-// // Test main for Player Functionality
-// int main() {
-//   testPlayers();
+// TODO: Delete Main, transfer to main.cpp
+//  // Test main for Player Functionality
+//  int main() {
+//    testPlayers();
 
 //   return 0;
 // }
 
-// Constructor to create player with arbitrary list of Territory, Card and
-// Order pointers.
+// Default Constructor
+Player::Player() {}
+
+// Constructor for testing purposes
 Player::Player(int nTerritories, int nCards, int nOrders) {
   // Populate list of Territories.
   territories = createTerritoryList(nTerritories);
@@ -47,54 +50,21 @@ Player::Player(int nTerritories, int nCards, int nOrders) {
   }
 }
 
-// //TODO: Decide whether to make deep or shallow copies of lists.
-// // Copy Constructor
-// Player::Player(const Player& player) {
-//   // Making new pointers to all territories in player's territory list.
-//   territories = player.territories;
-
-//   // Overloaded = in Hand class creates deep copy
-//   *cards = *player.cards;
-
-//   // Overloaded = in OrdersList class creates shallow copy
-//   *orders = *player.orders;
-// }
-
-// Returns a list of Territories to Attack
-list<Node*> Player::toAttack() {
-  // Populate list of Territories.
-  list<Node*> territoriesToAttack = createTerritoryList(5);
-
-  return territoriesToAttack;
-};
-
-// Returns a list of Territories to Defend (All of the player's currently owned
-// territories)
-list<Node*> Player::toDefend() { return territories; };
-
-void Player::issueOrder() {
-  // Create and add random order to List of Orders
-  Order* newOrder = new Order(static_cast<Order::OrderType>(rand() % 6));
-  (*orders).add(newOrder);
+// Copy Constructor makes shallow copies of members because we want functions to
+// be able to change the pointed to values.
+Player::Player(const Player& player) {  // TODO: Change to copy constructors.
+  territories = player.territories;     // Shallow copy
+  *cards = *player.cards;               // Shallow copy
+  *orders = *player.orders;             // Shallow copy
 }
 
-//=======================================================
-
-// Helper method to create territory list
-list<Node*> createTerritoryList(int nTerritories) {
-  list<Node*> territories;
-
-  int i = 0;
-  while (i < nTerritories) {
-    territories.push_back(
-        new Node("Territory " + to_string(i + 1), "Some Continent"));
-    i++;
-  }
-
-  return territories;
+// Destructor
+Player::~Player() {
+  delete orders;
+  // Iterate through and call method to put back cards. In Hand class.: void
+  // swapCardToDeck(Deck& deck, int indexOfCard);
+  delete cards;
 }
-
-//=========================================================
 
 // Overloaded stream insertion operator
 std::ostream& operator<<(std::ostream& strm, Player& player) {
@@ -117,14 +87,46 @@ std::ostream& operator<<(std::ostream& strm, Player& player) {
 Player& Player::operator=(const Player& player) {
   if (this == &player) return *this;
 
-  // Shallow copy of territory list
-  territories = player.territories;
-
-  // Overloaded = in Hand class creates deep copy
-  *cards = *player.cards;
-
-  // Overloaded = in OrdersList class creates shallow copy
-  *orders = *player.orders;
+  territories = player.territories;  // Shallow copy
+  *cards = *player.cards;            // shallow copy
+  *orders = *player.orders;          // Shallow copy
 
   return *this;
+}
+
+// ====================================================
+
+// Returns a list of Territories to Attack
+list<Node*> Player::toAttack() {
+  list<Node*> territoriesToAttack = createTerritoryList(5);
+  return territoriesToAttack;
+};
+
+// Returns a list of Territories to Defend (All of the player's currently owned
+// territories)
+list<Node*> Player::toDefend() { return territories; };
+
+void Player::issueOrder(Order* newOrder) { (*orders).add(newOrder); }
+
+// For Testing:
+void Player::issueOrder() {
+  // Create and add random order to List of Orders
+  Order* newOrder = new Order(static_cast<Order::OrderType>(rand() % 6));
+  (*orders).add(newOrder);
+}
+
+//=======================================================
+
+// Helper method to create territory list
+list<Node*> createTerritoryList(int nTerritories) {
+  list<Node*> territories;
+
+  int i = 0;
+  while (i < nTerritories) {
+    territories.push_back(
+        new Node("Territory " + to_string(i + 1), "Some Continent"));
+    i++;
+  }
+
+  return territories;
 }
