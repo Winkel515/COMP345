@@ -16,6 +16,7 @@ class Player {
   Hand* cards;
 
  public:
+  Player();
   Player(int nTerritories, int nCards, int nOrders);
   Player(const Player& player);
   ~Player();

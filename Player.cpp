@@ -19,8 +19,10 @@ using namespace std;
 //   return 0;
 // }
 
-// Constructor to create player with arbitrary list of Territory, Card and
-// Order pointers.
+// Default Constructor
+Player::Player() {}
+
+// Constructor for testing purposes
 Player::Player(int nTerritories, int nCards, int nOrders) {
   // Populate list of Territories.
   territories = createTerritoryList(nTerritories);
@@ -47,18 +49,13 @@ Player::Player(int nTerritories, int nCards, int nOrders) {
   }
 }
 
-// //TODO: Decide whether to make deep or shallow copies of lists.
-// // Copy Constructor
-// Player::Player(const Player& player) {
-//   // Making new pointers to all territories in player's territory list.
-//   territories = player.territories;
-
-//   // Overloaded = in Hand class creates deep copy
-//   *cards = *player.cards;
-
-//   // Overloaded = in OrdersList class creates shallow copy
-//   *orders = *player.orders;
-// }
+// Copy Constructor makes shallow copies of members because we want functions to
+// be able to change the pointed to values.
+Player::Player(const Player& player) {
+  territories = player.territories;  // Shallow copy
+  *cards = *player.cards;            // Deep copy, should be shallow?
+  *orders = *player.orders;          // Shallow copy
+}
 
 // Destructor
 Player::~Player() {
