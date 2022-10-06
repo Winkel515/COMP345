@@ -6,6 +6,8 @@
 
 #include "Orders.h"
 
+class Deck;
+class Hand;
 class Card {
  public:
   enum CardType { Bomb, Reinforcement, Blockade, Airlift, Diplomacy };

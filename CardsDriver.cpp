@@ -24,7 +24,7 @@ void testCards() {
   for (int i = 0; i < sizeOfHand; i++) {
     player.showCards();
     Card* cardP = player.getCards().at(0);
-    cardP->play();
+    cardP->play(d1);
     // remove card from hand and place in deck
     player.swapCardToDeck(d1, 0);
   }

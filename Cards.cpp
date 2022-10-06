@@ -55,39 +55,43 @@ void Card::SetType(Card::CardType type) { TypeOfCard = type; }
 // game, must give a reference to a deck to put the card back into after the
 // method is called
 Order* Card::play(Deck& deck) {
+  Order* order{};
   switch (TypeOfCard) {
     case Bomb:
       std::cout << "Special bomb order created\n";
       // create card order
-      Order* order = new Order(Order::Bomb);  // allocated on the heap
+      order = new Order(Order::Bomb);  // allocated on the heap
       // place card back in the deck
       deck.addCard(this);
       return order;
       break;
     case Reinforcement:
       std::cout << "Special Reinforcement order created\n";
-      Order* order = new Order(Order::Deploy);
+      order = new Order(Order::Deploy);
       deck.addCard(this);
       return order;
       break;
     case Blockade:
       std::cout << "Special Blockade order created\n";
-      Order* order = new Order(Order::Blockade);
+      order = new Order(Order::Blockade);
       deck.addCard(this);
       return order;
       break;
     case Airlift:
       std::cout << "Special Airlift order created\n";
-      Order* order = new Order(Order::Airlift);
+      order = new Order(Order::Airlift);
       deck.addCard(this);
       return order;
       break;
     case Diplomacy:
       std::cout << "Special Diplomacy order created\n";
-      Order* order = new Order(Order::Negotiate);
+      order = new Order(Order::Negotiate);
       deck.addCard(this);
       return order;
       break;
+    default:
+      std::cout << "Card class error, wrong type" << std::endl;
+      return order;
   }
 }
 
@@ -142,7 +146,10 @@ std::ostream& operator<<(std::ostream& out, const Deck& d) {
 // deck destructor class
 Deck::~Deck() {
   std::cout << "Destroying deck!" << std::endl;
-  for (Card* obj : cards) delete obj;
+  for (Card* obj : cards) {
+    delete obj;
+    obj = nullptr;
+  }
   cards.clear();
 }
 
