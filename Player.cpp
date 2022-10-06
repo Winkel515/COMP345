@@ -60,11 +60,45 @@ Player::Player(int nTerritories, int nCards, int nOrders) {
 //   *orders = *player.orders;
 // }
 
+// Destructor
+Player::~Player() {
+  delete orders;
+  delete cards;
+}
+
+// Overloaded stream insertion operator
+std::ostream& operator<<(std::ostream& strm, Player& player) {
+  strm << endl << "List of player's territories: " << endl;
+  for (std::list<Node*>::iterator it1 = player.territories.begin();
+       it1 != player.territories.end(); ++it1) {
+    strm << **it1;
+  }
+
+  // strm << endl << "List of player's cards: " << endl;
+  // strm << *player.cards;
+
+  strm << endl << "List of player's orders: " << endl;
+  strm << *player.orders;
+
+  return strm;
+}
+
+// Overloaded Assignment Operator
+Player& Player::operator=(const Player& player) {
+  if (this == &player) return *this;
+
+  territories = player.territories;  // Shallow copy
+  *cards = *player.cards;            // Deep Copy. Should be Shallow?
+  *orders = *player.orders;          // Shallow copy
+
+  return *this;
+}
+
+// ====================================================
+
 // Returns a list of Territories to Attack
 list<Node*> Player::toAttack() {
-  // Populate list of Territories.
   list<Node*> territoriesToAttack = createTerritoryList(5);
-
   return territoriesToAttack;
 };
 
@@ -95,39 +129,4 @@ list<Node*> createTerritoryList(int nTerritories) {
   }
 
   return territories;
-}
-
-//=========================================================
-
-// Overloaded stream insertion operator
-std::ostream& operator<<(std::ostream& strm, Player& player) {
-  strm << endl << "List of player's territories: " << endl;
-  for (std::list<Node*>::iterator it1 = player.territories.begin();
-       it1 != player.territories.end(); ++it1) {
-    strm << **it1;
-  }
-
-  // strm << endl << "List of player's cards: " << endl;
-  // strm << *player.cards;
-
-  strm << endl << "List of player's orders: " << endl;
-  strm << *player.orders;
-
-  return strm;
-}
-
-// Overloaded Assignment Operator
-Player& Player::operator=(const Player& player) {
-  if (this == &player) return *this;
-
-  // Shallow copy of territory list
-  territories = player.territories;
-
-  // Overloaded = in Hand class creates deep copy
-  *cards = *player.cards;
-
-  // Overloaded = in OrdersList class creates shallow copy
-  *orders = *player.orders;
-
-  return *this;
 }
