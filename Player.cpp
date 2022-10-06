@@ -12,9 +12,10 @@
 
 using namespace std;
 
-// // Test main for Player Functionality
-// int main() {
-//   testPlayers();
+// TODO: Delete Main, transfer to main.cpp
+//  // Test main for Player Functionality
+//  int main() {
+//    testPlayers();
 
 //   return 0;
 // }
@@ -51,15 +52,17 @@ Player::Player(int nTerritories, int nCards, int nOrders) {
 
 // Copy Constructor makes shallow copies of members because we want functions to
 // be able to change the pointed to values.
-Player::Player(const Player& player) {
-  territories = player.territories;  // Shallow copy
-  *cards = *player.cards;            // Deep copy, should be shallow?
-  *orders = *player.orders;          // Shallow copy
+Player::Player(const Player& player) {  // TODO: Change to copy constructors.
+  territories = player.territories;     // Shallow copy
+  *cards = *player.cards;               // Shallow copy
+  *orders = *player.orders;             // Shallow copy
 }
 
 // Destructor
 Player::~Player() {
   delete orders;
+  // Iterate through and call method to put back cards. In Hand class.: void
+  // swapCardToDeck(Deck& deck, int indexOfCard);
   delete cards;
 }
 
@@ -85,7 +88,7 @@ Player& Player::operator=(const Player& player) {
   if (this == &player) return *this;
 
   territories = player.territories;  // Shallow copy
-  *cards = *player.cards;            // Deep Copy. Should be Shallow?
+  *cards = *player.cards;            // shallow copy
   *orders = *player.orders;          // Shallow copy
 
   return *this;

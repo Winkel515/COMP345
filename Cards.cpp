@@ -118,7 +118,7 @@ Deck::Deck(const Deck& other) {
 }
 
 // deck overloading assignment= apperator
-Deck& Deck::operator=(const Deck& copy) {
+Deck& Deck::operator=(const Deck& copy) {  // TODO: Shallow
   if (this == &copy) return *this;
 
   // copy values
@@ -194,7 +194,7 @@ Hand::Hand(const Hand& copy) {
   }
 }
 // assignment operator overloading
-Hand& Hand::operator=(const Hand& copy) {
+Hand& Hand::operator=(const Hand& copy) {  // TODO: Shallow Copy
   if (this == &copy) return *this;
 
   // copy values
