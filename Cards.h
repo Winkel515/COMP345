@@ -4,6 +4,8 @@
 #include <string>
 #include <vector>
 
+#include "Orders.h"
+
 class Card {
  public:
   enum CardType { Bomb, Reinforcement, Blockade, Airlift, Diplomacy };
@@ -16,7 +18,7 @@ class Card {
 
   void SetType(Card::CardType type);
   Card::CardType GetType() const;
-  void play();
+  Order* play(Deck& deck);
 
  private:
   Card::CardType TypeOfCard;
