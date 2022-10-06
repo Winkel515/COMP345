@@ -72,6 +72,9 @@ list<Node*> Player::toAttack() {
 // territories)
 list<Node*> Player::toDefend() { return territories; };
 
+void Player::issueOrder(Order* newOrder) { (*orders).add(newOrder); }
+
+// For Testing:
 void Player::issueOrder() {
   // Create and add random order to List of Orders
   Order* newOrder = new Order(static_cast<Order::OrderType>(rand() % 6));

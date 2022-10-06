@@ -19,7 +19,8 @@ class Player {
   Player(const Player& player);
   std::list<Node*> toDefend();
   std::list<Node*> toAttack();
-  void issueOrder();
+  void issueOrder(Order* newOrder);
+  void issueOrder();  // For Testing
   void testListOrder();
   Player& operator=(const Player& player);
   friend std::ostream& operator<<(std::ostream& strm, Player& pl);
