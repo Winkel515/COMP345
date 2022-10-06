@@ -4,6 +4,8 @@
 #include <string>
 #include <vector>
 
+#include "Orders.h"
+
 // Card constructor
 Card::Card(Card::CardType type) {
   std::cout << "Card created with default constructor" << std::endl;
@@ -52,22 +54,39 @@ void Card::SetType(Card::CardType type) { TypeOfCard = type; }
 // each card has a play() method that enables a player to use it during the
 // game, must give a reference to a deck to put the card back into after the
 // method is called
-void Card::play() {
+Order* Card::play(Deck& deck) {
   switch (TypeOfCard) {
     case Bomb:
       std::cout << "Special bomb order created\n";
+      // create card order
+      Order* order = new Order(Order::Bomb);  // allocated on the heap
+      // place card back in the deck
+      deck.addCard(this);
+      return order;
       break;
     case Reinforcement:
       std::cout << "Special Reinforcement order created\n";
+      Order* order = new Order(Order::Deploy);
+      deck.addCard(this);
+      return order;
       break;
     case Blockade:
-      std::cout << "Special Reinforcement order created\n";
+      std::cout << "Special Blockade order created\n";
+      Order* order = new Order(Order::Blockade);
+      deck.addCard(this);
+      return order;
       break;
     case Airlift:
       std::cout << "Special Airlift order created\n";
+      Order* order = new Order(Order::Airlift);
+      deck.addCard(this);
+      return order;
       break;
     case Diplomacy:
       std::cout << "Special Diplomacy order created\n";
+      Order* order = new Order(Order::Negotiate);
+      deck.addCard(this);
+      return order;
       break;
   }
 }
