@@ -7,6 +7,7 @@ class Card;
 class Node;
 class OrdersList;
 class Hand;
+class Order;
 using namespace std;
 
 class Player {
