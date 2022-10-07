@@ -52,10 +52,10 @@ Player::Player(int nTerritories, int nCards, int nOrders) {
 
 // Copy Constructor makes shallow copies of members because we want functions to
 // be able to change the pointed to values.
-Player::Player(const Player& player) {  // TODO: Change to copy constructors.
-  territories = player.territories;     // Shallow copy
-  *cards = *player.cards;               // Shallow copy
-  *orders = *player.orders;             // Shallow copy
+Player::Player(const Player& player) {
+  territories = player.territories;
+  *cards = Hand(*player.cards);
+  *orders = OrdersList(*player.orders);
 }
 
 // Destructor
