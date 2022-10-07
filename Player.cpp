@@ -28,16 +28,16 @@ Player::Player(int nTerritories, int nCards, int nOrders) {
   // Populate list of Territories.
   territories = createTerritoryList(nTerritories);
 
-  // ***********Populate list of Cards randomly.*****************
+  // TODO: Fix this section:
   int i = 0;
-  // Deck* fakeDeck = new Deck(3);
-  // cout << "Finished creating deck, now draw cards " << endl;
-  // while (i < nCards) {
-  //   cout << "Drawing cards, i = " + to_string(i) << endl;
-  //   (*cards).drawCard(*fakeDeck);
-  //   i++;
-  //   cout << "end of while loop, i = " + to_string(i) << endl;
-  // }
+  Deck* fakeDeck = new Deck(3);
+  cout << "Finished creating deck, now draw cards " << endl;
+  while (i < nCards) {
+    cout << "Drawing cards, i = " + to_string(i) << endl;
+    // (*cards).drawCard(*fakeDeck); //TODO: Fix this line
+    i++;
+    cout << "end of while loop, i = " + to_string(i) << endl;
+  }
 
   cout << "Finished adding cards, soon to create orders" << endl;
 
