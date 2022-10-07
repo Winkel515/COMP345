@@ -4,14 +4,14 @@
 #include <list>
 
 class Card;
-class Node;
+class Territory;
 class OrdersList;
 class Hand;
 class Order;
 using namespace std;
 
 class Player {
-  std::list<Node*> territories;
+  std::list<Territory*> territories;
   OrdersList* orders;
   Hand* cards;
 
@@ -20,8 +20,8 @@ class Player {
   Player(int nTerritories, int nCards, int nOrders);
   Player(const Player& player);
   ~Player();
-  std::list<Node*> toDefend();
-  std::list<Node*> toAttack();
+  std::list<Territory*> toDefend();
+  std::list<Territory*> toAttack();
   void issueOrder(Order* newOrder);
   void issueOrder();  // For Testing
   void testListOrder();
@@ -29,4 +29,4 @@ class Player {
   friend std::ostream& operator<<(std::ostream& strm, Player& pl);
 };
 
-list<Node*> createTerritoryList(int nTerritories);
+list<Territory*> createTerritoryList(int nTerritories);

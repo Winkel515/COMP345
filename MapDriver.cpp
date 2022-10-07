@@ -1,15 +1,17 @@
 #include "MapDriver.h"
-#include "MapLoader.h"
+
 #include <fstream>
 #include <iostream>
 #include <string>
 
-//free function to test sample files
-void testLoadMaps(){
+#include "Map.h"
+
+// free function to test sample files
+void testLoadMaps() {
   cout << "001_I72_Ghtroc 720.map" << endl;
   MapLoader("001_I72_Ghtroc 720.map");
   cout << endl << endl;
-  
+
   cout << "002_I72_X-29.map" << endl;
   MapLoader("002_I72_X-29.map");
   cout << endl << endl;
@@ -25,7 +27,7 @@ void testLoadMaps(){
   cout << "005_I72_V-22.map" << endl;
   MapLoader("005_I72_V-22.map");
   cout << endl << endl;
-  
+
   cout << "4D_Hypercube.map" << endl;
   MapLoader("4D_Hypercube.map");
   cout << endl << endl;

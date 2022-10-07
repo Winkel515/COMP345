@@ -1,16 +1,20 @@
 #include "Map.h"
 
+#include <fstream>
+#include <iostream>
 #include <set>
+#include <string>
 #include <unordered_map>
 #include <vector>
 
 #include "Cards.h"
+#include "MapDriver.h"
 #include "Orders.h"
 #include "Player.h"
 
 using namespace std;
 
-Node::Node(
+Territory::Territory(
     string name,
     string continent) {  // node constructor, each node represent a territory
   this->name = name;
@@ -18,63 +22,73 @@ Node::Node(
   this->continent = continent;
   this->color = "WHITE";
   this->belongsToContinent = false;
-  this->owner;
-  this->numArmies;
+  this->owner = NULL;
+  this->numArmies = 0;
 }
 
-Node& Node::operator=(
-    const Node& n) {  // overloading assignment operator for node
+Territory& Territory::operator=(
+    const Territory& n) {  // overloading assignment operator for node
   this->name = n.name;
   this->adj = {};
   this->continent = n.continent;
   this->color = n.color;
   this->belongsToContinent = n.belongsToContinent;
-  // this->owner = new Player(*n.owner);
+  if (n.owner == NULL) {
+    this->owner = NULL;
+  } else {
+    this->owner = new Player(*n.owner);
+  }
+
   this->numArmies = n.numArmies;
   return *this;
 }
 
-Node::Node(const Node& n) {  // node copy constructor
+Territory::Territory(const Territory& n) {  // node copy constructor
   this->name = n.name;
   this->adj = {};
   this->continent = n.continent;
   this->color = n.color;
   this->belongsToContinent = n.belongsToContinent;
-  // this->owner = new Player(*n.owner);
+  if (n.owner == NULL) {
+    this->owner = NULL;
+  } else {
+    this->owner = new Player(*n.owner);
+  }
   this->numArmies = n.numArmies;
 }
 
 // setter for owner
-void Node::setOwner(Player* _owner) { this->owner = _owner; }
+void Territory::setOwner(Player* _owner) { this->owner = _owner; }
 
 // getter for owner
-Player* Node::getOwner() { return this->owner; }
+Player* Territory::getOwner() { return this->owner; }
 
 // setter for number of armies
-void Node::setNumArmies(int _numArmies) { this->numArmies = _numArmies; }
+void Territory::setNumArmies(int _numArmies) { this->numArmies = _numArmies; }
 
 // getter for number of armies
-int Node::getNumArmies() { return this->numArmies; }
+int Territory::getNumArmies() { return this->numArmies; }
 
-ostream& operator<<(ostream& strm,
-                    const Node& n) {  // overloading stream insertion operator
+ostream& operator<<(
+    ostream& strm,
+    const Territory& n) {  // overloading stream insertion operator
 
   return strm << "continent: " << n.continent << " Territory: " << n.name << " "
               << convertAdjToString(n.adj) << endl;
 }
 
-Map::Map(vector<Node*> territories) {  // Map constructor
+Map::Map(vector<Territory*> territories) {  // Map constructor
   this->territories = territories;
 }
 
 Map& Map::operator=(const Map& m) {  // overloading assignment operator for map
-  unordered_map<string, Node*> territoryMap;
+  unordered_map<string, Territory*> territoryMap;
   unordered_map<string, vector<string>> adjMap;
 
   // generating copied nodes
   this->territories = {};
   for (int i = 0; i < m.territories.size(); i++) {
-    Node* copyTerritory = new Node(*(m.territories[i]));
+    Territory* copyTerritory = new Territory(*(m.territories[i]));
     territoryMap[copyTerritory->name] = copyTerritory;
     territories.push_back(copyTerritory);
     vector<string> adjTerritories;
@@ -95,13 +109,13 @@ Map& Map::operator=(const Map& m) {  // overloading assignment operator for map
 }
 
 Map::Map(const Map& m) {  // map copy constructor
-  unordered_map<string, Node*> territoryMap;
+  unordered_map<string, Territory*> territoryMap;
   unordered_map<string, vector<string>> adjMap;
 
   // generating copied nodes
   this->territories = {};
   for (int i = 0; i < m.territories.size(); i++) {
-    Node* copyTerritory = new Node(*(m.territories[i]));
+    Territory* copyTerritory = new Territory(*(m.territories[i]));
     territoryMap[copyTerritory->name] = copyTerritory;
     territories.push_back(copyTerritory);
     vector<string> adjTerritories;
@@ -147,7 +161,7 @@ void Map::printMap() {
 }
 
 // set color of all territory to white
-void Map::setWhite(vector<Node*> territoriesCopy) {
+void Map::setWhite(vector<Territory*> territoriesCopy) {
   for (int i = 0; i < territoriesCopy.size(); i++) {
     if (territoriesCopy[i]->color != "WHITE") {
       territoriesCopy[i]->color = "WHITE";
@@ -156,7 +170,7 @@ void Map::setWhite(vector<Node*> territoriesCopy) {
 }
 
 // makes the copy graph bidirectional
-void Map::makeBidirectional(vector<Node*> territoriesCopy) {
+void Map::makeBidirectional(vector<Territory*> territoriesCopy) {
   for (int i = 0; i < territoriesCopy.size(); i++) {
     for (int j = 0; j < (*territoriesCopy[i]).adj.size(); j++) {
       for (int k = 0; k < territoriesCopy.size(); k++) {
@@ -181,9 +195,9 @@ void Map::makeBidirectional(vector<Node*> territoriesCopy) {
 }
 
 // makes a map of continents
-unordered_map<string, vector<Node*>> Map::copyContinents(
-    vector<string> continentsNames, vector<Node*> territoriesCopy) {
-  unordered_map<string, vector<Node*>> continentsCopy;
+unordered_map<string, vector<Territory*>> Map::copyContinents(
+    vector<string> continentsNames, vector<Territory*> territoriesCopy) {
+  unordered_map<string, vector<Territory*>> continentsCopy;
 
   for (int i = 0; i < continentsNames.size(); i++) {
     continentsCopy[continentsNames[i]] = {};
@@ -201,7 +215,7 @@ unordered_map<string, vector<Node*>> Map::copyContinents(
 void Map::validate(vector<string> continentsNames) {
   Map* copyMap = new Map(*this);
   makeBidirectional(copyMap->territories);
-  unordered_map<string, vector<Node*>> continentsCopy =
+  unordered_map<string, vector<Territory*>> continentsCopy =
       copyContinents(continentsNames, copyMap->territories);
   bool incorrectMap = false;
   int count = 0;
@@ -322,47 +336,48 @@ void Map::validate(vector<string> continentsNames) {
   delete copyMap;
 }
 
-void Map::dfs(
-    int currentNode,
-    vector<Node*> territoriesCopy) {  // dfs algorithm used for the complete map
+void Map::dfs(int currentTerritory,
+              vector<Territory*>
+                  territoriesCopy) {  // dfs algorithm used for the complete map
 
-  territoriesCopy[currentNode]->color = "GRAY";
+  territoriesCopy[currentTerritory]->color = "GRAY";
 
-  for (int i = 0; i < territoriesCopy[currentNode]->adj.size(); i++) {
-    if (territoriesCopy[currentNode]->adj[i]->color == "WHITE") {
+  for (int i = 0; i < territoriesCopy[currentTerritory]->adj.size(); i++) {
+    if (territoriesCopy[currentTerritory]->adj[i]->color == "WHITE") {
       for (int j = 0; j < territoriesCopy.size(); j++) {
         if (territoriesCopy[j]->name ==
-            territoriesCopy[currentNode]->adj[i]->name) {
+            territoriesCopy[currentTerritory]->adj[i]->name) {
           dfs(j, territoriesCopy);
           break;
         }
       }
     }
   }
-  territoriesCopy[currentNode]->color = "BLACK";
+  territoriesCopy[currentTerritory]->color = "BLACK";
 }
 
-void Map::dfs_sub(
-    int currentNode,
-    vector<Node*> continentsCopy) {  // dfs algorithm used for the continents
-  continentsCopy[currentNode]->color = "GRAY";
+void Map::dfs_sub(int currentTerritory,
+                  vector<Territory*> continentsCopy) {  // dfs algorithm used
+                                                        // for the continents
+  continentsCopy[currentTerritory]->color = "GRAY";
 
-  for (int i = 0; i < continentsCopy[currentNode]->adj.size(); i++) {
-    if (continentsCopy[currentNode]->adj[i]->color == "WHITE") {
+  for (int i = 0; i < continentsCopy[currentTerritory]->adj.size(); i++) {
+    if (continentsCopy[currentTerritory]->adj[i]->color == "WHITE") {
       for (int j = 0; j < continentsCopy.size(); j++) {
         if (continentsCopy[j]->name ==
-            continentsCopy[currentNode]->adj[i]->name) {
+            continentsCopy[currentTerritory]->adj[i]->name) {
           dfs_sub(j, continentsCopy);
           break;
         }
       }
     }
   }
-  continentsCopy[currentNode]->color = "BLACK";
+  continentsCopy[currentTerritory]->color = "BLACK";
 }
 
-string convertAdjToString(vector<Node*> adj) {  // free function to convert the
-                                                // adjacency lists to strings
+string convertAdjToString(
+    vector<Territory*> adj) {  // free function to convert the
+                               // adjacency lists to strings
   string s = "[";
 
   if (adj.size() > 1)
@@ -375,4 +390,110 @@ string convertAdjToString(vector<Node*> adj) {  // free function to convert the
   s = s + "]";
 
   return s;
+}
+
+MapLoader::MapLoader(string fileName) {  // TODO: Put this into Map.cpp
+  string myText;
+  this->fileName = fileName;
+  ifstream MyReadFile(fileName);
+  string type;
+  unordered_map<string, vector<string>> adjMap;
+  unordered_map<string, Territory*> territoryMap;
+  unordered_map<string, vector<Territory*>> continentsCopy;
+  vector<string> continentsNames;
+  vector<Territory*> territories;
+  vector<Territory*> territoriesCopy;
+
+  // parse files data
+  if (MyReadFile) {
+    try {
+      bool foundTerritory = false;
+      while (getline(MyReadFile, myText)) {
+        if (myText.empty()) {
+          continue;
+        }
+        if (myText.compare("[Territories]") == 0) {
+          type = "[Territories]";
+          foundTerritory = true;
+          continue;
+        }
+        if (type == "[Territories]") {
+          vector<string> territoryData = splitString(myText, ",");
+          vector<string> adjTerritories;
+          Territory* n = new Territory(territoryData[0], territoryData[3]);
+          territories.push_back(n);
+          territoryMap[territoryData[0]] = n;
+
+          continentsNames.push_back(territoryData[3]);
+
+          for (int i = 4; i < territoryData.size(); i++) {
+            adjTerritories.push_back(territoryData[i]);
+          }
+          adjMap[territoryData[0]] = adjTerritories;
+        }
+      }
+
+      if (!foundTerritory) {
+        throw exception();
+      }
+
+      // fills adjacency list of each territory
+      for (int i = 0; i < territories.size(); i++) {
+        vector<string> adj = adjMap[(*territories[i]).name];
+        for (int j = 0; j < adj.size(); j++) {
+          (*territories[i]).adj.push_back(territoryMap[adj[j]]);
+        }
+      }
+
+      // remove duplicates continents name -> change to set if time
+      for (int i = 0; i < continentsNames.size(); i++) {
+        for (int j = i + 1; j < continentsNames.size(); j++) {
+          if (continentsNames[i] == continentsNames[j]) {
+            continentsNames.erase(continentsNames.begin() + j);
+            j--;
+          }
+        }
+      }
+
+      // creates and validates created map
+      this->map = new Map(territories);
+      this->map->validate(continentsNames);
+    } catch (const std::exception& e) {
+      cout << "The map does not have a correct format" << endl;
+      this->map = NULL;
+    }
+  } else
+    cout << "Unable to open file" << endl;
+};
+
+// overload << operator for MapLoader
+ostream& operator<<(
+    ostream& strm,
+    const MapLoader& ml) {  // overloading stream insertion operator
+
+  return strm << ml.fileName << endl;
+}
+
+// MapLoader destructor
+MapLoader::~MapLoader() { delete this->map; }
+
+// helper function for parsing
+vector<string> splitString(string s, string delimiter) {
+  vector<string> split;
+  int start = 0;
+  for (int i = 0; i < s.size() - delimiter.size();) {
+    if (delimiter.compare(s.substr(i, delimiter.size())) == 0) {
+      split.push_back(s.substr(start, i - start));
+      i = i + delimiter.size();
+      start = i;
+    } else {
+      i++;
+    }
+  }
+
+  if (start < s.size()) {
+    split.push_back(s.substr(start, s.size() - start));
+  }
+
+  return split;
 }
