@@ -2,7 +2,7 @@
 
 Florian Charreau - 26494889
 <br/>
-John Kent 40161958
+John Kent - 40161958
 <br/>
 Joshua-James Nantel-Ouimet - 40131733
 <br/>
