@@ -15,11 +15,11 @@ MapLoader::MapLoader(string fileName) {  // TODO: Put this into Map.cpp
   ifstream MyReadFile(fileName);
   string type;
   unordered_map<string, vector<string>> adjMap;
-  unordered_map<string, Node *> territoryMap;
-  unordered_map<string, vector<Node *>> continentsCopy;
+  unordered_map<string, Territory *> territoryMap;
+  unordered_map<string, vector<Territory *>> continentsCopy;
   vector<string> continentsNames;
-  vector<Node *> territories;
-  vector<Node *> territoriesCopy;
+  vector<Territory *> territories;
+  vector<Territory *> territoriesCopy;
 
   // parse files data
   if (MyReadFile) {
@@ -37,7 +37,7 @@ MapLoader::MapLoader(string fileName) {  // TODO: Put this into Map.cpp
         if (type == "[Territories]") {
           vector<string> territoryData = splitString(myText, ",");
           vector<string> adjTerritories;
-          Node *n = new Node(territoryData[0], territoryData[3]);
+          Territory *n = new Territory(territoryData[0], territoryData[3]);
           territories.push_back(n);
           territoryMap[territoryData[0]] = n;
 

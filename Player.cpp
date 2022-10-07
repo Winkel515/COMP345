@@ -69,7 +69,7 @@ Player::~Player() {
 // Overloaded stream insertion operator
 std::ostream& operator<<(std::ostream& strm, Player& player) {
   strm << endl << "List of player's territories: " << endl;
-  for (std::list<Node*>::iterator it1 = player.territories.begin();
+  for (std::list<Territory*>::iterator it1 = player.territories.begin();
        it1 != player.territories.end(); ++it1) {
     strm << **it1;
   }
@@ -97,14 +97,14 @@ Player& Player::operator=(const Player& player) {
 // ====================================================
 
 // Returns a list of Territories to Attack
-list<Node*> Player::toAttack() {
-  list<Node*> territoriesToAttack = createTerritoryList(5);
+list<Territory*> Player::toAttack() {
+  list<Territory*> territoriesToAttack = createTerritoryList(5);
   return territoriesToAttack;
 };
 
 // Returns a list of Territories to Defend (All of the player's currently owned
 // territories)
-list<Node*> Player::toDefend() { return territories; };
+list<Territory*> Player::toDefend() { return territories; };
 
 void Player::issueOrder(Order* newOrder) { (*orders).add(newOrder); }
 
@@ -118,13 +118,13 @@ void Player::issueOrder() {
 //=======================================================
 
 // Helper method to create territory list
-list<Node*> createTerritoryList(int nTerritories) {
-  list<Node*> territories;
+list<Territory*> createTerritoryList(int nTerritories) {
+  list<Territory*> territories;
 
   int i = 0;
   while (i < nTerritories) {
     territories.push_back(
-        new Node("Territory " + to_string(i + 1), "Some Continent"));
+        new Territory("Territory " + to_string(i + 1), "Some Continent"));
     i++;
   }
 
