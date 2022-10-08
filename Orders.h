@@ -33,6 +33,7 @@ class OrdersList {
   void remove(int index);
   void add(Order *order);
   friend std::ostream &operator<<(std::ostream &o, const OrdersList &oL);
+  void executeOrders();
 
  private:
   std::vector<Order *> ListOfOrders;

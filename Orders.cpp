@@ -40,14 +40,13 @@ ostream &operator<<(ostream &out, const Order::OrderType ot) {
 // Validate function
 void Order::validate() {
   // Will need to check player territories to see if order is valid
-  cout << "Order validated" << endl;
+  cout << "Order " << this->GetType() << " validated" << endl;
 };
 
 // Execute function
 void Order::execute() {
   validate();
-  orderEffect = "Order did this";
-  cout << orderEffect << endl;
+  cout << "Order " << this->GetType() << " did this" << endl;
 };
 
 // Accessor methods
@@ -122,3 +121,10 @@ ostream &operator<<(ostream &o, const OrdersList &ol) {
 
   return o << ss.str() << endl;
 }
+
+// execute all orders in the list
+void OrdersList::executeOrders() {
+  for (Order *order : ListOfOrders) {
+    order->execute();
+  }
+};

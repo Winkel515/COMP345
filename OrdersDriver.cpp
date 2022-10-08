@@ -24,9 +24,6 @@ void testOrdersList() {
   testList.remove(2);
 
   std::cout << testList;
-}
 
-// int main() {
-//   testOrdersList();
-//   return 0;
-// }
+  testList.executeOrders();
+}
