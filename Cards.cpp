@@ -22,28 +22,22 @@ Card& Card::operator=(const Card& copy) {
   if (this == &copy) return *this;
 
   // copy values
-  TypeOfCard = copy.TypeOfCard;
+  TypeOfCard = copy.TypeOfCard;  // shallow copy
 
   return *this;
 }
 
 // overloading insertion stream operator for card
 std::ostream& operator<<(std::ostream& out, const Card& c) {
-  out << c.GetType() << std::endl;
+  int type = c.GetType();
+  std::string types[] = {"Bomb", "Reinforcement", "Blockade", "Airlift",
+                         "Diplomacy"};
+  out << types[type] << std::endl;
   return out;
 }
 
-// overloading insertion stream operator for Card::CardType
-std::ostream& operator<<(std::ostream& out, const Card::CardType ct) {
-  const std::string cardTypes[] = {"Bomb", "Reinforcement", "Blockade",
-                                   "Airlift", "Diplomacy"};
-  return out << cardTypes[ct];
-}
-
 // destructor class
-Card::~Card() {
-  std::cout << "Destroyed " << this->GetType() << " Card" << std::endl;
-}
+Card::~Card() { std::cout << "Destroyed Card" << std::endl; }
 
 // accessor methods
 Card::CardType Card::GetType() const { return TypeOfCard; }
@@ -52,52 +46,46 @@ Card::CardType Card::GetType() const { return TypeOfCard; }
 void Card::SetType(Card::CardType type) { TypeOfCard = type; }
 
 // each card has a play() method that enables a player to use it during the
-// game, must give a reference to a deck to put the card back into after the
-// method is called
-Order* Card::play(Deck& deck) {
-  Order* order{};
+// game, must give a pointer to a deck to put the card back into after the
+// method is called. Must also have a order pointer to set the type of the order
+// depending on the card.
+void Card::play(Deck* deck, Order* order) {
   switch (TypeOfCard) {
     case Bomb:
       std::cout << "Special bomb order created\n";
       // create card order
-      order = new Order(Order::Bomb);  // allocated on the heap
+      order->SetType(Order::Bomb);
       // place card back in the deck
-      deck.addCard(this);
-      return order;
+      deck->addCard(this);
       break;
     case Reinforcement:
       std::cout << "Special Reinforcement order created\n";
-      order = new Order(Order::Deploy);
-      deck.addCard(this);
-      return order;
+      // adds five armies to the reinforcement pool of the play who called this
+      // card
+      deck->addCard(this);
       break;
     case Blockade:
       std::cout << "Special Blockade order created\n";
-      order = new Order(Order::Blockade);
-      deck.addCard(this);
-      return order;
+      order->SetType(Order::Blockade);
+      deck->addCard(this);
       break;
     case Airlift:
       std::cout << "Special Airlift order created\n";
-      order = new Order(Order::Airlift);
-      deck.addCard(this);
-      return order;
+      order->SetType(Order::Airlift);
+      deck->addCard(this);
       break;
     case Diplomacy:
       std::cout << "Special Diplomacy order created\n";
-      order = new Order(Order::Negotiate);
-      deck.addCard(this);
-      return order;
+      order->SetType(Order::Negotiate);
+      deck->addCard(this);
       break;
     default:
       std::cout << "Card class error, wrong type" << std::endl;
-      return order;
   }
 }
 
 // Deck constructor, numOfCards represents the quantity of each type of card,
 // there will be an equal amount of each type.
-
 Deck::Deck(int numOfCardsPerType) {
   for (int i = 0; i < numOfCardsPerType; i++) {
     this->addCardsToDeck();
@@ -106,29 +94,37 @@ Deck::Deck(int numOfCardsPerType) {
 
 // method to add 1 card of each type to the deck
 void Deck::addCardsToDeck() {
-  cards.push_back(new Card(Card::Bomb));
-  cards.push_back(new Card(Card::Reinforcement));
-  cards.push_back(new Card(Card::Blockade));
-  cards.push_back(new Card(Card::Airlift));
-  cards.push_back(new Card(Card::Diplomacy));
+  Card* bomb = new Card(Card::Bomb);
+  cards.push_back(bomb);
+
+  Card* reinforcement = new Card(Card::Reinforcement);
+  cards.push_back(reinforcement);
+
+  Card* blockade = new Card(Card::Blockade);
+  cards.push_back(blockade);
+
+  Card* airlift = new Card(Card::Airlift);
+  cards.push_back(airlift);
+
+  Card* diplomacy = new Card(Card::Diplomacy);
+  cards.push_back(diplomacy);
 }
 
 // copy constructor
 Deck::Deck(const Deck& other) {
-  int size = other.cards.size();
-  for (int i = 0; i < size; i++) {
-    cards.push_back(new Card(other.cards[i]->GetType()));
+  this->cards = {};
+  for (int i = 0; i < other.cards.size(); i++) {
+    Card* card = new Card(*(other.cards[i]));
+    cards.push_back(card);
   }
 }
 
 // deck overloading assignment= apperator
 Deck& Deck::operator=(const Deck& copy) {  // TODO: Shallow
-  if (this == &copy) return *this;
-
-  // copy values
-  int size = copy.cards.size();
-  for (int i = 0; i < size; i++) {
-    cards.push_back(new Card(copy.cards[i]->GetType()));
+  this->cards = {};
+  for (int i = 0; i < copy.cards.size(); i++) {
+    Card* card = new Card(*(copy.cards[i]));
+    cards.push_back(card);
   }
   return *this;
 }
@@ -146,11 +142,9 @@ std::ostream& operator<<(std::ostream& out, const Deck& d) {
 // deck destructor class
 Deck::~Deck() {
   std::cout << "Destroying deck!" << std::endl;
-  for (Card* obj : cards) {
-    delete obj;
-    obj = nullptr;
+  for (int i = 0; i < this->cards.size(); i++) {
+    delete this->cards[i];
   }
-  cards.clear();
 }
 
 // draws a random card from the deck
@@ -165,8 +159,10 @@ Card* Deck::draw() {
   return drawnCard;
 }
 
+// add card*  to the back of a deck object
 void Deck::addCard(Card* card) { cards.push_back(card); }
 
+// prints out all of the cards in the deck and their type
 void Deck::showCards() {
   std::cout << "Current cards in deck:\n";
   int size = cards.size();
@@ -185,29 +181,29 @@ std::vector<Card*> Deck::getCards() { return this->cards; }
 // hand constructor
 Hand::Hand() {}
 
-//  destructor
+// destructor
 Hand::~Hand() {
   std::cout << "Hand Destroyed!" << std::endl;
-  for (Card* obj : cards) delete obj;
-  cards.clear();
+  for (int i = 0; i < this->cards.size(); i++) {
+    delete this->cards[i];
+  }
 }
 
 // copy constructor
 Hand::Hand(const Hand& copy) {
-  int size = copy.cards.size();
-
-  for (int i = 0; i < size; i++) {
-    cards.push_back(new Card(copy.cards[i]->GetType()));
+  this->cards = {};
+  for (int i = 0; i < copy.cards.size(); i++) {
+    Card* card = new Card(*(copy.cards[i]));
+    cards.push_back(card);
   }
 }
 // assignment operator overloading
 Hand& Hand::operator=(const Hand& copy) {  // TODO: Shallow Copy
-  if (this == &copy) return *this;
+  this->cards = {};
 
-  // copy values
-  int size = copy.cards.size();
-  for (int i = 0; i < size; i++) {
-    cards.push_back(new Card(copy.cards[i]->GetType()));
+  for (int i = 0; i < copy.cards.size(); i++) {
+    Card* card = new Card(*(copy.cards[i]));
+    cards.push_back(card);
   }
 
   return *this;
@@ -226,8 +222,12 @@ std::ostream& operator<<(std::ostream& out, const Hand& h) {
 
 // pick a card from a deck at random and add it to the hand, removing it from
 // the deck.
-void Hand::drawCard(Deck& deck) { cards.push_back(deck.draw()); }
+void Hand::drawCard(Deck* deck) {
+  Card* card = deck->draw();
+  cards.push_back(card);
+}
 
+// prints out all the cards in a hand and their type
 void Hand::showCards() {
   std::cout << "Current cards in hand:\n";
   int size = cards.size();
@@ -243,8 +243,7 @@ void Hand::showCards() {
 // get cards method
 std::vector<Card*> Hand::getCards() { return cards; }
 
-void Hand::swapCardToDeck(Deck& deck, int indexOfCard) {
-  Card* cardP = cards.at(indexOfCard);
+// erases pointer to card from hand, does not delete actual card.
+void Hand::removeCard(int indexOfCard) {
   cards.erase(cards.begin() + indexOfCard);
-  deck.addCard(cardP);
 }

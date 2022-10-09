@@ -10,7 +10,7 @@ int main() {
   cout << "====== Testing Map ======\n";
   testLoadMaps();
   cout << "====== Testing cards ======\n";
-  // testCards();
+  testCards();
   cout << "====== Testing Game Engine ======\n";
   testGameStates();
 

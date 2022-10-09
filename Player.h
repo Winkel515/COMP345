@@ -26,6 +26,8 @@ class Player {
   void issueOrder();  // For Testing
   void testListOrder();
   Player& operator=(const Player& player);
+  Hand* getCards();
+  void removeCard(int index);
   friend std::ostream& operator<<(std::ostream& strm, Player& pl);
 };
 

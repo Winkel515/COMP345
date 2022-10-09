@@ -16,11 +16,10 @@ class Card {
   ~Card();
   Card& operator=(const Card& copy);
   friend std::ostream& operator<<(std::ostream& out, const Card& c);
-  friend std::ostream& operator<<(std::ostream& out, const Card::CardType c);
 
   void SetType(Card::CardType type);
   Card::CardType GetType() const;
-  Order* play(Deck& deck);
+  void play(Deck* deck, Order* order);
 
  private:
   Card::CardType TypeOfCard;
@@ -50,10 +49,10 @@ class Hand {
   Hand(const Hand& other);
   Hand& operator=(const Hand& copy);
   friend std::ostream& operator<<(std::ostream& out, const Hand& h);
-  void drawCard(Deck& deck);
+  void drawCard(Deck* deck);
   void showCards();
   std::vector<Card*> getCards();
-  void swapCardToDeck(Deck& deck, int indexOfCard);
+  void removeCard(int indexOfCard);
 
  private:
   std::vector<Card*> cards;

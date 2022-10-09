@@ -7,12 +7,12 @@
 class Order {
  public:
   enum OrderType { Deploy, Advance, Bomb, Blockade, Airlift, Negotiate };
+  Order();
   Order(Order::OrderType type);
   Order(const Order &o);
   Order &operator=(const Order &copy);
   ~Order();
   friend std::ostream &operator<<(std::ostream &output, const Order &o);
-  friend std::ostream &operator<<(std::ostream &out, const Order::OrderType ot);
   void validate();
   void execute();
   void SetType(Order::OrderType type);
