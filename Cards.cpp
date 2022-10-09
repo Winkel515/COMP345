@@ -214,7 +214,7 @@ std::ostream& operator<<(std::ostream& out, const Hand& h) {
   int size = h.cards.size();
 
   for (int i = 0; i < size; i++) {
-    out << h.cards[i] << "\n";
+    out << *h.cards[i] << "\n";
   }
   out << std::endl;
   return out;

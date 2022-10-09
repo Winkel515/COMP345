@@ -13,9 +13,9 @@
 using namespace std;
 
 // TODO: Delete Main, transfer to main.cpp
-//  // Test main for Player Functionality
-//  int main() {
-//    testPlayers();
+// Test main for Player Functionality
+// int main() {
+//   testPlayers();
 
 //   return 0;
 // }
@@ -27,16 +27,18 @@ Player::Player() {}
 Player::Player(int nTerritories, int nCards, int nOrders) {
   // Populate list of Territories.
   territories = createTerritoryList(nTerritories);
+  cards = new Hand();
 
   // TODO: Fix this section:
   int i = 0;
   Deck* fakeDeck = new Deck(3);
   cout << "Finished creating deck, now draw cards " << endl;
+  (*fakeDeck).showCards();
   while (i < nCards) {
-    cout << "Drawing cards, i = " + to_string(i) << endl;
-    // (*cards).drawCard(*fakeDeck); //TODO: Fix this line
+    cout << "Drawing cards, i = " << i << endl;
+    (*cards).drawCard(fakeDeck);  // TODO: Fix this line
     i++;
-    cout << "end of while loop, i = " + to_string(i) << endl;
+    cout << "end of while loop, i = " << i << endl;
   }
 
   cout << "Finished adding cards, soon to create orders" << endl;
@@ -48,7 +50,7 @@ Player::Player(int nTerritories, int nCards, int nOrders) {
     (*orders).add(new Order(static_cast<Order::OrderType>(rand() % 6)));
     i++;
   }
-}
+}  // TODO: Why does cards get error when returning from copy constructor
 
 // Copy Constructor makes shallow copies of members because we want functions to
 // be able to change the pointed to values.
@@ -74,8 +76,8 @@ std::ostream& operator<<(std::ostream& strm, Player& player) {
     strm << **it1;
   }
 
-  // strm << endl << "List of player's cards: " << endl;
-  // strm << *player.cards;
+  strm << endl << "List of player's cards: " << endl;
+  strm << *player.cards;
 
   strm << endl << "List of player's orders: " << endl;
   strm << *player.orders;
