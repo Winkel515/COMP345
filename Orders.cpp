@@ -4,6 +4,8 @@
 
 using namespace std;
 
+// default constructor
+Order::Order() {}
 // Order constructor
 Order::Order(Order::OrderType type) {
   cout << type << " Order created with default constructor" << endl;
@@ -22,19 +24,15 @@ Order &Order::operator=(const Order &order) {
 }
 
 // Order destructor
-Order::~Order() { cout << "Destroyed " << this->GetType() << " Order" << endl; }
+Order::~Order() { cout << "Destroyed Order" << endl; }
 
 // Order insertion stream operator
 ostream &operator<<(ostream &out, const Order &o) {
-  out << o.GetType() << endl;
+  int type = o.GetType();
+  std::string types[] = {"Deploy",   "Advance", "Bomb",
+                         "Blockade", "Airlift", "Negotiate"};
+  out << types[type] << endl;
   return out;
-}
-
-// Order::OrderType insertion stream operator
-ostream &operator<<(ostream &out, const Order::OrderType ot) {
-  const string orderTypes[] = {"Deploy",   "Advance", "Bomb",
-                               "Blockade", "Airlift", "Negotiate"};
-  return out << orderTypes[ot];
 }
 
 // Validate function

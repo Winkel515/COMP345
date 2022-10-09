@@ -130,3 +130,6 @@ list<Territory*> createTerritoryList(int nTerritories) {
 
   return territories;
 }
+
+Hand* Player::getCards() { return cards; }
+void Player::removeCard(int index) { cards->removeCard(index); }

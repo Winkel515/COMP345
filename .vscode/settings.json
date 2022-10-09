@@ -64,6 +64,7 @@
     "random": "cpp",
     "string_view": "cpp",
     "numbers": "cpp",
-    "sstream": "cpp"
+    "sstream": "cpp",
+    "optional": "cpp"
   }
 }
