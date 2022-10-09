@@ -38,7 +38,6 @@ class Map {
   void validate(vector<string> continentsNames);
   void dfs(int currentTerritory, vector<Territory*> territoriesCopy);
   void dfs_sub(int currentTerritory, vector<Territory*> continents);
-  void setWhite(vector<Territory*> territoriesCopy);
   void makeBidirectional(vector<Territory*> territories);
   unordered_map<string, vector<Territory*>> copyContinents(
       vector<string> continentsNames, vector<Territory*> territoriesCopy);
