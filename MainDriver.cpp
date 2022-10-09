@@ -3,6 +3,7 @@
 #include "CardsDriver.h"
 #include "GameEngineDriver.h"
 #include "MapDriver.h"
+#include "OrdersDriver.h"
 #include "PlayerDriver.h"
 
 using std::cout;
@@ -12,8 +13,10 @@ int main() {
   testLoadMaps();
   cout << "====== Testing Players ======\n";
   testPlayers();
-  cout << "====== Testing cards ======\n";
+  cout << "====== Testing Cards ======\n";
   testCards();
+  cout << "====== Testing Orders ======\n";
+  testOrdersList();
   cout << "====== Testing Game Engine ======\n";
   testGameStates();
 
