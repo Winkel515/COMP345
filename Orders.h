@@ -16,7 +16,7 @@ class Order {
   void validate();
   void execute();
   void SetType(Order::OrderType type);
-  Order::OrderType GetType() const;
+  std::string GetType() const;
 
  private:
   Order::OrderType TypeOfOrder;
