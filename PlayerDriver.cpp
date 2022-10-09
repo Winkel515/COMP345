@@ -6,20 +6,20 @@ void testPlayers() {
   cout << endl << "Creating Player 1" << endl << endl;
   Player* p1 = new Player(5, 4, 3);
 
-  cout << endl << "====================================" << endl;
+  cout << endl << "----------------------------" << endl;
   cout << endl
        << "Demonstrating Overloaded Stream Insertion Operator for Player"
        << endl;
   cout << *p1;
 
-  cout << endl << "====================================" << endl;
+  cout << endl << "----------------------------" << endl;
   cout << endl << "Demonstrating issueOrder() method for Player 1" << endl;
 
   // issue arbitrary order
   (*p1).issueOrder();
   cout << (*p1);
 
-  cout << endl << "====================================" << endl;
+  cout << endl << "----------------------------" << endl;
   cout << endl << "Demonstrating toAttack() method" << endl;
   list<Territory*> toAttack = (*p1).toAttack();
   for (std::list<Territory*>::iterator it1 = toAttack.begin();
@@ -27,11 +27,12 @@ void testPlayers() {
     cout << **it1;
   }
 
-  cout << endl << "====================================" << endl;
+  cout << endl << "----------------------------" << endl;
   cout << endl << "Demonstrating toDefend() method" << endl;
   list<Territory*> toDefend = (*p1).toDefend();
   for (std::list<Territory*>::iterator it2 = toDefend.begin();
        it2 != toDefend.end(); ++it2) {
     cout << **it2;
   }
+  cout << endl;
 }

@@ -12,45 +12,27 @@
 
 using namespace std;
 
-// TODO: Delete Main, transfer to main.cpp
-// Test main for Player Functionality
-// int main() {
-//   testPlayers();
-
-//   return 0;
-// }
-
 // Default Constructor
 Player::Player() {}
 
-// Constructor for testing purposes
+// Parameterized constructor for testing purposes
 Player::Player(int nTerritories, int nCards, int nOrders) {
   // Populate list of Territories.
   territories = createTerritoryList(nTerritories);
+
+  // Create deck and draw hand
   cards = new Hand();
-
-  // TODO: Fix this section:
-  int i = 0;
   Deck* fakeDeck = new Deck(3);
-  cout << "Finished creating deck, now draw cards " << endl;
-  (*fakeDeck).showCards();
-  while (i < nCards) {
-    cout << "Drawing cards, i = " << i << endl;
-    (*cards).drawCard(fakeDeck);  // TODO: Fix this line
-    i++;
-    cout << "end of while loop, i = " << i << endl;
+  for (int i = 0; i < nCards; i++) {
+    (*cards).drawCard(fakeDeck);
   }
-
-  cout << "Finished adding cards, soon to create orders" << endl;
 
   // Populate OrdersList with random Orders
   orders = new OrdersList();
-  i = 0;
-  while (i < nOrders) {
+  for (int i = 0; i < nOrders; i++) {
     (*orders).add(new Order(static_cast<Order::OrderType>(rand() % 6)));
-    i++;
   }
-}  // TODO: Why does cards get error when returning from copy constructor
+}
 
 // Copy Constructor makes shallow copies of members because we want functions to
 // be able to change the pointed to values.
@@ -62,9 +44,14 @@ Player::Player(const Player& player) {
 
 // Destructor
 Player::~Player() {
+  // delete all territory pointers in list
+  for (std::list<Territory*>::iterator it1 = territories.begin();
+       it1 != territories.end(); ++it1) {
+    delete *it1;
+    *it1 = NULL;
+  }
+
   delete orders;
-  // Iterate through and call method to put back cards. In Hand class.: void
-  // swapCardToDeck(Deck& deck, int indexOfCard);
   delete cards;
 }
 
@@ -96,11 +83,9 @@ Player& Player::operator=(const Player& player) {
   return *this;
 }
 
-// ====================================================
-
 // Returns a list of Territories to Attack
 list<Territory*> Player::toAttack() {
-  list<Territory*> territoriesToAttack = createTerritoryList(5);
+  list<Territory*> territoriesToAttack = createTerritoryList(3);
   return territoriesToAttack;
 };
 
@@ -117,8 +102,6 @@ void Player::issueOrder() {
   (*orders).add(newOrder);
 }
 
-//=======================================================
-
 // Helper method to create territory list
 list<Territory*> createTerritoryList(int nTerritories) {
   list<Territory*> territories;
@@ -132,6 +115,3 @@ list<Territory*> createTerritoryList(int nTerritories) {
 
   return territories;
 }
-
-Hand* Player::getCards() { return cards; }
-void Player::removeCard(int index) { cards->removeCard(index); }
