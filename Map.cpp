@@ -160,15 +160,6 @@ void Map::printMap() {
   }
 }
 
-// set color of all territory to white
-void Map::setWhite(vector<Territory*> territoriesCopy) {
-  for (int i = 0; i < territoriesCopy.size(); i++) {
-    if (territoriesCopy[i]->color != "WHITE") {
-      territoriesCopy[i]->color = "WHITE";
-    }
-  }
-}
-
 // makes the copy graph bidirectional
 void Map::makeBidirectional(vector<Territory*> territoriesCopy) {
   for (int i = 0; i < territoriesCopy.size(); i++) {
@@ -281,9 +272,9 @@ void Map::validate(vector<string> continentsNames) {
   }
 
   if (correctContinent) {
-    cout << "Continents have the proper format" << endl;
+    cout << "Continents have the proper format." << endl;
   } else {
-    cout << "Continents do not have the proper format" << endl;
+    cout << "Continents do not have the proper format." << endl;
   }
 
   int index = 0;
