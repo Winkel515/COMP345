@@ -235,19 +235,12 @@ void Map::validate(vector<string> continentsNames) {
 
     if (count == copyMap->territories
                      .size()) {  // if all nodes can be visited from node i it
-                                 // breaks since the map is weakly connected
-      break;
-    } else if (count != copyMap->territories.size() &&
-               i == copyMap->territories.size() -
-                        1) {  // otherwise the map does not have the proper
-                              // format and the loop stops
+      break;                     // breaks since the map is weakly connected
+    } else if (count != copyMap->territories
+                            .size()) {  // otherwise the map does not have the
+                                        // proper format and the loop stops
       incorrectMap = true;
       break;
-    } else {
-      setWhite(
-          copyMap
-              ->territories);  // set all nodes to white to continue the process
-      continue;
     }
   }
 
@@ -276,14 +269,10 @@ void Map::validate(vector<string> continentsNames) {
                                    // starts over on another continent
         correctContinent = true;
         break;
-      } else if (count != continentsCopy[continentsNames[i]].size() &&
-                 j == continentsCopy[continentsNames[i]].size() -
-                          1) {  // if one continent is wrong it breaks
+      } else if (count != continentsCopy[continentsNames[i]]
+                              .size()) {  // if one continent is wrong it breaks
         correctContinent = false;
         break;
-      } else {  // set all nodes of current continent to white
-        setWhite(continentsCopy[continentsNames[i]]);
-        continue;
       }
     }
     if (!correctContinent) {
@@ -459,7 +448,7 @@ MapLoader::MapLoader(string fileName) {  // TODO: Put this into Map.cpp
       this->map = new Map(territories);
       this->map->validate(continentsNames);
     } catch (const std::exception& e) {
-      cout << "The map does not have a correct format" << endl;
+      cout << "The map does not have a correct format." << endl;
       this->map = NULL;
     }
   } else
