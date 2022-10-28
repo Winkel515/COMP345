@@ -89,6 +89,10 @@ GameEngine &GameEngine::operator=(const GameEngine &copy) {
   return *this;
 }
 
+GameEngine::~GameEngine() {
+  if (mapLoader != NULL) delete mapLoader;
+}
+
 // Overload Stream insertion
 ostream &operator<<(ostream &out, const GameEngine &gameEngine) {
   out << "Game Engine ";
@@ -139,7 +143,7 @@ void GameEngine::run() { this->execSelector(this->state); }
 void GameEngine::execSelector(GameStateEnum state) {
   switch (state) {
     case S_START:
-      execStart();
+      startupPhase();
       break;
     case S_MAP_LOADED:
       execMapLoaded();
@@ -171,7 +175,7 @@ void GameEngine::execSelector(GameStateEnum state) {
 }
 
 // Prompts for the command
-void GameEngine::promptCommand() {
+string GameEngine::promptCommand() {
   string command = "";
 
   do {
@@ -179,8 +183,28 @@ void GameEngine::promptCommand() {
       cout << "Try again.\n";
     }
     cout << "Please enter a command: ";
-    cin >> command;
+    getline(cin, command);
   } while (!handleCommand(command));
+
+  vector<string> str = splitString(command, " ");
+  if (str.size() > 1) return str.at(1);
+  return "";
+}
+
+string GameEngine::promptCommand(bool transitionState) {
+  string command = "";
+
+  do {
+    if (command != "" && commands.find(command) == commands.end()) {
+      cout << "Try again.\n";
+    }
+    cout << "Please enter a command: ";
+    getline(cin, command);
+  } while (!handleCommand(command, transitionState));
+
+  vector<string> str = splitString(command, " ");
+  if (str.size() > 1) return str.at(1);
+  return "";
 }
 
 // Displays the list of valid commands
@@ -202,6 +226,7 @@ void GameEngine::printCommands() {
 
 // Handles the mapping between command and state
 bool GameEngine::handleCommand(string command) {
+  command = splitString(command, " ").at(0);
   // Checks if valid command
   if (commands.find(command) == commands.end()) {
     cout << "Invalid Command.\n";
@@ -211,6 +236,22 @@ bool GameEngine::handleCommand(string command) {
   // Transition the state
   GameStateEnum desiredState = GameEngineFSA::commandToStateMap.at(command);
   setState(desiredState);
+
+  return true;
+}
+
+bool GameEngine::handleCommand(string command, bool transitionState) {
+  command = splitString(command, " ").at(0);
+  // Checks if valid command
+  if (commands.find(command) == commands.end()) {
+    cout << "Invalid Command.\n";
+    return false;
+  }
+
+  if (transitionState) {
+    GameStateEnum desiredState = GameEngineFSA::commandToStateMap.at(command);
+    setState(desiredState);
+  }
 
   return true;
 }
@@ -262,4 +303,17 @@ void GameEngine::execWin() {
 void GameEngine::execEnd() {
   // // Exec End here
   cout << "Game has ended.\n";
+}
+
+void GameEngine::startupPhase() {
+  while (true) {
+    printCommands();
+    string param = promptCommand(false);
+    mapLoader = new MapLoader();
+    if (mapLoader->loadMap(param)) break;
+  }
+
+  setState(GameEngineFSA::commandToStateMap.at("loadmap"));
+
+  printCommands();
 }

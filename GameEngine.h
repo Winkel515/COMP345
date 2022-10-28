@@ -3,6 +3,8 @@
 #include <set>
 #include <string>
 
+#include "Map.h"
+
 namespace GameState {
 enum GameStateEnum {
   S_START,
@@ -32,6 +34,7 @@ class GameEngine {
   // Attributes
   GameState::GameStateEnum state;
   std::set<std::string> commands;
+  MapLoader* mapLoader = NULL;
   // Methods
   void execSelector(GameState::GameStateEnum);
   void execStart();
@@ -43,12 +46,15 @@ class GameEngine {
   void execExecuteOrders();
   void execWin();
   void execEnd();
+  void startupPhase();
 
  public:
   void start();
   void run();
   bool handleCommand(std::string);
-  void promptCommand();
+  bool handleCommand(std::string, bool);
+  std::string promptCommand();
+  std::string promptCommand(bool);
   void printCommands();
   std::set<std::string> getCommands();
   void setState(GameState::GameStateEnum);
@@ -56,6 +62,7 @@ class GameEngine {
   GameEngine& operator=(const GameEngine&);
   GameEngine();                   // default constructor
   GameEngine(const GameEngine&);  // copy constructor
+  ~GameEngine();
   friend std::ostream& operator<<(std::ostream&,
                                   const GameEngine&);  // stream insertion
 };
