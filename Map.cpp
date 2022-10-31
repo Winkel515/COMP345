@@ -209,13 +209,14 @@ unordered_map<string, vector<Territory*>> Map::copyContinents(
 
 // checks the map and continents are connected graphs and ensures each territory
 // belongs to one and only one continent
-void Map::validate() {
+bool Map::validate() {
   Map* copyMap = new Map(*this);
   makeBidirectional(copyMap->territories);
   unordered_map<string, vector<Territory*>> continentsCopy =
       copyContinents(copyMap->territories);
   bool incorrectMap = false;
   int count = 0;
+  bool isValid = true;
 
   for (int i = 0; i < copyMap->territories.size();
        i++) {  // runs dfs from each node in territories
@@ -242,9 +243,10 @@ void Map::validate() {
   }
 
   if (incorrectMap) {
-    cout << "The map is not valid." << endl;
+    cout << "The map is not connected." << endl;
+    isValid = false;
   } else {
-    cout << "The map valid." << endl;
+    cout << "The map connected." << endl;
   }
 
   bool correctContinent = false;
@@ -281,6 +283,7 @@ void Map::validate() {
     cout << "Continents have the proper format." << endl;
   } else {
     cout << "Continents do not have the proper format." << endl;
+    isValid = false;
   }
 
   int index = 0;
@@ -317,9 +320,12 @@ void Map::validate() {
   } else {
     cout << "Each territory does not belong to one and only one continent."
          << endl;
+    isValid = false;
   }
 
   delete copyMap;
+
+  return isValid;
 }
 
 void Map::dfs(int currentTerritory,
@@ -452,7 +458,7 @@ bool MapLoader::loadMap(string fileName) {
       return false;
     }
   } else {
-    cout << "File does not exist." << endl;
+    cout << "\"" << fileName << "\" map file does not exist." << endl;
     return false;
   }
 };

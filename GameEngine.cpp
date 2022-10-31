@@ -175,7 +175,7 @@ void GameEngine::execSelector(GameStateEnum state) {
 }
 
 // Prompts for the command
-string GameEngine::promptCommand() {
+vector<string> GameEngine::promptCommand() {
   string command = "";
 
   do {
@@ -184,14 +184,12 @@ string GameEngine::promptCommand() {
     }
     cout << "Please enter a command: ";
     getline(cin, command);
-  } while (!handleCommand(command));
+  } while (!handleCommand(command, true));
 
-  vector<string> str = splitString(command, " ");
-  if (str.size() > 1) return str.at(1);
-  return "";
+  return splitString(command, " ");
 }
 
-string GameEngine::promptCommand(bool transitionState) {
+vector<string> GameEngine::promptCommand(bool transitionState) {
   string command = "";
 
   do {
@@ -202,9 +200,7 @@ string GameEngine::promptCommand(bool transitionState) {
     getline(cin, command);
   } while (!handleCommand(command, transitionState));
 
-  vector<string> str = splitString(command, " ");
-  if (str.size() > 1) return str.at(1);
-  return "";
+  return splitString(command, " ");
 }
 
 // Displays the list of valid commands
@@ -308,12 +304,40 @@ void GameEngine::execEnd() {
 void GameEngine::startupPhase() {
   while (true) {
     printCommands();
-    string param = promptCommand(false);
+    vector<string> result = promptCommand(false);
     mapLoader = new MapLoader();
-    if (mapLoader->loadMap(param)) break;
+    if (result.size() <= 1)
+      cout << "Enter a file name in the format loadmap <filename>" << std::endl;
+    else if (mapLoader->loadMap(result.at(1))) {
+      cout << "\"" << result.at(1) << "\" has been loaded\n";
+      setState(GameEngineFSA::commandToStateMap.at("loadmap"));
+      break;
+    }
   }
 
-  setState(GameEngineFSA::commandToStateMap.at("loadmap"));
+  while (true) {
+    printCommands();
+    vector<string> result = promptCommand(false);
+    if (result.at(0) == "loadmap") {
+      if (result.size() <= 1)
+        cout << "Enter a file name in the format loadmap <filename>"
+             << std::endl;
+      else if (mapLoader->loadMap(result.at(1))) {
+        cout << "\"" << result.at(1) << "\" has been loaded\n";
+      }
+    }
+
+    else if (result.at(0) == "validatemap") {
+      if (mapLoader->getMap()->validate()) {
+        cout << "The map passed all the tests and is a valid map to be used.\n";
+        setState(GameEngineFSA::commandToStateMap.at("validatemap"));
+        break;
+      } else {
+        cout << "The map has failed at least one test and is not a valid map. "
+                "Try loading another map.\n";
+      }
+    }
+  }
 
   printCommands();
 }

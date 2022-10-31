@@ -36,7 +36,7 @@ class Map {
   ~Map();
   Map& operator=(const Map& m);
   void printMap();
-  void validate();
+  bool validate();
   void dfs(int currentTerritory, vector<Territory*> territoriesCopy);
   void dfs_sub(int currentTerritory, vector<Territory*> continents);
   void makeBidirectional(vector<Territory*> territories);

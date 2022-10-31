@@ -53,8 +53,8 @@ class GameEngine {
   void run();
   bool handleCommand(std::string);
   bool handleCommand(std::string, bool);
-  std::string promptCommand();
-  std::string promptCommand(bool);
+  std::vector<std::string> promptCommand();
+  std::vector<std::string> promptCommand(bool);
   void printCommands();
   std::set<std::string> getCommands();
   void setState(GameState::GameStateEnum);
