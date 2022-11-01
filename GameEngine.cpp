@@ -302,6 +302,7 @@ void GameEngine::execEnd() {
 }
 
 void GameEngine::startupPhase() {
+  // S_START state loading a map
   while (true) {
     printCommands();
     vector<string> result = promptCommand(false);
@@ -315,9 +316,13 @@ void GameEngine::startupPhase() {
     }
   }
 
+  // S_MAP_LOADED state, load map or validate map
+  // transition to S_MAP_VALIDATED validate is successful
   while (true) {
     printCommands();
     vector<string> result = promptCommand(false);
+
+    // 2 possible commands: loadmap/validatemap
     if (result.at(0) == "loadmap") {
       if (result.size() <= 1)
         cout << "Enter a file name in the format loadmap <filename>"
