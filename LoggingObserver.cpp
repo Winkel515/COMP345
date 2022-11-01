@@ -49,7 +49,7 @@ void Subject::Notify(ILoggable* ILog) {
 };
 
 void LogObserver::Update(ILoggable* ILog) { ILog->stringToLog(); }
-
+/*
 int main() {
   std::cout << "bla" << std::endl;
   A* a1 = new A(1);
@@ -57,4 +57,4 @@ int main() {
   a1->callNotify();
 
   return 0;
-}
+}*/

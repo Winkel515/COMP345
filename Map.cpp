@@ -388,6 +388,7 @@ Map* MapLoader::getMap() { return this->map; }
 
 bool MapLoader::loadMap(string fileName) {
   string myText;
+  fileName = "./map/" + fileName;
   this->fileName = fileName;
   ifstream MyReadFile(fileName);
   string type;

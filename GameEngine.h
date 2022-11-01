@@ -5,6 +5,8 @@
 
 #include "Map.h"
 
+class CommandProcessor;
+
 namespace GameState {
 enum GameStateEnum {
   S_START,
@@ -47,6 +49,7 @@ class GameEngine {
   void execWin();
   void execEnd();
   void startupPhase();
+  friend class CommandProcessor;
 
  public:
   void start();
