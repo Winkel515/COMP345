@@ -4,7 +4,6 @@
 #include <vector>
 
 #include "GameEngine.h"
-#include "Map.h"
 
 using std::cin;
 using std::cout;
@@ -42,6 +41,7 @@ void CommandProcessor::saveCommand(string command) {
 
 bool CommandProcessor::validate(string input) {
   // check gamestate and return if command is valid
+  return false;  // just to make compiler happy
 }
 
 Command::Command(string input) {
