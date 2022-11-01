@@ -28,19 +28,20 @@ class Territory {
 class Map {
  private:
   vector<Territory*> territories;
+  vector<string> continentsNames;
 
  public:
-  Map(vector<Territory*> territories);
+  Map(vector<Territory*> territories, vector<string> continentsNames);
   Map(const Map& m);
   ~Map();
   Map& operator=(const Map& m);
   void printMap();
-  void validate(vector<string> continentsNames);
+  bool validate();
   void dfs(int currentTerritory, vector<Territory*> territoriesCopy);
   void dfs_sub(int currentTerritory, vector<Territory*> continents);
   void makeBidirectional(vector<Territory*> territories);
   unordered_map<string, vector<Territory*>> copyContinents(
-      vector<string> continentsNames, vector<Territory*> territoriesCopy);
+      vector<Territory*> territoriesCopy);
   friend ostream& operator<<(ostream& strm, const Map& m);
 };
 
@@ -50,7 +51,8 @@ class MapLoader {
   string fileName;
 
  public:
-  MapLoader(string fileName);
+  Map* getMap();
+  bool loadMap(string fileName);
   ~MapLoader();
   friend ostream& operator<<(ostream& strm, const MapLoader& ml);
 };

@@ -77,8 +77,10 @@ ostream& operator<<(
               << convertAdjToString(n.adj) << endl;
 }
 
-Map::Map(vector<Territory*> territories) {  // Map constructor
+// Map constructor
+Map::Map(vector<Territory*> territories, vector<string> continents) {
   this->territories = territories;
+  this->continentsNames = continents;
 }
 
 Map& Map::operator=(const Map& m) {  // overloading assignment operator for map
@@ -131,6 +133,10 @@ Map::Map(const Map& m) {  // map copy constructor
     for (int j = 0; j < adj.size(); j++) {
       territories[i]->adj.push_back(territoryMap[adj[j]]);
     }
+  }
+
+  for (int i = 0; i < m.continentsNames.size(); i++) {
+    this->continentsNames.push_back(m.continentsNames.at(i));
   }
 }
 // map destructor
@@ -187,7 +193,7 @@ void Map::makeBidirectional(vector<Territory*> territoriesCopy) {
 
 // makes a map of continents
 unordered_map<string, vector<Territory*>> Map::copyContinents(
-    vector<string> continentsNames, vector<Territory*> territoriesCopy) {
+    vector<Territory*> territoriesCopy) {
   unordered_map<string, vector<Territory*>> continentsCopy;
 
   for (int i = 0; i < continentsNames.size(); i++) {
@@ -203,13 +209,14 @@ unordered_map<string, vector<Territory*>> Map::copyContinents(
 
 // checks the map and continents are connected graphs and ensures each territory
 // belongs to one and only one continent
-void Map::validate(vector<string> continentsNames) {
+bool Map::validate() {
   Map* copyMap = new Map(*this);
   makeBidirectional(copyMap->territories);
   unordered_map<string, vector<Territory*>> continentsCopy =
-      copyContinents(continentsNames, copyMap->territories);
+      copyContinents(copyMap->territories);
   bool incorrectMap = false;
   int count = 0;
+  bool isValid = true;
 
   for (int i = 0; i < copyMap->territories.size();
        i++) {  // runs dfs from each node in territories
@@ -236,9 +243,10 @@ void Map::validate(vector<string> continentsNames) {
   }
 
   if (incorrectMap) {
-    cout << "The map is not a weakly connected graph." << endl;
+    cout << "The map is not connected." << endl;
+    isValid = false;
   } else {
-    cout << "The map is a weakly connected graph." << endl;
+    cout << "The map connected." << endl;
   }
 
   bool correctContinent = false;
@@ -275,6 +283,7 @@ void Map::validate(vector<string> continentsNames) {
     cout << "Continents have the proper format." << endl;
   } else {
     cout << "Continents do not have the proper format." << endl;
+    isValid = false;
   }
 
   int index = 0;
@@ -311,9 +320,12 @@ void Map::validate(vector<string> continentsNames) {
   } else {
     cout << "Each territory does not belong to one and only one continent."
          << endl;
+    isValid = false;
   }
 
   delete copyMap;
+
+  return isValid;
 }
 
 void Map::dfs(int currentTerritory,
@@ -372,7 +384,9 @@ string convertAdjToString(
   return s;
 }
 
-MapLoader::MapLoader(string fileName) {  // TODO: Put this into Map.cpp
+Map* MapLoader::getMap() { return this->map; }
+
+bool MapLoader::loadMap(string fileName) {
   string myText;
   this->fileName = fileName;
   ifstream MyReadFile(fileName);
@@ -435,15 +449,18 @@ MapLoader::MapLoader(string fileName) {  // TODO: Put this into Map.cpp
         }
       }
 
-      // creates and validates created map
-      this->map = new Map(territories);
-      this->map->validate(continentsNames);
+      this->map = new Map(territories, continentsNames);
+
+      return true;
     } catch (const std::exception& e) {
-      cout << "The map does not have a correct format." << endl;
+      cout << "The map file does not have a correct format." << endl;
       this->map = NULL;
+      return false;
     }
-  } else
-    cout << "Unable to open file" << endl;
+  } else {
+    cout << "\"" << fileName << "\" map file does not exist." << endl;
+    return false;
+  }
 };
 
 // overload << operator for MapLoader
