@@ -4,6 +4,7 @@
 #include <string>
 
 #include "Map.h"
+#include "Player.h"
 
 namespace GameState {
 enum GameStateEnum {
@@ -35,6 +36,7 @@ class GameEngine {
   GameState::GameStateEnum state;
   std::set<std::string> commands;
   MapLoader* mapLoader = NULL;
+  std::vector<Player*> players;
   // Methods
   void execSelector(GameState::GameStateEnum);
   void execStart();

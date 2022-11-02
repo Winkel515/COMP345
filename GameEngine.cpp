@@ -345,6 +345,36 @@ void GameEngine::startupPhase() {
   }
 
   // addPlayer implementation:
+  bool done_adding_players = false;
+  int nPlayers = 0;
+  cout << "Enter 2-6 players in the format \"addplayer <playername>\"" << endl;
+  cout << "When you have added all players, start game with \"gamestart\" "
+          "command"
+       << endl;
+  while (!done_adding_players) {
+    printCommands();
+    vector<string> result = promptCommand(false);
+
+    if (result.at(0) == "addplayer") {
+      players.push_back(new Player(result.at(1)));
+      nPlayers++;
+    } else if (result.at(0) == "gamestart") {
+      done_adding_players = true;
+    }
+
+    // Allow gamestart command once we have added 2 players.
+    if (nPlayers == 2) {
+      setState(GameEngineFSA::commandToStateMap.at("addplayer"));
+    }
+
+    if (nPlayers == 6) {
+      cout << "The maximum number of players have been added. Game will start "
+              "now."
+           << endl;
+      done_adding_players = true;
+      // TODO: Change game state to gamestart
+    }
+  }
 
   printCommands();
 }
