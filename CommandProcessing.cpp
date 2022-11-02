@@ -1,5 +1,6 @@
 #include "CommandProcessing.h"
 
+#include <fstream>
 #include <iostream>
 #include <vector>
 
@@ -8,6 +9,7 @@
 using std::cin;
 using std::cout;
 using std::getline;
+using std::ofstream;
 
 void CommandProcessor::getCommand() {
   string input = readCommand();
@@ -33,9 +35,19 @@ string CommandProcessor::readCommand() {
   return input;
 }
 
+string CommandProcessor::stringToLog() {
+  ofstream output;
+  output.open("gamelog.txt", std::ios_base::app);
+  output << "print to gamelog" << endl;
+  output << "In command processor" << endl;
+  output.close();
+  return "string";
+}
+
 void CommandProcessor::saveCommand(string command) {
   Command* newCommand = new Command(command);
   commandList.push_back(newCommand);
+  Notify(this);
   // create Command and add to commands vector
 }
 

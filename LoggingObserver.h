@@ -3,6 +3,7 @@
 #include <list>
 #include <string>
 using std::list, std::string;
+class CommandProcessor;
 
 class ILoggable {
  public:
@@ -52,9 +53,11 @@ class LogObserver : public Observer {
  public:
   LogObserver();
   LogObserver(A* s);
+  LogObserver(CommandProcessor* commandProcessor);
   ~LogObserver();
   void Update(ILoggable* ILog);
 
  private:
-  A* _subject;
+  A* _subjectA;
+  CommandProcessor* _subjectCommandProcessor;
 };

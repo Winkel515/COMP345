@@ -1,6 +1,7 @@
 #include <string>
 #include <vector>
 
+#include "LoggingObserver.h"
 class GameEngine;
 
 using std::string;
@@ -15,7 +16,7 @@ class Command {
   ~Command();
 };
 
-class CommandProcessor {
+class CommandProcessor : public Subject, public ILoggable {
   vector<Command*> commandList;
 
   string readCommand();
@@ -26,4 +27,5 @@ class CommandProcessor {
   void getCommand();
   CommandProcessor();
   ~CommandProcessor();
+  string stringToLog();
 };

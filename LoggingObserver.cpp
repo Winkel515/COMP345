@@ -1,7 +1,9 @@
-#include "LoggingObserver.h"
+//#include "LoggingObserver.h"
 
 #include <fstream>
 #include <iostream>
+
+#include "CommandProcessing.h"
 using std::cout;
 using std::endl;
 using std::ofstream;
@@ -35,8 +37,13 @@ Observer::Observer(){};
 Observer::~Observer(){};
 
 LogObserver::LogObserver(A* s) {
-  _subject = s;
-  _subject->Attach(this);
+  _subjectA = s;
+  _subjectA->Attach(this);
+}
+
+LogObserver::LogObserver(CommandProcessor* commandProcessor) {
+  _subjectCommandProcessor = commandProcessor;
+  _subjectCommandProcessor->Attach(this);
 }
 
 void Subject::Attach(Observer* o) { _observers->push_back(o); };
