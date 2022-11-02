@@ -15,6 +15,8 @@ using namespace std;
 // Default Constructor
 Player::Player() {}
 
+Player::Player(string name) { (*this).name = name; }
+
 // Parameterized constructor for testing purposes
 Player::Player(int nTerritories, int nCards, int nOrders) {
   // Populate list of Territories.
@@ -40,6 +42,7 @@ Player::Player(const Player& player) {
   territories = player.territories;
   *cards = Hand(*player.cards);
   *orders = OrdersList(*player.orders);
+  name = player.name;
 }
 
 // Destructor

@@ -2,6 +2,7 @@
 
 #include <iostream>
 #include <list>
+#include <string>
 
 class Card;
 class Territory;
@@ -14,10 +15,12 @@ class Player {
   std::list<Territory*> territories;
   OrdersList* orders;
   Hand* cards;
+  string name;
 
  public:
   Player();
   Player(int nTerritories, int nCards, int nOrders);
+  Player(string name);
   Player(const Player& player);
   ~Player();
   std::list<Territory*> toDefend();
