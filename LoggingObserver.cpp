@@ -14,15 +14,19 @@ string A::stringToLog() {
   ofstream output;
   output.open("gamelog.txt", std::ios_base::app);
   output << "print to gamelog" << endl;
+  output << this->a << endl;
   output << "In A string to log" << endl;
   output.close();
   cout << "In A string to log" << endl;
   return "string";
 }
 
-A::A(int a) { a = 1; }
+A::A(int a) { this->a = 1; }
 
-void A::callNotify() { Notify(this); }
+void A::callNotify() {
+  Notify(this);
+  cout << this->a << endl;
+}
 
 B::B() { b = 0; }
 
@@ -62,6 +66,7 @@ int main() {
   A* a1 = new A(1);
   LogObserver* view = new LogObserver(a1);
   a1->callNotify();
+  cout << a1->a << endl;
 
   return 0;
 }*/
