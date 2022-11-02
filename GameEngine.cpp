@@ -351,6 +351,7 @@ void GameEngine::startupPhase() {
   cout << "When you have added all players, start game with \"gamestart\" "
           "command"
        << endl;
+
   while (!done_adding_players) {
     printCommands();
     vector<string> result = promptCommand(false);
@@ -379,6 +380,10 @@ void GameEngine::startupPhase() {
       // TODO: Change to "gamestart" whenever changed in FSA
       setState(GameEngineFSA::commandToStateMap.at("assigncountries"));
   }
+
+  // TODO: Implement gamestart setup phase
+  Map *map = mapLoader->getMap();
+  map->distributeTerritories(players);  // TODO: Test this function works
 
   printCommands();
 }

@@ -16,6 +16,7 @@ class Player {
   OrdersList* orders;
   Hand* cards;
   string name;
+  int reinforcementPool;
 
  public:
   Player();
@@ -30,6 +31,7 @@ class Player {
   void testListOrder();
   Player& operator=(const Player& player);
   friend std::ostream& operator<<(std::ostream& strm, Player& pl);
+  void addTerritory(Territory*);
 };
 
 list<Territory*> createTerritoryList(int nTerritories);

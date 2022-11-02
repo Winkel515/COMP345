@@ -17,6 +17,7 @@ Player::Player() {}
 
 Player::Player(string name) {
   (*this).name = name;
+  reinforcementPool = 0;
   // TODO: How best to deal with not initializing territories, hand, or
   // orderlist right now? Should I initialize as empty? And anywhere I access
   // them, should I check for nullpointer, because it's not initialized?
@@ -48,6 +49,7 @@ Player::Player(const Player& player) {
   *cards = Hand(*player.cards);
   *orders = OrdersList(*player.orders);
   name = player.name;
+  reinforcementPool = player.reinforcementPool;
 }
 
 // Destructor
@@ -102,6 +104,10 @@ list<Territory*> Player::toAttack() {
 list<Territory*> Player::toDefend() { return territories; };
 
 void Player::issueOrder(Order* newOrder) { (*orders).add(newOrder); }
+
+void Player::addTerritory(Territory* territory) {
+  territories.push_back(territory);
+}
 
 // For Testing:
 void Player::issueOrder() {

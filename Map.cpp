@@ -1,7 +1,10 @@
 #include "Map.h"
 
+#include <algorithm>
+#include <chrono>
 #include <fstream>
 #include <iostream>
+#include <random>
 #include <set>
 #include <string>
 #include <unordered_map>
@@ -365,6 +368,28 @@ void Map::dfs_sub(int currentTerritory,
     }
   }
   continentsCopy[currentTerritory]->color = "BLACK";
+}
+
+void Map::distributeTerritories(vector<Player*> players) {
+  int nPlayers = players.size();
+  int nTerritories = this->territories.size();
+
+  // Shuffle territory vector into a random order
+  unsigned seed = std::chrono::system_clock::now().time_since_epoch().count();
+  shuffle(this->territories.begin(), this->territories.end(),
+          std::default_random_engine(seed));
+
+  // Distribute even number of territories to all players
+  for (int i = 0; i < nPlayers; i++) {
+    for (int j = 0; j < nTerritories / nPlayers; j++) {
+      (players.at(i))->addTerritory(this->territories.at(i * nPlayers + j));
+    }
+  }
+
+  // Distribute remainder of territories
+  for (int i = 0; i < nTerritories % nPlayers; i++) {
+    (players.at(i))->addTerritory(this->territories.at(nTerritories - i - 1));
+  }
 }
 
 string convertAdjToString(
