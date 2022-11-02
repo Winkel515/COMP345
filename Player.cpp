@@ -15,7 +15,12 @@ using namespace std;
 // Default Constructor
 Player::Player() {}
 
-Player::Player(string name) { (*this).name = name; }
+Player::Player(string name) {
+  (*this).name = name;
+  // TODO: How best to deal with not initializing territories, hand, or
+  // orderlist right now? Should I initialize as empty? And anywhere I access
+  // them, should I check for nullpointer, because it's not initialized?
+}
 
 // Parameterized constructor for testing purposes
 Player::Player(int nTerritories, int nCards, int nOrders) {

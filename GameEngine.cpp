@@ -358,7 +358,9 @@ void GameEngine::startupPhase() {
     if (result.at(0) == "addplayer") {
       players.push_back(new Player(result.at(1)));
       nPlayers++;
-    } else if (result.at(0) == "gamestart") {
+    } else if (result.at(0) ==
+               "assigncountries") {  // TODO: Change this to gamestart, once
+                                     // it's been changed in FSA
       done_adding_players = true;
     }
 
@@ -372,8 +374,10 @@ void GameEngine::startupPhase() {
               "now."
            << endl;
       done_adding_players = true;
-      // TODO: Change game state to gamestart
     }
+    if (done_adding_players)
+      // TODO: Change to "gamestart" whenever changed in FSA
+      setState(GameEngineFSA::commandToStateMap.at("assigncountries"));
   }
 
   printCommands();
