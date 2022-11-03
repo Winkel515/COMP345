@@ -4,4 +4,4 @@ build
 outputfile
 
 # Ignore tasks.json
-.vscode/
+.vscode/*
