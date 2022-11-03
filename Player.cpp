@@ -18,9 +18,8 @@ Player::Player() {}
 Player::Player(string name) {
   (*this).name = name;
   reinforcementPool = 0;
-  // TODO: How best to deal with not initializing territories, hand, or
-  // orderlist right now? Should I initialize as empty? And anywhere I access
-  // them, should I check for nullpointer, because it's not initialized?
+  cards = new Hand();
+  orders = new OrdersList();
 }
 
 // Parameterized constructor for testing purposes
