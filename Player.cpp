@@ -129,3 +129,5 @@ list<Territory*> createTerritoryList(int nTerritories) {
 
   return territories;
 }
+
+void Player::addReinforcements(int n) { reinforcementPool += n; }

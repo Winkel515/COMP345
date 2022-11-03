@@ -388,10 +388,16 @@ void GameEngine::startupPhase() {
   Map *map = mapLoader->getMap();
   map->distributeTerritories(players);  // TODO: Test this function works
 
-  //  Randomlyy shuffle player vector to determine player order.
+  //  Randomly shuffle player vector to determine player order.
   unsigned seed = std::chrono::system_clock::now().time_since_epoch().count();
   shuffle(this->players.begin(), this->players.end(),
           std::default_random_engine(seed));
+
+  for (int i = 0; i < players.size(); i++) {
+    players.at(i)->addReinforcements(50);
+  }
+
+  // TODO: Each player draws 2 cards
 
   printCommands();
 }

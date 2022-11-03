@@ -32,6 +32,7 @@ class Player {
   Player& operator=(const Player& player);
   friend std::ostream& operator<<(std::ostream& strm, Player& pl);
   void addTerritory(Territory*);
+  void addReinforcements(int);
 };
 
 list<Territory*> createTerritoryList(int nTerritories);
