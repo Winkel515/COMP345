@@ -3,6 +3,7 @@
 #include <set>
 #include <string>
 
+#include "Cards.h"
 #include "Map.h"
 #include "Player.h"
 
@@ -37,6 +38,7 @@ class GameEngine {
   std::set<std::string> commands;
   MapLoader* mapLoader = NULL;
   std::vector<Player*> players;
+  Deck* deck;
   // Methods
   void execSelector(GameState::GameStateEnum);
   void execStart();

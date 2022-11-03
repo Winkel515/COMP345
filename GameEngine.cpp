@@ -393,11 +393,15 @@ void GameEngine::startupPhase() {
   shuffle(this->players.begin(), this->players.end(),
           std::default_random_engine(seed));
 
-  for (int i = 0; i < players.size(); i++) {
-    players.at(i)->addReinforcements(50);
-  }
+  // TODO: Should this be initialized in GameEngine constructor?
+  deck = new Deck(3);
 
   // TODO: Each player draws 2 cards
+  for (int i = 0; i < players.size(); i++) {
+    players.at(i)->addReinforcements(50);
+    players.at(i)->getHand()->drawCard(deck);
+    players.at(i)->getHand()->drawCard(deck);
+  }
 
   printCommands();
 }
