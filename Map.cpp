@@ -373,6 +373,7 @@ void Map::dfs_sub(int currentTerritory,
 void Map::distributeTerritories(vector<Player*> players) {
   int nPlayers = players.size();
   int nTerritories = this->territories.size();
+  int territoriesPerPlayer = nTerritories / nPlayers;
 
   // Shuffle territory vector into a random order
   unsigned seed = std::chrono::system_clock::now().time_since_epoch().count();
@@ -381,7 +382,7 @@ void Map::distributeTerritories(vector<Player*> players) {
 
   // Distribute even number of territories to all players
   for (int i = 0; i < nPlayers; i++) {
-    for (int j = 0; j < nTerritories / nPlayers; j++) {
+    for (int j = 0; j < territoriesPerPlayer; j++) {
       (players.at(i))->addTerritory(this->territories.at(i * nPlayers + j));
     }
   }

@@ -1,7 +1,10 @@
 #include "GameEngine.h"
 
+#include <algorithm>
+#include <chrono>
 #include <iostream>
 #include <map>
+#include <random>
 #include <set>
 #include <string>
 
@@ -384,6 +387,11 @@ void GameEngine::startupPhase() {
   // TODO: Implement gamestart setup phase
   Map *map = mapLoader->getMap();
   map->distributeTerritories(players);  // TODO: Test this function works
+
+  //  Randomlyy shuffle player vector to determine player order.
+  unsigned seed = std::chrono::system_clock::now().time_since_epoch().count();
+  shuffle(this->players.begin(), this->players.end(),
+          std::default_random_engine(seed));
 
   printCommands();
 }
