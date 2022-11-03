@@ -360,6 +360,12 @@ void GameEngine::startupPhase() {
     vector<string> result = promptCommand(false);
 
     if (result.at(0) == "addplayer") {
+      if (result.size() <= 1) {
+        cout << "Specify the player name in the format \"addplayer "
+                "<playername>\""
+             << endl;
+        continue;
+      }
       players.push_back(new Player(result.at(1)));
       nPlayers++;
     } else if (result.at(0) ==
