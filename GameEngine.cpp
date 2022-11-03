@@ -384,9 +384,10 @@ void GameEngine::startupPhase() {
       setState(GameEngineFSA::commandToStateMap.at("assigncountries"));
   }
 
-  // TODO: Implement gamestart setup phase
-  Map *map = mapLoader->getMap();
-  map->distributeTerritories(players);  // TODO: Test this function works
+  // gamestart phase:
+
+  // TODO: Set territory owners in distributeTerritories
+  mapLoader->getMap()->distributeTerritories(players);
 
   //  Randomly shuffle player vector to determine player order.
   unsigned seed = std::chrono::system_clock::now().time_since_epoch().count();
@@ -401,6 +402,9 @@ void GameEngine::startupPhase() {
     players.at(i)->getHand()->drawCard(deck);
     players.at(i)->getHand()->drawCard(deck);
   }
+
+  cout << "Player 1: " << *players.at(0) << endl;
+  cout << "Player 2: " << *players.at(1) << endl;
 
   printCommands();
 }

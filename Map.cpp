@@ -382,14 +382,24 @@ void Map::distributeTerritories(vector<Player*> players) {
 
   // Distribute even number of territories to all players
   for (int i = 0; i < nPlayers; i++) {
+    Player* currentPlayer = players.at(i);
+
     for (int j = 0; j < territoriesPerPlayer; j++) {
-      (players.at(i))->addTerritory(this->territories.at(i * nPlayers + j));
+      Territory* currentTerritory =
+          this->territories.at(i * territoriesPerPlayer + j);
+
+      currentPlayer->addTerritory(currentTerritory);
+      currentTerritory->setOwner(currentPlayer);
     }
   }
 
   // Distribute remainder of territories
   for (int i = 0; i < nTerritories % nPlayers; i++) {
-    (players.at(i))->addTerritory(this->territories.at(nTerritories - i - 1));
+    Player* currentPlayer = players.at(i);
+    Territory* currentTerritory = this->territories.at(nTerritories - i - 1);
+
+    currentPlayer->addTerritory(currentTerritory);
+    currentTerritory->setOwner(currentPlayer);
   }
 }
 
