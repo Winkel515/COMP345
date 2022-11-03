@@ -412,6 +412,4 @@ void GameEngine::startupPhase() {
   for (int i = 0; i < players.size(); i++) {
     cout << "Player " << i + 1 << ": " << *players.at(i) << endl;
   }
-
-  printCommands();
 }
