@@ -23,7 +23,6 @@ const map<string, GameStateEnum> GameEngineFSA::commandToStateMap{
     {"validatemap", S_MAP_VALIDATED},
     {"addplayer", S_PLAYERS_ADDED},
     {"gamestart", S_ASSIGN_REINFORCEMENT},
-    // {"assigncountries", S_ASSIGN_REINFORCEMENT},
     {"issueorder", S_ISSUE_ORDERS},
     {"endissueorders", S_EXECUTE_ORDERS},
     {"execorder", S_EXECUTE_ORDERS},
@@ -39,7 +38,6 @@ const map<GameStateEnum, set<string>> GameEngineFSA::commandsPerStateMap{
     {S_MAP_LOADED, {"loadmap", "validatemap"}},
     {S_MAP_VALIDATED, {"addplayer"}},
     {S_PLAYERS_ADDED, {"addplayer", "gamestart"}},
-    // {S_PLAYERS_ADDED, {"addplayer", "assigncountries"}},
     {S_ASSIGN_REINFORCEMENT, {"issueorder"}},
     {S_ISSUE_ORDERS, {"issueorder", "endissueorders"}},
     {S_EXECUTE_ORDERS, {"execorder", "endexecorders", "win"}},
@@ -371,8 +369,8 @@ void GameEngine::startupPhase() {
       players.push_back(new Player(result.at(1)));
       nPlayers++;
     } else if (result.at(0) ==
-               "assigncountries") {  // TODO: Change this to gamestart, once
-                                     // it's been changed in FSA
+               "gamestart") {  // TODO: Change this to gamestart, once
+                               // it's been changed in FSA
       done_adding_players = true;
     }
 
@@ -389,7 +387,7 @@ void GameEngine::startupPhase() {
     }
     if (done_adding_players)
       // TODO: Change to "gamestart" whenever changed in FSA
-      setState(GameEngineFSA::commandToStateMap.at("assigncountries"));
+      setState(GameEngineFSA::commandToStateMap.at("gamestart"));
   }
 
   // gamestart phase:
