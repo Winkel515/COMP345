@@ -409,8 +409,9 @@ void GameEngine::startupPhase() {
     players.at(i)->getHand()->drawCard(deck);
   }
 
-  cout << "Player 1: " << *players.at(0) << endl;
-  cout << "Player 2: " << *players.at(1) << endl;
+  for (int i = 0; i < players.size(); i++) {
+    cout << "Player " << i + 1 << ": " << *players.at(i) << endl;
+  }
 
   printCommands();
 }
