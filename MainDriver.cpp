@@ -12,7 +12,7 @@ using std::string;
 using std::vector;
 
 int main(int argc, char *argv[]) {
-  if (argc == 2) {
+  if (argc >= 2) {
     // cast to string
     string flag(argv[1]);
     vector<string> supportedFlags{"-help", "-oldtests"};
