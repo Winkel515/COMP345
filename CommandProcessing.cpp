@@ -24,6 +24,10 @@ CommandProcessor::CommandProcessor(const CommandProcessor& cp) {
   }
 };
 
+CommandProcessor::~CommandProcessor() {
+  for (int i = 0; i < commandList.size(); i++) delete commandList.at(i);
+}
+
 vector<string> CommandProcessor::getCommand() {
   vector<string> result = readCommand();
   saveCommand(result);
@@ -93,6 +97,8 @@ Command::Command(vector<string>& result) {
     param = result.at(1);
   }
 }
+
+Command::~Command() {}
 
 void Command::saveEffect(string s) {
   //  Notify(this);

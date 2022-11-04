@@ -103,7 +103,10 @@ GameEngine &GameEngine::operator=(const GameEngine &copy) {
 }
 
 GameEngine::~GameEngine() {
-  if (mapLoader != NULL) delete mapLoader;
+  delete mapLoader;
+  delete commandProcessor;
+  for (int i = 0; i < players.size(); i++) delete players.at(i);
+  delete deck;
 }
 
 // Overload Stream insertion
