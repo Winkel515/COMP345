@@ -366,7 +366,7 @@ void GameEngine::startupPhase() {
 
   while (!done_adding_players) {
     printCommands();
-    vector<string> result = promptCommand(false);
+    vector<string> result = commandProcessor->getCommand();
 
     if (result.at(0) == "addplayer") {
       if (result.size() <= 1) {
