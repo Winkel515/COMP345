@@ -8,6 +8,8 @@
 #include <set>
 #include <string>
 
+#include "CommandProcessing.h"
+
 using std::cin;
 using std::cout;
 using std::map;
@@ -81,10 +83,18 @@ string GameState::getLabel(GameStateEnum state) {
 };
 
 // Default Constructor for GameEngine
-GameEngine::GameEngine() { setState(S_START); }
+GameEngine::GameEngine() {
+  setState(S_START);
+  mapLoader = new MapLoader();
+  commandProcessor = new CommandProcessor(&commands);
+}
 
 // Copy Constructor for GameEngine
-GameEngine::GameEngine(const GameEngine &ge) { setState(ge.state); }
+GameEngine::GameEngine(const GameEngine &ge) {
+  setState(ge.state);
+  mapLoader = new MapLoader(*ge.mapLoader);
+  commandProcessor = new CommandProcessor(&commands);
+}
 
 // Assignment Operator for GameEngine
 GameEngine &GameEngine::operator=(const GameEngine &copy) {
@@ -308,8 +318,7 @@ void GameEngine::startupPhase() {
   // S_START state loading a map
   while (true) {
     printCommands();
-    vector<string> result = promptCommand(false);
-    mapLoader = new MapLoader();
+    vector<string> result = commandProcessor->getCommand();
     if (result.size() <= 1)
       cout << "Enter a file name in the format loadmap <filename>" << std::endl;
     else if (mapLoader->loadMap(result.at(1))) {
@@ -323,7 +332,7 @@ void GameEngine::startupPhase() {
   // transition to S_MAP_VALIDATED validate is successful
   while (true) {
     printCommands();
-    vector<string> result = promptCommand(false);
+    vector<string> result = commandProcessor->getCommand();
 
     // 2 possible commands: loadmap/validatemap
     if (result.at(0) == "loadmap") {
