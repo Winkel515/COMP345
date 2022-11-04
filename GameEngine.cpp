@@ -87,6 +87,7 @@ GameEngine::GameEngine() {
   setState(S_START);
   mapLoader = new MapLoader();
   commandProcessor = new CommandProcessor(&commands);
+  deck = new Deck(3);
 }
 
 // Copy Constructor for GameEngine
@@ -409,8 +410,6 @@ void GameEngine::startupPhase() {
   shuffle(this->players.begin(), this->players.end(),
           std::default_random_engine(seed));
 
-  // TODO: Should this be initialized in GameEngine constructor?
-  deck = new Deck(3);
   // Each player gets 50 reincforcements and draws 2 cards
   for (int i = 0; i < players.size(); i++) {
     players.at(i)->addReinforcements(50);
