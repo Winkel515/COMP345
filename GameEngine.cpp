@@ -1,15 +1,18 @@
 #include "GameEngine.h"
 
+#include <fstream>
 #include <iostream>
 #include <map>
 #include <set>
 #include <string>
 
 #include "CommandProcessing.h"
+#include "LoggingObserver.h"
 
 using std::cin;
 using std::cout;
 using std::map;
+using std::ofstream;
 using std::ostream;
 using std::set;
 using std::string;
@@ -354,4 +357,13 @@ void GameEngine::startupPhase() {
   }
 
   printCommands();
+}
+
+string GameEngine::stringToLog() {
+  ofstream output;
+  output.open("gamelog.txt", std::ios_base::app);
+  output << "print to gamelog" << endl;
+  output << "In command " << endl;
+  output.close();
+  return "string";
 }

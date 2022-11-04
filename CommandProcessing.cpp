@@ -66,7 +66,7 @@ void CommandProcessor::saveCommand(vector<string>& result) {
   cout << "CommandProcessor::saveCommand : command has been saved "
        << commandList.size() << endl;
   // Notify(this);
-  // create Command and add to commands vector
+  //   create Command and add to commands vector
 }
 
 bool CommandProcessor::validate(vector<string>& result) {
@@ -96,4 +96,13 @@ Command::Command(vector<string>& result) {
 
 void Command::saveEffect(string s) {
   //  Notify(this);
+}
+
+string Command::stringToLog() {
+  ofstream output;
+  output.open("gamelog.txt", std::ios_base::app);
+  output << "print to gamelog" << endl;
+  output << "In command " << endl;
+  output.close();
+  return "string";
 }

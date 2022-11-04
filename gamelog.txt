@@ -1,9 +1,0 @@
-print to gamelog
-0
-In A string to log
-print to gamelog
-0
-In A string to log
-print to gamelog
-1
-In A string to log

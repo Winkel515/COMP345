@@ -55,11 +55,15 @@ void Subject::Attach(Observer* o) { _observers->push_back(o); };
 void Subject::Detach(Observer* o) { _observers->remove(o); };
 
 void Subject::Notify(ILoggable* ILog) {
+  // cout << "bla from notify " << ILog << endl;
   list<Observer*>::iterator i = _observers->begin();
   for (; i != _observers->end(); ++i) (*i)->Update(ILog);
 };
 
-void LogObserver::Update(ILoggable* ILog) { ILog->stringToLog(); }
+void LogObserver::Update(ILoggable* ILog) {
+  ILog->stringToLog();
+  cout << "bla from update" << endl;
+}
 /*
 int main() {
   std::cout << "bla" << std::endl;

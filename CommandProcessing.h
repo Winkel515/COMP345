@@ -11,7 +11,7 @@ using std::set;
 using std::string;
 using std::vector;
 
-class Command {
+class Command : public Subject, public ILoggable {
   string command;
   string param;
 
@@ -23,7 +23,7 @@ class Command {
   string stringToLog();
 };
 
-class CommandProcessor {
+class CommandProcessor : public Subject, public ILoggable {
   vector<Command *> commandList;
   set<string> *commands;
 
