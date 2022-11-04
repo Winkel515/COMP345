@@ -386,6 +386,16 @@ string convertAdjToString(
 
 Map* MapLoader::getMap() { return this->map; }
 
+MapLoader::MapLoader() {
+  fileName = "";
+  map = NULL;
+}
+
+MapLoader::MapLoader(const MapLoader& m) {
+  fileName = m.fileName;
+  map = new Map(*m.map);
+}
+
 bool MapLoader::loadMap(string fileName) {
   string myText;
   fileName = "./map/" + fileName;

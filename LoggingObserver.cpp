@@ -47,7 +47,7 @@ LogObserver::LogObserver(A* s) {
 
 LogObserver::LogObserver(CommandProcessor* commandProcessor) {
   _subjectCommandProcessor = commandProcessor;
-  _subjectCommandProcessor->Attach(this);
+  // _subjectCommandProcessor->Attach(this);
 }
 
 void Subject::Attach(Observer* o) { _observers->push_back(o); };

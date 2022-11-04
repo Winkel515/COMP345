@@ -1,3 +1,6 @@
+#ifndef GAMEENGINE_H
+#define GAMEENGINE_H
+
 #include <iostream>
 #include <map>
 #include <set>
@@ -36,7 +39,8 @@ class GameEngine {
   // Attributes
   GameState::GameStateEnum state;
   std::set<std::string> commands;
-  MapLoader* mapLoader = NULL;
+  MapLoader* mapLoader;
+  CommandProcessor* commandProcessor;
   // Methods
   void execSelector(GameState::GameStateEnum);
   void execStart();
@@ -49,7 +53,6 @@ class GameEngine {
   void execWin();
   void execEnd();
   void startupPhase();
-  friend class CommandProcessor;
 
  public:
   void start();
@@ -66,6 +69,9 @@ class GameEngine {
   GameEngine();                   // default constructor
   GameEngine(const GameEngine&);  // copy constructor
   ~GameEngine();
+  string stringToLog();
   friend std::ostream& operator<<(std::ostream&,
                                   const GameEngine&);  // stream insertion
 };
+
+#endif

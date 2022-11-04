@@ -2,6 +2,7 @@
 
 #include <fstream>
 #include <iostream>
+#include <string>
 #include <vector>
 
 #include "GameEngine.h"
@@ -10,15 +11,29 @@ using std::cin;
 using std::cout;
 using std::getline;
 using std::ofstream;
+using std::set;
+using std::string;
 
-void CommandProcessor::getCommand() {
-  string input = readCommand();
-  saveCommand(input);
+CommandProcessor::CommandProcessor(set<string>* commands) {
+  this->commands = commands;
+};
+
+CommandProcessor::CommandProcessor(const CommandProcessor& cp) {
+  for (int i = 0; i < cp.commandList.size(); i++) {
+    commandList.push_back(new Command(*cp.commandList.at(i)));
+  }
+};
+
+vector<string> CommandProcessor::getCommand() {
+  vector<string> result = readCommand();
+  saveCommand(result);
+  return result;
 }
 
-string CommandProcessor::readCommand() {
+vector<string> CommandProcessor::readCommand() {
   string input = "";
   bool invalid = false;
+  vector<string> result;
 
   while (true) {
     if (invalid) {
@@ -26,13 +41,14 @@ string CommandProcessor::readCommand() {
     }
     cout << "Please enter a command: ";
     getline(cin, input);
-    if (validate(input))
+    result = splitString(input, " ");
+    if (validate(result))
       break;
     else
       invalid = true;
   };
 
-  return input;
+  return result;
 }
 
 string CommandProcessor::stringToLog() {
@@ -44,23 +60,40 @@ string CommandProcessor::stringToLog() {
   return "string";
 }
 
-void CommandProcessor::saveCommand(string command) {
-  Command* newCommand = new Command(command);
+void CommandProcessor::saveCommand(vector<string>& result) {
+  Command* newCommand = new Command(result);
   commandList.push_back(newCommand);
-  Notify(this);
+  cout << "CommandProcessor::saveCommand : command has been saved "
+       << commandList.size() << endl;
+  // Notify(this);
   // create Command and add to commands vector
 }
 
-bool CommandProcessor::validate(string input) {
+bool CommandProcessor::validate(vector<string>& result) {
   // check gamestate and return if command is valid
-  return false;  // just to make compiler happy
+  string command = result.at(0);
+  // Checks if valid command
+  if (commands->find(command) == commands->end()) {
+    cout << "Invalid Command.\n";
+    return false;
+  }
+
+  return true;
 }
 
-Command::Command(string input) {
-  // split string and store
-  vector<string> store = splitString(input, " ");
-  command = store.at(0);
-  if (store.size() > 1) {
-    param = store.at(1);
+Command::Command(const Command& c) {
+  command = c.command;
+  param = c.param;
+}
+
+Command::Command(vector<string>& result) {
+  command = result.at(0);
+  param = "";
+  if (result.size() > 1) {
+    param = result.at(1);
   }
+}
+
+void Command::saveEffect(string s) {
+  //  Notify(this);
 }

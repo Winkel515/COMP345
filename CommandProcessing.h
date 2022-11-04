@@ -1,9 +1,13 @@
+#ifndef COMMANDPROCESSING_H
+#define COMMANDPROCESSING_H
+
 #include <string>
 #include <vector>
 
+#include "GameEngine.h"
 #include "LoggingObserver.h"
-class GameEngine;
 
+using std::set;
 using std::string;
 using std::vector;
 
@@ -12,20 +16,27 @@ class Command {
   string param;
 
  public:
-  Command(string s);
+  Command(vector<string> &);
+  Command(const Command &);
   ~Command();
+  void saveEffect(string);
+  string stringToLog();
 };
 
-class CommandProcessor : public Subject, public ILoggable {
-  vector<Command*> commandList;
+class CommandProcessor {
+  vector<Command *> commandList;
+  set<string> *commands;
 
-  string readCommand();
-  void saveCommand(string);
-  bool validate(string);
+  vector<string> readCommand();
+  void saveCommand(vector<string> &);
+  bool validate(vector<string> &);
 
  public:
-  void getCommand();
-  CommandProcessor();
+  vector<string> getCommand();
+  CommandProcessor(set<string> *);
+  CommandProcessor(const CommandProcessor &);
   ~CommandProcessor();
   string stringToLog();
 };
+
+#endif

@@ -53,6 +53,8 @@ class MapLoader {
  public:
   Map* getMap();
   bool loadMap(string fileName);
+  MapLoader();
+  MapLoader(const MapLoader&);
   ~MapLoader();
   friend ostream& operator<<(ostream& strm, const MapLoader& ml);
 };
