@@ -17,8 +17,8 @@ Player::Player() {}
 
 // Parameterized constructor for testing purposes
 Player::Player(int nTerritories, int nCards, int nOrders) {
-  // Populate list of Territories.
-  territories = createTerritoryList(nTerritories);
+  // // Populate list of Territories.
+  // territories = createTerritoryList(nTerritories);
 
   // Create deck and draw hand
   cards = new Hand();
@@ -26,6 +26,7 @@ Player::Player(int nTerritories, int nCards, int nOrders) {
   for (int i = 0; i < nCards; i++) {
     (*cards).drawCard(fakeDeck);
   }
+  delete fakeDeck;
 
   // Populate OrdersList with random Orders
   orders = new OrdersList();
@@ -44,13 +45,6 @@ Player::Player(const Player& player) {
 
 // Destructor
 Player::~Player() {
-  // delete all territory pointers in list
-  for (std::list<Territory*>::iterator it1 = territories.begin();
-       it1 != territories.end(); ++it1) {
-    delete *it1;
-    *it1 = NULL;
-  }
-
   delete orders;
   delete cards;
 }
@@ -85,8 +79,8 @@ Player& Player::operator=(const Player& player) {
 
 // Returns a list of Territories to Attack
 list<Territory*> Player::toAttack() {
-  list<Territory*> territoriesToAttack = createTerritoryList(3);
-  return territoriesToAttack;
+  // list<Territory*> territoriesToAttack = createTerritoryList(3);
+  // return territoriesToAttack;
 };
 
 // Returns a list of Territories to Defend (All of the player's currently owned
@@ -102,16 +96,16 @@ void Player::issueOrder() {
   (*orders).add(newOrder);
 }
 
-// Helper method to create territory list
-list<Territory*> createTerritoryList(int nTerritories) {
-  list<Territory*> territories;
+// // Helper method to create territory list
+// list<Territory*> createTerritoryList(int nTerritories) {
+//   list<Territory*> territories;
 
-  int i = 0;
-  while (i < nTerritories) {
-    territories.push_back(
-        new Territory("Territory " + to_string(i + 1), "Some Continent"));
-    i++;
-  }
+//   int i = 0;
+//   while (i < nTerritories) {
+//     territories.push_back(
+//         new Territory("Territory " + to_string(i + 1), "Some Continent"));
+//     i++;
+//   }
 
-  return territories;
-}
+//   return territories;
+// }

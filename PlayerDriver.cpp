@@ -21,11 +21,13 @@ void testPlayers() {
 
   cout << endl << "----------------------------" << endl;
   cout << endl << "Demonstrating toAttack() method" << endl;
-  list<Territory*> toAttack = (*p1).toAttack();
-  for (std::list<Territory*>::iterator it1 = toAttack.begin();
-       it1 != toAttack.end(); ++it1) {
-    cout << **it1;
-  }
+
+  // TODO player should get territories from maploader
+  // list<Territory*> toAttack = (*p1).toAttack();
+  // for (std::list<Territory*>::iterator it1 = toAttack.begin();
+  //      it1 != toAttack.end(); ++it1) {
+  //   cout << **it1;
+  // }
 
   cout << endl << "----------------------------" << endl;
   cout << endl << "Demonstrating toDefend() method" << endl;
@@ -35,4 +37,6 @@ void testPlayers() {
     cout << **it2;
   }
   cout << endl;
+
+  delete p1;
 }
