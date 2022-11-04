@@ -95,6 +95,7 @@ GameEngine::GameEngine(const GameEngine &ge) {
   setState(ge.state);
   mapLoader = new MapLoader(*ge.mapLoader);
   commandProcessor = new CommandProcessor(&commands);
+  deck = new Deck(3);
 }
 
 // Assignment Operator for GameEngine
