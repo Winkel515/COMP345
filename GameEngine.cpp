@@ -377,9 +377,7 @@ void GameEngine::startupPhase() {
       }
       players.push_back(new Player(result.at(1)));
       nPlayers++;
-    } else if (result.at(0) ==
-               "gamestart") {  // TODO: Change this to gamestart, once
-                               // it's been changed in FSA
+    } else if (result.at(0) == "gamestart") {
       done_adding_players = true;
     }
 
@@ -395,7 +393,6 @@ void GameEngine::startupPhase() {
       done_adding_players = true;
     }
     if (done_adding_players)
-      // TODO: Change to "gamestart" whenever changed in FSA
       setState(GameEngineFSA::commandToStateMap.at("gamestart"));
   }
 
