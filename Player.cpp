@@ -57,13 +57,6 @@ Player::Player(const Player& player) {
 
 // Destructor
 Player::~Player() {
-  // delete all territory pointers in list
-  for (std::list<Territory*>::iterator it1 = territories.begin();
-       it1 != territories.end(); ++it1) {
-    delete *it1;
-    *it1 = NULL;
-  }
-
   delete orders;
   delete cards;
 }

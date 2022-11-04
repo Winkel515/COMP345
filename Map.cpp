@@ -445,6 +445,8 @@ bool MapLoader::loadMap(string fileName) {
   vector<Territory*> territories;
   vector<Territory*> territoriesCopy;
 
+  if (map != NULL) delete map;
+
   // parse files data
   if (MyReadFile) {
     try {
@@ -519,7 +521,9 @@ ostream& operator<<(
 }
 
 // MapLoader destructor
-MapLoader::~MapLoader() { delete this->map; }
+MapLoader::~MapLoader() {
+  if (map != NULL) delete map;
+}
 
 // helper function for parsing
 vector<string> splitString(string s, string delimiter) {
