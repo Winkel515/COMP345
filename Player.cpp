@@ -13,10 +13,14 @@
 using namespace std;
 
 // Default Constructor
-Player::Player() {}
+Player::Player() {
+  reinforcementPool = 0;
+  cards = new Hand();
+  orders = new OrdersList();
+}
 
 Player::Player(string name) {
-  (*this).name = name;
+  this->name = name;
   reinforcementPool = 0;
   cards = new Hand();
   orders = new OrdersList();
