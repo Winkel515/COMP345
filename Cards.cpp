@@ -8,7 +8,7 @@
 
 // Card constructor
 Card::Card(Card::CardType type) {
-  std::cout << "Card created with default constructor" << std::endl;
+  // std::cout << "Card created with default constructor" << std::endl;
   TypeOfCard = type;
 }
 

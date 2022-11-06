@@ -32,10 +32,10 @@ void testGameStates() {
   std::cout << "- Testing GameEngine: Running Game States\n";
   GameEngine* runningGameEngine = new GameEngine;
   runningGameEngine->start();
-  while (runningGameEngine->getState() != GameState::S_END) {
-    std::cout << *runningGameEngine;
-    runningGameEngine->promptCommand();
-  }
+  // while (runningGameEngine->getState() != GameState::S_END) {
+  //   std::cout << *runningGameEngine;
+  //   runningGameEngine->promptCommand();
+  // }
 
   delete runningGameEngine;
 }
