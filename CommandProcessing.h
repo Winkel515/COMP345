@@ -20,6 +20,7 @@ class Command : public Subject, public ILoggable {
   Command(const Command &);
   ~Command();
   void saveEffect(string);
+  void callNotify();
   string stringToLog();
 };
 

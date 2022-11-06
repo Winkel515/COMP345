@@ -21,11 +21,11 @@ string A::stringToLog() {
   return "string";
 }
 
-A::A(int a) { this->a = 1; }
+A::A(int a) { this->a = a; }
 
 void A::callNotify() {
   Notify(this);
-  cout << this->a << endl;
+  cout << "this->a" << this->a << endl;
 }
 
 B::B() { b = 0; }
@@ -45,18 +45,32 @@ LogObserver::LogObserver(A* s) {
   _subjectA->Attach(this);
 }
 
-LogObserver::LogObserver(CommandProcessor* commandProcessor) {
-  _subjectCommandProcessor = commandProcessor;
-  // _subjectCommandProcessor->Attach(this);
+LogObserver::LogObserver(Command* c) {
+  _subjectCommand = c;
+  _subjectCommand->Attach(this);
+  cout << "this " << this << endl;
+  cout << "attached" << endl;
 }
 
-void Subject::Attach(Observer* o) { _observers->push_back(o); };
+LogObserver::LogObserver(CommandProcessor* commandProcessor) {
+  _subjectCommandProcessor = commandProcessor;
+  _subjectCommandProcessor->Attach(this);
+}
+
+void Subject::Attach(Observer* o) {
+  cout << "in attach" << endl;
+  _observers->push_back(o);
+  cout << "obs size in attach " << _observers->size() << endl;
+};
 
 void Subject::Detach(Observer* o) { _observers->remove(o); };
 
 void Subject::Notify(ILoggable* ILog) {
-  // cout << "bla from notify " << ILog << endl;
+  cout << "bla from notify " << ILog << endl;
   list<Observer*>::iterator i = _observers->begin();
+  cout << "i" << (*i) << endl;
+  cout << "observer size in notify " << _observers->size() << endl;
+
   for (; i != _observers->end(); ++i) (*i)->Update(ILog);
 };
 
@@ -67,7 +81,7 @@ void LogObserver::Update(ILoggable* ILog) {
 /*
 int main() {
   std::cout << "bla" << std::endl;
-  A* a1 = new A(1);
+  A* a1 = new A(10);
   LogObserver* view = new LogObserver(a1);
   a1->callNotify();
   cout << a1->a << endl;

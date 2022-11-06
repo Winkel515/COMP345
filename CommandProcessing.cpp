@@ -62,12 +62,16 @@ string CommandProcessor::stringToLog() {
 
 void CommandProcessor::saveCommand(vector<string>& result) {
   Command* newCommand = new Command(result);
+  LogObserver* commandView = new LogObserver(newCommand);
   commandList.push_back(newCommand);
   cout << "CommandProcessor::saveCommand : command has been saved "
        << commandList.size() << endl;
   // Notify(this);
+  newCommand->callNotify();
   //   create Command and add to commands vector
 }
+
+void Command::callNotify() { Notify(this); }
 
 bool CommandProcessor::validate(vector<string>& result) {
   // check gamestate and return if command is valid
@@ -82,15 +86,15 @@ bool CommandProcessor::validate(vector<string>& result) {
 }
 
 Command::Command(const Command& c) {
-  command = c.command;
-  param = c.param;
+  this->command = c.command;
+  this->param = c.param;
 }
 
 Command::Command(vector<string>& result) {
-  command = result.at(0);
-  param = "";
+  this->command = result.at(0);
+  this->param = "";
   if (result.size() > 1) {
-    param = result.at(1);
+    this->param = result.at(1);
   }
 }
 
@@ -102,6 +106,7 @@ string Command::stringToLog() {
   ofstream output;
   output.open("gamelog.txt", std::ios_base::app);
   output << "print to gamelog" << endl;
+  output << "command " << this->command << " param " << this->param << endl;
   output << "In command " << endl;
   output.close();
   return "string";

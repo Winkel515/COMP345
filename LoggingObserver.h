@@ -4,6 +4,8 @@
 #include <string>
 using std::list, std::string;
 class CommandProcessor;
+class GameEngine;
+class Command;
 
 class ILoggable {
  public:
@@ -53,11 +55,15 @@ class LogObserver : public Observer {
  public:
   LogObserver();
   LogObserver(A* s);
-  LogObserver(CommandProcessor* commandProcessor);
+  LogObserver(Command* c);
+  LogObserver(CommandProcessor* cp);
+  LogObserver(GameEngine* ge);
   ~LogObserver();
   void Update(ILoggable* ILog);
 
  private:
   A* _subjectA;
+  Command* _subjectCommand;
   CommandProcessor* _subjectCommandProcessor;
+  GameEngine* _subjectGameEngine;
 };
