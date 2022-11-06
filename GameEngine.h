@@ -52,12 +52,13 @@ class GameEngine {
   void execMapLoaded();
   void execMapValidated();
   void execPlayersAdded();
-  void execAssignReinforcement();
-  void execIssueOrders();
+  void reinforcementPhase();
+  void issueOrdersPhase();
   void execExecuteOrders();
   void execWin();
   void execEnd();
   void startupPhase();
+  void mainGameLoop();
 
  public:
   void start();

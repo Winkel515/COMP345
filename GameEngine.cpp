@@ -173,10 +173,10 @@ void GameEngine::execSelector(GameStateEnum state) {
       execPlayersAdded();
       break;
     case S_ASSIGN_REINFORCEMENT:
-      execAssignReinforcement();
+      reinforcementPhase();
       break;
     case S_ISSUE_ORDERS:
-      execIssueOrders();
+      issueOrdersPhase();
       break;
     case S_EXECUTE_ORDERS:
       execExecuteOrders();
@@ -294,18 +294,41 @@ void GameEngine::execPlayersAdded() {
 }
 
 // Executes Assign Reinforcement state
-void GameEngine::execAssignReinforcement() {
+void GameEngine::reinforcementPhase() {
   // // Exec Assign Reinforcement here
+  for (int i = 0; i < players.size(); i++) {
+    // Get reinforcement for Player
+    int reinforcements;
+    reinforcements = (players.at(i)->getTerritories().size())/3;
+
+    // TODO: CHECK IF PLAYER OWNS A CONTINENT AND ADD BONUS TO REINFORCEMENTS
+
+    // if lower than 3, assign 3 reinforcements
+    if (reinforcements < 3)
+    {
+      reinforcements = 3;
+    }
+
+    players.at(i)->addReinforcements(reinforcements);
+
+    cout << "Added " << reinforcements << " units to player " << i << " reinforcement pool" << std::endl;
+  }
 }
 
 // Executes Issue Order state
-void GameEngine::execIssueOrders() {
+void GameEngine::issueOrdersPhase() {
   // // Exec Issue order here
+  for (int i = 0; i < players.size(); i++) {
+
+  }
 }
 
 // Execute Execute Orders state
 void GameEngine::execExecuteOrders() {
   // // Exec Execute Orders here
+  for (int i = 0; i < players.size(); i++) {
+
+  }
 }
 
 // Execute Win state
@@ -420,5 +443,13 @@ void GameEngine::startupPhase() {
 
   for (int i = 0; i < players.size(); i++) {
     cout << "Player " << i + 1 << ": " << *players.at(i) << endl;
+  }
+}
+
+void GameEngine::mainGameLoop() {
+  while(true) { // TODO: CHANGE TRUE TO A CONDITION WHERE no player owns all territories
+  reinforcementPhase();
+  issueOrdersPhase();
+  execExecuteOrders();
   }
 }
