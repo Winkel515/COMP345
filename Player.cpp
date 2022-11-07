@@ -131,3 +131,7 @@ void Player::addReinforcements(int n) { reinforcementPool += n; }
 Hand* Player::getHand() { return cards; }
 
 std::list<Territory*> Player::getTerritories() { return territories; }
+
+OrdersList* Player::getOrderList() {
+  return orders;
+}

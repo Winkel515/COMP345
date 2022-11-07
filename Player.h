@@ -35,6 +35,7 @@ class Player {
   void addReinforcements(int);
   Hand* getHand();
   std::list<Territory*> getTerritories();
+  OrdersList* Player::getOrderList();
 };
 
 list<Territory*> createTerritoryList(int nTerritories);

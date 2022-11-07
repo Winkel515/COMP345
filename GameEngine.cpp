@@ -319,7 +319,23 @@ void GameEngine::reinforcementPhase() {
 void GameEngine::issueOrdersPhase() {
   // // Exec Issue order here
   for (int i = 0; i < players.size(); i++) {
+    
+    // List of territories to attack and defend
+    // players.at(i)->toAttack();
+    // players.at(i)->toDefend();
 
+    // Issue deploy orders
+    while (true) { // TODO: Replace true with a get method for reinforcement pool (while(reinforcementPool > 0))
+      players.at(i)->issueOrder();
+    }
+
+    // Issue advance orders
+    while (true) { // TODO: Replace true with a condition that ends the loop through a command
+    players.at(i)->issueOrder();
+    }
+
+    // Issue card order
+    players.at(i)->issueOrder();
   }
 }
 
@@ -327,7 +343,7 @@ void GameEngine::issueOrdersPhase() {
 void GameEngine::execExecuteOrders() {
   // // Exec Execute Orders here
   for (int i = 0; i < players.size(); i++) {
-
+    players.at(i)->getOrderList()->executeOrders(); // TODO: Update execute order function
   }
 }
 
