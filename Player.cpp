@@ -13,12 +13,13 @@
 using namespace std;
 
 // Default Constructor
-Player::Player() {}
+Player::Player() { ConqueredTerritoryFlag = false;}
 
 // Parameterized constructor for testing purposes
 Player::Player(int nTerritories, int nCards, int nOrders) {
   // Populate list of Territories.
   territories = createTerritoryList(nTerritories);
+  ConqueredTerritoryFlag = false;
 
   // Create deck and draw hand
   cards = new Hand();
@@ -40,6 +41,7 @@ Player::Player(const Player& player) {
   territories = player.territories;
   *cards = Hand(*player.cards);
   *orders = OrdersList(*player.orders);
+  ConqueredTerritoryFlag = false;
 }
 
 // Destructor

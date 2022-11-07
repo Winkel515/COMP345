@@ -14,6 +14,7 @@ class Player {
   std::list<Territory*> territories;
   OrdersList* orders;
   Hand* cards;
+  bool ConqueredTerritoryFlag;
 
  public:
   Player();
