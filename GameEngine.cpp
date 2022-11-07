@@ -1,8 +1,12 @@
 #include "GameEngine.h"
 
+
 #include <fstream>
+#include <algorithm>
+#include <chrono>
 #include <iostream>
 #include <map>
+#include <random>
 #include <set>
 #include <string>
 
@@ -24,7 +28,7 @@ const map<string, GameStateEnum> GameEngineFSA::commandToStateMap{
     {"loadmap", S_MAP_LOADED},
     {"validatemap", S_MAP_VALIDATED},
     {"addplayer", S_PLAYERS_ADDED},
-    {"assigncountries", S_ASSIGN_REINFORCEMENT},
+    {"gamestart", S_ASSIGN_REINFORCEMENT},
     {"issueorder", S_ISSUE_ORDERS},
     {"endissueorders", S_EXECUTE_ORDERS},
     {"execorder", S_EXECUTE_ORDERS},
@@ -39,7 +43,7 @@ const map<GameStateEnum, set<string>> GameEngineFSA::commandsPerStateMap{
     {S_START, {"loadmap"}},
     {S_MAP_LOADED, {"loadmap", "validatemap"}},
     {S_MAP_VALIDATED, {"addplayer"}},
-    {S_PLAYERS_ADDED, {"addplayer", "assigncountries"}},
+    {S_PLAYERS_ADDED, {"addplayer", "gamestart"}},
     {S_ASSIGN_REINFORCEMENT, {"issueorder"}},
     {S_ISSUE_ORDERS, {"issueorder", "endissueorders"}},
     {S_EXECUTE_ORDERS, {"execorder", "endexecorders", "win"}},
@@ -88,6 +92,7 @@ GameEngine::GameEngine() {
   mapLoader = new MapLoader();
   commandProcessor = new CommandProcessor(&commands);
   LogObserver *commandView = new LogObserver(commandProcessor);
+  deck = new Deck(3);
 }
 
 // Copy Constructor for GameEngine
@@ -95,6 +100,7 @@ GameEngine::GameEngine(const GameEngine &ge) {
   setState(ge.state);
   mapLoader = new MapLoader(*ge.mapLoader);
   commandProcessor = new CommandProcessor(&commands);
+  deck = new Deck(3);
 }
 
 // Assignment Operator for GameEngine
@@ -104,7 +110,10 @@ GameEngine &GameEngine::operator=(const GameEngine &copy) {
 }
 
 GameEngine::~GameEngine() {
-  if (mapLoader != NULL) delete mapLoader;
+  delete mapLoader;
+  delete commandProcessor;
+  for (int i = 0; i < players.size(); i++) delete players.at(i);
+  delete deck;
 }
 
 // Overload Stream insertion
@@ -357,7 +366,71 @@ void GameEngine::startupPhase() {
     }
   }
 
-  printCommands();
+
+  printCommands();//TODO should it be removed?
+}
+
+
+  // addPlayer implementation:
+  bool done_adding_players = false;
+  int nPlayers = 0;
+  cout << "Enter 2-6 players in the format \"addplayer <playername>\"" << endl;
+  cout << "When you have added all players, start game with \"gamestart\" "
+          "command"
+       << endl;
+
+  while (!done_adding_players) {
+    printCommands();
+    vector<string> result = commandProcessor->getCommand();
+
+    if (result.at(0) == "addplayer") {
+      if (result.size() <= 1) {
+        cout << "Specify the player name in the format \"addplayer "
+                "<playername>\""
+             << endl;
+        continue;
+      }
+      players.push_back(new Player(result.at(1)));
+      nPlayers++;
+    } else if (result.at(0) == "gamestart") {
+      done_adding_players = true;
+    }
+
+    // Allow gamestart command once we have added 2 players.
+    if (nPlayers == 2) {
+      setState(GameEngineFSA::commandToStateMap.at("addplayer"));
+    }
+
+    if (nPlayers == 6) {
+      cout << "The maximum number of players have been added. Game will start "
+              "now."
+           << endl;
+      done_adding_players = true;
+    }
+    if (done_adding_players)
+      setState(GameEngineFSA::commandToStateMap.at("gamestart"));
+  }
+
+  // gamestart phase:
+
+  // TODO: Set territory owners in distributeTerritories
+  mapLoader->getMap()->distributeTerritories(players);
+
+  //  Randomly shuffle player vector to determine player order.
+  unsigned seed = std::chrono::system_clock::now().time_since_epoch().count();
+  shuffle(this->players.begin(), this->players.end(),
+          std::default_random_engine(seed));
+
+  // Each player gets 50 reincforcements and draws 2 cards
+  for (int i = 0; i < players.size(); i++) {
+    players.at(i)->addReinforcements(50);
+    players.at(i)->getHand()->drawCard(deck);
+    players.at(i)->getHand()->drawCard(deck);
+  }
+
+  for (int i = 0; i < players.size(); i++) {
+    cout << "Player " << i + 1 << ": " << *players.at(i) << endl;
+  }
 }
 
 string GameEngine::stringToLog() {

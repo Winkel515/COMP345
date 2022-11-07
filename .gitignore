@@ -1,7 +1,8 @@
 # Ignore Output files
 build
 *.exe
+*.out
 outputfile
 
 # Ignore tasks.json
-.vscode/tasks.json
+.vscode/*

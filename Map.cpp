@@ -1,7 +1,10 @@
 #include "Map.h"
 
+#include <algorithm>
+#include <chrono>
 #include <fstream>
 #include <iostream>
+#include <random>
 #include <set>
 #include <string>
 #include <unordered_map>
@@ -367,6 +370,39 @@ void Map::dfs_sub(int currentTerritory,
   continentsCopy[currentTerritory]->color = "BLACK";
 }
 
+void Map::distributeTerritories(vector<Player*> players) {
+  int nPlayers = players.size();
+  int nTerritories = this->territories.size();
+  int territoriesPerPlayer = nTerritories / nPlayers;
+
+  // Shuffle territory vector into a random order
+  unsigned seed = std::chrono::system_clock::now().time_since_epoch().count();
+  shuffle(this->territories.begin(), this->territories.end(),
+          std::default_random_engine(seed));
+
+  // Distribute even number of territories to all players
+  for (int i = 0; i < nPlayers; i++) {
+    Player* currentPlayer = players.at(i);
+
+    for (int j = 0; j < territoriesPerPlayer; j++) {
+      Territory* currentTerritory =
+          this->territories.at(i * territoriesPerPlayer + j);
+
+      currentPlayer->addTerritory(currentTerritory);
+      currentTerritory->setOwner(currentPlayer);
+    }
+  }
+
+  // Distribute remainder of territories
+  for (int i = 0; i < nTerritories % nPlayers; i++) {
+    Player* currentPlayer = players.at(i);
+    Territory* currentTerritory = this->territories.at(nTerritories - i - 1);
+
+    currentPlayer->addTerritory(currentTerritory);
+    currentTerritory->setOwner(currentPlayer);
+  }
+}
+
 string convertAdjToString(
     vector<Territory*> adj) {  // free function to convert the
                                // adjacency lists to strings
@@ -408,6 +444,8 @@ bool MapLoader::loadMap(string fileName) {
   vector<string> continentsNames;
   vector<Territory*> territories;
   vector<Territory*> territoriesCopy;
+
+  if (map != NULL) delete map;
 
   // parse files data
   if (MyReadFile) {
@@ -483,7 +521,9 @@ ostream& operator<<(
 }
 
 // MapLoader destructor
-MapLoader::~MapLoader() { delete this->map; }
+MapLoader::~MapLoader() {
+  if (map != NULL) delete map;
+}
 
 // helper function for parsing
 vector<string> splitString(string s, string delimiter) {

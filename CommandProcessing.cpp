@@ -24,6 +24,10 @@ CommandProcessor::CommandProcessor(const CommandProcessor& cp) {
   }
 };
 
+CommandProcessor::~CommandProcessor() {
+  for (int i = 0; i < commandList.size(); i++) delete commandList.at(i);
+}
+
 vector<string> CommandProcessor::getCommand() {
   vector<string> result = readCommand();
   saveCommand(result);
@@ -102,6 +106,7 @@ Command::Command(vector<string>& result) {
   }
 }
 
+
 void Command::saveEffect(string s) { Notify(this); }
 
 string Command::stringToLog() {
@@ -112,4 +117,7 @@ string Command::stringToLog() {
   output << "In command " << endl;
   output.close();
   return "string";
+
+Command::~Command() {}
+
 }

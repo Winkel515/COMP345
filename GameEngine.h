@@ -6,8 +6,11 @@
 #include <set>
 #include <string>
 
+
 #include "LoggingObserver.h"
+#include "Cards.h"
 #include "Map.h"
+#include "Player.h"
 
 class CommandProcessor;
 
@@ -40,8 +43,11 @@ class GameEngine : public Subject, public ILoggable {
   // Attributes
   GameState::GameStateEnum state;
   std::set<std::string> commands;
+  std::vector<Player*> players;
+  Deck* deck;
   MapLoader* mapLoader;
   CommandProcessor* commandProcessor;
+
   // Methods
   void execSelector(GameState::GameStateEnum);
   void execStart();

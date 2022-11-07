@@ -43,6 +43,7 @@ class Map {
   unordered_map<string, vector<Territory*>> copyContinents(
       vector<Territory*> territoriesCopy);
   friend ostream& operator<<(ostream& strm, const Map& m);
+  void distributeTerritories(vector<Player*> players);
 };
 
 class MapLoader {
