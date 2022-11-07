@@ -367,7 +367,7 @@ void GameEngine::startupPhase() {
   }
 
 
-  printCommands();//TODO should it be removed?
+  printCommands();
 }
 
 
