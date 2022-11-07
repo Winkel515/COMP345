@@ -13,7 +13,20 @@
 using namespace std;
 
 // Default Constructor
-Player::Player() { ConqueredTerritoryFlag = false;}
+Player::Player() {
+  reinforcementPool = 0;
+  ConqueredTerritoryFlag = false;
+  cards = new Hand();
+  orders = new OrdersList();
+}
+
+Player::Player(string name) {
+  this->name = name;
+  reinforcementPool = 0;
+  cards = new Hand();
+  orders = new OrdersList();
+  ConqueredTerritoryFlag = false;
+}
 
 // Parameterized constructor for testing purposes
 Player::Player(int nTerritories, int nCards, int nOrders) {
@@ -41,18 +54,13 @@ Player::Player(const Player& player) {
   territories = player.territories;
   *cards = Hand(*player.cards);
   *orders = OrdersList(*player.orders);
+  name = player.name;
+  reinforcementPool = player.reinforcementPool;
   ConqueredTerritoryFlag = false;
 }
 
 // Destructor
 Player::~Player() {
-  // delete all territory pointers in list
-  for (std::list<Territory*>::iterator it1 = territories.begin();
-       it1 != territories.end(); ++it1) {
-    delete *it1;
-    *it1 = NULL;
-  }
-
   delete orders;
   delete cards;
 }
@@ -97,6 +105,10 @@ list<Territory*> Player::toDefend() { return territories; };
 
 void Player::issueOrder(Order* newOrder) { (*orders).add(newOrder); }
 
+void Player::addTerritory(Territory* territory) {
+  territories.push_back(territory);
+}
+
 // For Testing:
 void Player::issueOrder() {
   // Create and add random order to List of Orders
@@ -117,3 +129,9 @@ list<Territory*> createTerritoryList(int nTerritories) {
 
   return territories;
 }
+
+void Player::addReinforcements(int n) { reinforcementPool += n; }
+
+Hand* Player::getHand() { return cards; }
+
+std::list<Territory*> Player::getTerritories() { return territories; }

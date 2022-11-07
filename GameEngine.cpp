@@ -1,9 +1,14 @@
 #include "GameEngine.h"
 
+#include <algorithm>
+#include <chrono>
 #include <iostream>
 #include <map>
+#include <random>
 #include <set>
 #include <string>
+
+#include "CommandProcessing.h"
 
 using std::cin;
 using std::cout;
@@ -20,7 +25,6 @@ const map<string, GameStateEnum> GameEngineFSA::commandToStateMap{
     {"validatemap", S_MAP_VALIDATED},
     {"addplayer", S_PLAYERS_ADDED},
     {"gamestart", S_ASSIGN_REINFORCEMENT},
-    // {"assigncountries", S_ASSIGN_REINFORCEMENT},
     {"issueorder", S_ISSUE_ORDERS},
     {"endissueorders", S_EXECUTE_ORDERS},
     {"execorder", S_EXECUTE_ORDERS},
@@ -36,7 +40,6 @@ const map<GameStateEnum, set<string>> GameEngineFSA::commandsPerStateMap{
     {S_MAP_LOADED, {"loadmap", "validatemap"}},
     {S_MAP_VALIDATED, {"addplayer"}},
     {S_PLAYERS_ADDED, {"addplayer", "gamestart"}},
-    // {S_PLAYERS_ADDED, {"addplayer", "assigncountries"}},
     {S_ASSIGN_REINFORCEMENT, {"issueorder"}},
     {S_ISSUE_ORDERS, {"issueorder", "endissueorders"}},
     {S_EXECUTE_ORDERS, {"execorder", "endexecorders", "win"}},
@@ -80,15 +83,32 @@ string GameState::getLabel(GameStateEnum state) {
 };
 
 // Default Constructor for GameEngine
-GameEngine::GameEngine() { setState(S_START); }
+GameEngine::GameEngine() {
+  setState(S_START);
+  mapLoader = new MapLoader();
+  commandProcessor = new CommandProcessor(&commands);
+  deck = new Deck(3);
+}
 
 // Copy Constructor for GameEngine
-GameEngine::GameEngine(const GameEngine &ge) { setState(ge.state); }
+GameEngine::GameEngine(const GameEngine &ge) {
+  setState(ge.state);
+  mapLoader = new MapLoader(*ge.mapLoader);
+  commandProcessor = new CommandProcessor(&commands);
+  deck = new Deck(3);
+}
 
 // Assignment Operator for GameEngine
 GameEngine &GameEngine::operator=(const GameEngine &copy) {
   setState(copy.state);
   return *this;
+}
+
+GameEngine::~GameEngine() {
+  delete mapLoader;
+  delete commandProcessor;
+  for (int i = 0; i < players.size(); i++) delete players.at(i);
+  delete deck;
 }
 
 // Overload Stream insertion
@@ -141,7 +161,7 @@ void GameEngine::run() { this->execSelector(this->state); }
 void GameEngine::execSelector(GameStateEnum state) {
   switch (state) {
     case S_START:
-      execStart();
+      startupPhase();
       break;
     case S_MAP_LOADED:
       execMapLoaded();
@@ -173,7 +193,7 @@ void GameEngine::execSelector(GameStateEnum state) {
 }
 
 // Prompts for the command
-void GameEngine::promptCommand() {
+vector<string> GameEngine::promptCommand() {
   string command = "";
 
   do {
@@ -181,8 +201,24 @@ void GameEngine::promptCommand() {
       cout << "Try again.\n";
     }
     cout << "Please enter a command: ";
-    cin >> command;
-  } while (!handleCommand(command));
+    getline(cin, command);
+  } while (!handleCommand(command, true));
+
+  return splitString(command, " ");
+}
+
+vector<string> GameEngine::promptCommand(bool transitionState) {
+  string command = "";
+
+  do {
+    if (command != "" && commands.find(command) == commands.end()) {
+      cout << "Try again.\n";
+    }
+    cout << "Please enter a command: ";
+    getline(cin, command);
+  } while (!handleCommand(command, transitionState));
+
+  return splitString(command, " ");
 }
 
 // Displays the list of valid commands
@@ -204,6 +240,7 @@ void GameEngine::printCommands() {
 
 // Handles the mapping between command and state
 bool GameEngine::handleCommand(string command) {
+  command = splitString(command, " ").at(0);
   // Checks if valid command
   if (commands.find(command) == commands.end()) {
     cout << "Invalid Command.\n";
@@ -213,6 +250,22 @@ bool GameEngine::handleCommand(string command) {
   // Transition the state
   GameStateEnum desiredState = GameEngineFSA::commandToStateMap.at(command);
   setState(desiredState);
+
+  return true;
+}
+
+bool GameEngine::handleCommand(string command, bool transitionState) {
+  command = splitString(command, " ").at(0);
+  // Checks if valid command
+  if (commands.find(command) == commands.end()) {
+    cout << "Invalid Command.\n";
+    return false;
+  }
+
+  if (transitionState) {
+    GameStateEnum desiredState = GameEngineFSA::commandToStateMap.at(command);
+    setState(desiredState);
+  }
 
   return true;
 }
@@ -264,4 +317,108 @@ void GameEngine::execWin() {
 void GameEngine::execEnd() {
   // // Exec End here
   cout << "Game has ended.\n";
+}
+
+void GameEngine::startupPhase() {
+  // S_START state loading a map
+  while (true) {
+    printCommands();
+    vector<string> result = commandProcessor->getCommand();
+    if (result.size() <= 1)
+      cout << "Enter a file name in the format loadmap <filename>" << std::endl;
+    else if (mapLoader->loadMap(result.at(1))) {
+      cout << "\"" << result.at(1) << "\" has been loaded\n";
+      setState(GameEngineFSA::commandToStateMap.at("loadmap"));
+      break;
+    }
+  }
+
+  // S_MAP_LOADED state, load map or validate map
+  // transition to S_MAP_VALIDATED validate is successful
+  while (true) {
+    printCommands();
+    vector<string> result = commandProcessor->getCommand();
+
+    // 2 possible commands: loadmap/validatemap
+    if (result.at(0) == "loadmap") {
+      if (result.size() <= 1)
+        cout << "Enter a file name in the format loadmap <filename>"
+             << std::endl;
+      else if (mapLoader->loadMap(result.at(1))) {
+        cout << "\"" << result.at(1) << "\" has been loaded\n";
+      }
+    }
+
+    else if (result.at(0) == "validatemap") {
+      if (mapLoader->getMap()->validate()) {
+        cout << "The map passed all the tests and is a valid map to be used.\n";
+        setState(GameEngineFSA::commandToStateMap.at("validatemap"));
+        break;
+      } else {
+        cout << "The map has failed at least one test and is not a valid map. "
+                "Try loading another map.\n";
+      }
+    }
+  }
+
+  // addPlayer implementation:
+  bool done_adding_players = false;
+  int nPlayers = 0;
+  cout << "Enter 2-6 players in the format \"addplayer <playername>\"" << endl;
+  cout << "When you have added all players, start game with \"gamestart\" "
+          "command"
+       << endl;
+
+  while (!done_adding_players) {
+    printCommands();
+    vector<string> result = commandProcessor->getCommand();
+
+    if (result.at(0) == "addplayer") {
+      if (result.size() <= 1) {
+        cout << "Specify the player name in the format \"addplayer "
+                "<playername>\""
+             << endl;
+        continue;
+      }
+      players.push_back(new Player(result.at(1)));
+      nPlayers++;
+    } else if (result.at(0) == "gamestart") {
+      done_adding_players = true;
+    }
+
+    // Allow gamestart command once we have added 2 players.
+    if (nPlayers == 2) {
+      setState(GameEngineFSA::commandToStateMap.at("addplayer"));
+    }
+
+    if (nPlayers == 6) {
+      cout << "The maximum number of players have been added. Game will start "
+              "now."
+           << endl;
+      done_adding_players = true;
+    }
+    if (done_adding_players)
+      setState(GameEngineFSA::commandToStateMap.at("gamestart"));
+  }
+
+  // gamestart phase:
+
+  // TODO: Set territory owners in distributeTerritories
+  mapLoader->getMap()->distributeTerritories(players);
+
+  //  Randomly shuffle player vector to determine player order.
+  unsigned seed = std::chrono::system_clock::now().time_since_epoch().count();
+  shuffle(this->players.begin(), this->players.end(),
+          std::default_random_engine(seed));
+
+  // Each player gets 50 reincforcements and draws 2 cards
+  for (int i = 0; i < players.size(); i++) {
+    players.at(i)->addReinforcements(50);
+    players.at(i)->getHand()->drawCard(deck);
+    players.at(i)->getHand()->drawCard(deck);
+  }
+
+  for (int i = 0; i < players.size(); i++) {
+    cout << "Player " << i + 1 << ": " << *players.at(i) << endl;
+  }
 }

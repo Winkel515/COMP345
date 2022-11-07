@@ -1,7 +1,16 @@
+#ifndef GAMEENGINE_H
+#define GAMEENGINE_H
+
 #include <iostream>
 #include <map>
 #include <set>
 #include <string>
+
+#include "Cards.h"
+#include "Map.h"
+#include "Player.h"
+
+class CommandProcessor;
 
 namespace GameState {
 enum GameStateEnum {
@@ -32,6 +41,11 @@ class GameEngine {
   // Attributes
   GameState::GameStateEnum state;
   std::set<std::string> commands;
+  std::vector<Player*> players;
+  Deck* deck;
+  MapLoader* mapLoader;
+  CommandProcessor* commandProcessor;
+
   // Methods
   void execSelector(GameState::GameStateEnum);
   void execStart();
@@ -43,12 +57,15 @@ class GameEngine {
   void execExecuteOrders();
   void execWin();
   void execEnd();
+  void startupPhase();
 
  public:
   void start();
   void run();
   bool handleCommand(std::string);
-  void promptCommand();
+  bool handleCommand(std::string, bool);
+  std::vector<std::string> promptCommand();
+  std::vector<std::string> promptCommand(bool);
   void printCommands();
   std::set<std::string> getCommands();
   void setState(GameState::GameStateEnum);
@@ -56,6 +73,10 @@ class GameEngine {
   GameEngine& operator=(const GameEngine&);
   GameEngine();                   // default constructor
   GameEngine(const GameEngine&);  // copy constructor
+  ~GameEngine();
+  string stringToLog();
   friend std::ostream& operator<<(std::ostream&,
                                   const GameEngine&);  // stream insertion
 };
+
+#endif
