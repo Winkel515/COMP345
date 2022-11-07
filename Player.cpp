@@ -9,6 +9,7 @@
 #include "Map.h"
 #include "Orders.h"
 #include "PlayerDriver.h"
+#include "Cards.h"
 
 using namespace std;
 
@@ -28,6 +29,7 @@ Player::Player(string name) {
   ConqueredTerritoryFlag = false;
 }
 
+/*
 // Parameterized constructor for testing purposes
 Player::Player(int nTerritories, int nCards, int nOrders) {
   // Populate list of Territories.
@@ -37,8 +39,9 @@ Player::Player(int nTerritories, int nCards, int nOrders) {
   // Create deck and draw hand
   cards = new Hand();
   Deck* fakeDeck = new Deck(3);
+  cards->setDeck(fakeDeck);
   for (int i = 0; i < nCards; i++) {
-    (*cards).drawCard(fakeDeck);
+    (*cards).drawCard();
   }
 
   // Populate OrdersList with random Orders
@@ -47,6 +50,7 @@ Player::Player(int nTerritories, int nCards, int nOrders) {
     (*orders).add(new Order(static_cast<Order::OrderType>(rand() % 6)));
   }
 }
+*/
 
 // Copy Constructor makes shallow copies of members because we want functions to
 // be able to change the pointed to values.
@@ -109,15 +113,16 @@ void Player::addTerritory(Territory* territory) {
   territories.push_back(territory);
 }
 
-// For Testing:
+/*
 void Player::issueOrder() {
   // Create and add random order to List of Orders
   Order* newOrder = new Order(static_cast<Order::OrderType>(rand() % 6));
   (*orders).add(newOrder);
 }
+*/
 
 // Helper method to create territory list
-list<Territory*> createTerritoryList(int nTerritories) {
+list<Territory*> Player::createTerritoryList(int nTerritories) {
   list<Territory*> territories;
 
   int i = 0;
@@ -135,3 +140,13 @@ void Player::addReinforcements(int n) { reinforcementPool += n; }
 Hand* Player::getHand() { return cards; }
 
 std::list<Territory*> Player::getTerritories() { return territories; }
+
+bool Player::getConcqueredFlag(){ return ConqueredTerritoryFlag; }
+
+void Player::setConcqueredFlag(bool flag){ ConqueredTerritoryFlag = flag; }
+
+vector<Player*> Player::getDiplomaticAllies(){return diplomaticAllies;}
+
+void Player::addDiplomaticAlly(Player* ally) { diplomaticAllies.push_back(ally);}
+
+void Player::clearDiplomaticAllies(){ diplomaticAllies.clear();}

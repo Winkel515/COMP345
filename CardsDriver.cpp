@@ -14,12 +14,14 @@ void testCards() {
 
   // create new hand object using default
   Hand* hand = new Hand();
+  //assign deck to hand
+  hand->setDeck(d1);
 
   // draws ten cards from deck. since deck only contains 5 cards, it will
   // automatically create 5 more.
   std::cout << "Creating hand and drawing 10 cards from deck" << std::endl;
   for (int i = 0; i < 10; i++) {
-    hand->drawCard(d1);
+    hand->drawCard();
   }
   // show deck cards and hand cards to prove that swap occured
   d1->showCards();

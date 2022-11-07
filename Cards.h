@@ -19,7 +19,7 @@ class Card {
 
   void SetType(Card::CardType type);
   Card::CardType GetType() const;
-  void play(Deck* deck, Order* order);
+  void play(Deck* deck);
 
  private:
   Card::CardType TypeOfCard;
@@ -49,13 +49,16 @@ class Hand {
   Hand(const Hand& other);
   Hand& operator=(const Hand& copy);
   friend std::ostream& operator<<(std::ostream& out, const Hand& h);
-  void drawCard(Deck* deck);
+  void drawCard();
   void showCards();
   std::vector<Card*> getCards();
   void removeCard(int indexOfCard);
+  Deck* getDeck();
+  void setDeck(Deck* deck);
 
  private:
   std::vector<Card*> cards;
+  Deck* deck;
 };
 
 #endif

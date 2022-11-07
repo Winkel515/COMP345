@@ -60,30 +60,53 @@ class Advance : public Order{
 
 class Bomb : public Order {
   public:
+  Bomb(Territory* target, Player* owner);
   void execute();
   bool validate();
   friend std::ostream &operator<<(std::ostream &output, const Bomb &o);
+
+  private:
+  Player* Owner;
+  Territory* Target;
 };
 
 class Blockade : public Order{
   public:
+  Blockade(Territory* target, Player* owner, Player* neutral);
   void execute();
   bool validate();
   friend std::ostream &operator<<(std::ostream &output, const Blockade &o);
+
+  private:
+    Territory* Target;
+    Player* Owner;
+    Player* NeutralPlayer;
 };
 
 class Airlift : public Order{
   public:
+  Airlift(Territory* target, Territory* source, Player* owner, int numOfArmies);
   void execute();
   bool validate();
   friend std::ostream &operator<<(std::ostream &output, const Airlift &o);
+
+  private:
+    Territory* Source;
+    Territory* Target;
+    int NumOfArmies;
+    Player* Owner;
 };
 
 class Negotiate : public Order{
   public:
+  Negotiate(Territory* target, Player* owner);
   void execute();
   bool validate();
   friend std::ostream &operator<<(std::ostream &output, const Negotiate &o);
+
+  private:
+    Territory* Target;
+    Player* Owner;
 };
 
 class OrdersList {

@@ -1,7 +1,9 @@
 #include "Orders.h"
+#include "Cards.h"
 
 #include <sstream>
 #include <stdlib.h> //rand()
+#include <cmath> //floor()
 
 using namespace std;
 
@@ -186,22 +188,28 @@ bool Advance::validate(){
     cout << "Invalid Order: Source not owned by player." << endl;
     return false;
   }
+  //make sure the target is not a diplomatic ally
+  vector<Player*>::iterator alliesIterate = Target->getOwner()->getDiplomaticAllies().begin();
+  //check if players are allies
+  for(alliesIterate; alliesIterate != Target->getOwner()->getDiplomaticAllies().end(); alliesIterate++){
+    if(*alliesIterate == Owner){
+      cout << "Invalid order: Target is a diplomatic Ally till the end of this turn." << endl;
+      return false;
+    }
+  }
+
 
   //check if territories are adjacent
   bool adj = false;
   //declare vector iterator
   vector<Territory*>::iterator iter = this->GetTarget()->adj.begin();
-  for(iter; iter < this->GetTarget()->adj.end(); iter++){
+  for(iter; iter != this->GetTarget()->adj.end(); iter++){
     if(*iter == this->GetSource()){
-      adj = true;
+      return true;
     }
   }
-  if(adj == false){
     cout << "Invalid order: Target and source are not adjacent!" << endl;
     return false;
-  }
-
-  return true;
 }
 
 //Advance order execution
@@ -246,8 +254,178 @@ void Advance::execute(){
       this->Source->setOwner(this->Owner);
       this->Source->setNumArmies(numAttackArmies);
 
-      
+      //check if this is the first territory concquered by the player this turn, if yes, player draws card
+      if(this->Source->getOwner()->getConcqueredFlag() == false){
+        this->Source->getOwner()->setConcqueredFlag(true);
+        Owner->getHand()->drawCard();
+      }
+
     }
   }
 }
+}
 
+//end of Advance order class
+
+//Airlift order implementation
+Airlift::Airlift(Territory* target, Territory* source, Player* owner, int numOfArmies){
+  Target = target;
+  Source = source; 
+  Owner = owner;
+  NumOfArmies = numOfArmies;
+}
+
+bool Airlift::validate(){
+  //both source and target territories have to belong to the owner of the order
+  if(this->Target->getOwner() != this->Owner){
+    cout << "Order invalid: Target does not belong to the owner." << endl;
+    return false;
+  }
+  if(this->Source->getOwner() != this->Owner){
+    cout << "Order invalid: Source does not belong to the owner." << endl;
+    return false;
+  }
+
+  return true;
+}
+
+void Airlift::execute(){
+  //validate order
+  bool validate = this->validate();
+
+  if(validate){
+    //remove armies from source
+    Source->addNumArmies(NumOfArmies * -1);
+    //move them to target
+    Target->addNumArmies(NumOfArmies);
+  } 
+}
+
+ostream &operator<<(ostream &output, const Airlift &o){
+  output << "\nAirlift order:" << "\n\tSource: " << *o.Source << "\n\tTarget: " << *o.Target << "\n\tNum of Armies: " << o.NumOfArmies << endl;
+  return output;
+}
+
+Bomb::Bomb(Territory* target, Player* owner){
+  Target = target;
+  Owner = owner;
+}
+
+bool Bomb::validate(){
+  //target cannot belong to owner
+  if(Target->getOwner() == Owner){
+    cout << "Order invalid: territory belongs to owner" << endl;
+    return false;
+  }
+  //make sure the target is not a diplomatic ally
+  vector<Player*>::iterator alliesIterate = Target->getOwner()->getDiplomaticAllies().begin();
+  //check if players are allies
+  for(alliesIterate; alliesIterate != Target->getOwner()->getDiplomaticAllies().end(); alliesIterate++){
+    if(*alliesIterate == Owner){
+      cout << "Invalid order: Target is a diplomatic Ally till the end of this turn." << endl;
+      return false;
+    }
+  }
+
+  //target must be adjacent to one of the owner's territory
+  //declare vector iterator
+  vector<Territory*>::iterator iterate = Target->adj.begin();
+
+  for(iterate; iterate != Target->adj.end(); iterate++){
+    if((*iterate)->getOwner() == Owner){
+      return true;
+    }
+  }
+    cout << "Invalid order: Target and source are not adjacent!" << endl;
+    return false;
+  
+}
+
+void Bomb::execute(){
+  //validate the order
+  bool validate = this->validate();
+
+  if(validate){
+    //removes half of the army on the territory, rounded down.
+    int numOfarmies = std::floor(Target->getNumArmies()/ 2.0);
+    Target->setNumArmies(numOfarmies);
+  }
+
+}
+
+ostream &operator<<(ostream &output, const Bomb &o){
+  output << "Bomb Order:\n\tOwner:  " << *o.Owner << "\n\tTarget: " << *o.Target << endl;
+  return output;
+}
+
+//end of Bomb order implementation
+
+//Blockade order implementation
+Blockade::Blockade(Territory* target, Player* owner, Player* neutral){
+  Target = target;
+  Owner = owner;
+  NeutralPlayer = neutral;
+}
+
+bool Blockade::validate(){
+  //target cannot belong to another player
+  if(Target->getOwner() != Owner){
+    return false;
+  }
+  return true;
+}
+
+void Blockade::execute(){
+  //validate order
+  bool validate = this->validate();
+
+  if(validate){
+    //double the num of armies
+    int numArmies = Target->getNumArmies() * 2;
+    Target->setNumArmies(numArmies);
+
+    //give territory to neutral player
+    Target->setOwner(this->NeutralPlayer);
+  }
+
+}
+
+ostream &operator<<(ostream &output, const Blockade &o){
+  output << "Blockade Order:\n\t" << *o.Owner << "\n\tTarget: " << *o.Target << endl;
+  return output;
+}
+
+//end of blockade implementation
+
+//negotiate order implementation
+Negotiate::Negotiate(Territory* target, Player* owner){
+  Target = target;
+  Owner = owner;
+}
+
+bool Negotiate::validate(){
+  //target must be an enemy
+  if(Target->getOwner() == Owner){
+    cout << "Invalid order: Owner cannot own the target territory" << endl;
+    return false;
+  }
+  return true;
+}
+
+void Negotiate::execute(){
+  //validate order
+  bool validate = this->validate();
+
+  if(validate){
+    //make both players diplomatic allies for the rest of the turn
+    Owner->addDiplomaticAlly(Target->getOwner());
+    Target->getOwner()->addDiplomaticAlly(Owner);
+  }
+}
+
+ostream &operator<<(ostream &output, const Negotiate &o){
+  output << "Negotiate Order:\n\tTarget: " << *o.Target << "\n\tOwner: " << *o.Owner << endl;
+  return output;
+}
+
+//end of negotiate order implementation
