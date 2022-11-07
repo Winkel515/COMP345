@@ -12,10 +12,9 @@ using std::string;
 using std::vector;
 
 class Command : public Subject, public ILoggable {
+ public:
   string command;
   string param;
-
- public:
   Command(vector<string> &);
   Command(const Command &);
   ~Command();

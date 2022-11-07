@@ -9,11 +9,15 @@ class Command;
 
 class ILoggable {
  public:
+  // ILoggable();
+  //  ILoggable(const ILoggable& ILog);
   virtual string stringToLog() = 0;
 };
 
 class Observer {
  public:
+  // Observer();
+  //  Observer(const Observer& o);
   ~Observer();
   virtual void Update(ILoggable* ILog) = 0;
 
@@ -27,6 +31,7 @@ class Subject {
   virtual void Detach(Observer* o);
   virtual void Notify(ILoggable* ILog);
   Subject();
+  // Subject(const Subject& s);
   ~Subject();
 
  private:
@@ -53,7 +58,8 @@ class B {
 
 class LogObserver : public Observer {
  public:
-  LogObserver();
+  // LogObserver();
+  //  LogObserver(const LogObserver& LogObserver);
   LogObserver(A* s);
   LogObserver(Command* c);
   LogObserver(CommandProcessor* cp);

@@ -1,16 +1,10 @@
 print to gamelog
-1
-In A string to log
+command 0 loadmap
+param 0 3D.map
+In command processor
 print to gamelog
-10
-In A string to log
-print to gamelog
-In command 
-print to gamelog
-In command 
-print to gamelog
-command loadmap param 3D.map
-In command 
-print to gamelog
-command validatemap param 
-In command 
+command 0 loadmap
+param 0 3D.map
+command 1 validatemap
+param 1 
+In command processor

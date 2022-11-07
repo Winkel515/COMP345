@@ -87,6 +87,7 @@ GameEngine::GameEngine() {
   setState(S_START);
   mapLoader = new MapLoader();
   commandProcessor = new CommandProcessor(&commands);
+  LogObserver *commandView = new LogObserver(commandProcessor);
 }
 
 // Copy Constructor for GameEngine

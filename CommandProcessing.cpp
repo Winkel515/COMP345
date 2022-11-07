@@ -55,6 +55,10 @@ string CommandProcessor::stringToLog() {
   ofstream output;
   output.open("gamelog.txt", std::ios_base::app);
   output << "print to gamelog" << endl;
+  for (int i = 0; i < (this->commandList).size(); i++) {
+    output << "command " << i << " " << this->commandList[i]->command << endl;
+    output << "param " << i << " " << this->commandList[i]->param << endl;
+  }
   output << "In command processor" << endl;
   output.close();
   return "string";
@@ -66,9 +70,9 @@ void CommandProcessor::saveCommand(vector<string>& result) {
   commandList.push_back(newCommand);
   cout << "CommandProcessor::saveCommand : command has been saved "
        << commandList.size() << endl;
-  // Notify(this);
-  newCommand->callNotify();
-  //   create Command and add to commands vector
+  Notify(this);
+  // newCommand->callNotify();
+  //    create Command and add to commands vector
 }
 
 void Command::callNotify() { Notify(this); }
@@ -98,9 +102,7 @@ Command::Command(vector<string>& result) {
   }
 }
 
-void Command::saveEffect(string s) {
-  //  Notify(this);
-}
+void Command::saveEffect(string s) { Notify(this); }
 
 string Command::stringToLog() {
   ofstream output;
