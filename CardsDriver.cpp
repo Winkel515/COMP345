@@ -35,10 +35,10 @@ void testCards() {
   for (int i = 0; i < sizeOfHand; i++) {
     hand->showCards();
     // create basic order object for testing purposes
-    Order* order = new Order();
-    hand->getCards().at(0)->play(d1, order);
+    //Order* order = new Order();
+    //hand->getCards().at(0)->play(d1, order);
     hand->removeCard(0);
-    delete order;
+    //delete order;
   }
 
   // proof that cards were returned to deck

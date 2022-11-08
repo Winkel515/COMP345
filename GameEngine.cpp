@@ -414,8 +414,9 @@ void GameEngine::startupPhase() {
   // Each player gets 50 reincforcements and draws 2 cards
   for (int i = 0; i < players.size(); i++) {
     players.at(i)->addReinforcements(50);
-    players.at(i)->getHand()->drawCard(deck);
-    players.at(i)->getHand()->drawCard(deck);
+    players.at(i)->getHand()->setDeck(deck);
+    players.at(i)->getHand()->drawCard();
+    players.at(i)->getHand()->drawCard();
   }
 
   for (int i = 0; i < players.size(); i++) {

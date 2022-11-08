@@ -10,6 +10,7 @@
 #include "Map.h"
 #include "Player.h"
 
+class Card;
 class CommandProcessor;
 
 namespace GameState {

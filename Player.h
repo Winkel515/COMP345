@@ -3,22 +3,21 @@
 #include <iostream>
 #include <list>
 #include <string>
+#include "Cards.h"
+#include "Map.h"
+#include "Orders.h"
 
-class Card;
-class Territory;
-class OrdersList;
-class Hand;
-class Order;
-using namespace std;
+
 
 class Player {
-  std::list<Territory*> territories;
-  OrdersList* orders;
-  Hand* cards;
-  bool ConqueredTerritoryFlag;
-  string name;
-  int reinforcementPool;
-  std::vector<Player*> diplomaticAllies;
+  private:
+    std::list<Territory*> territories;
+    OrdersList* orders;
+    Hand* cards;
+    bool ConqueredTerritoryFlag;
+    string name;
+    int reinforcementPool;
+    std::vector<Player*> diplomaticAllies;
 
  public:
   Player();

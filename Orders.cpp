@@ -1,18 +1,18 @@
 #include "Orders.h"
 #include "Cards.h"
+#include "Player.h"
 
 #include <sstream>
 #include <stdlib.h> //rand()
 #include <cmath> //floor()
 
-using namespace std;
 
 // default constructor
 Order::Order() {}
 
 // Order copy constructor
 Order::Order(const Order &order) {
-  cout << " Order created with copy constructor" << endl;
+  std::cout << " Order created with copy constructor" << std::endl;
 }
 
 // Order assignment operator
@@ -22,18 +22,18 @@ Order &Order::operator=(const Order &order) {
 }
 
 // Order destructor
-Order::~Order() { cout << "Destroyed Order" << endl; }
+Order::~Order() { std::cout << "Destroyed Order" << std::endl; }
 
 // Order insertion stream operator
-ostream &operator<<(ostream &out, const Order &o) {
-  out << "Order insertion stream called" << endl;
+std::ostream &operator<<(std::ostream &out, const Order &o) {
+  out << "Order insertion stream called" << std::endl;
   return out;
 }
 
 
 // Default OrderList constructor
 OrdersList::OrdersList() {
-  vector<Order *> o;
+  std::vector<Order *> o;
   this->ListOfOrders = o;
 }
 
@@ -53,7 +53,7 @@ void OrdersList::move(int initial, int final) {
   if (initial >= ListOfOrders.size() || initial < 0) return;
 
   // If final index is out of bounds, use list size as index
-  int newIndex = min(max(final, 0), (int)ListOfOrders.size());
+  int newIndex = std::min(std::max(final, 0), (int)ListOfOrders.size());
 
   Order *movedOrder = ListOfOrders[initial];
   ListOfOrders.erase(ListOfOrders.begin() + initial);
@@ -85,17 +85,17 @@ OrdersList::~OrdersList() {
 }
 
 // Stream insertion operator
-ostream &operator<<(ostream &o, const OrdersList &ol) {
-  stringstream ss;
+std::ostream &operator<<(std::ostream &o, const OrdersList &ol) {
+  std::stringstream ss;
 
-  ss << "Order list:" << endl;
+  ss << "Order list:" << std::endl;
 
   for (Order *order : ol.ListOfOrders) {
     ss << "\t"
        << "Order " << order->GetType() << " is present in the list,\n";
   }
 
-  return o << ss.str() << endl;
+  return o << ss.str() << std::endl;
 }
 
 // execute all orders in the list
@@ -124,15 +124,15 @@ Player* Deploy::GetOwner(){ return Owner;}
 //getter for target territory
 Territory* Deploy::GetTarget(){ return Target; }
 
-ostream &operator<<(ostream &output, const Deploy &o){
-  output << "\nDeploy order: " << "\n\tOwner: " << *o.Owner << "\n\tTarget" << *o.Target << "\n\tNum of armies:" <<o.NumOfArmies << endl;
+std::ostream &operator<<(std::ostream &output, const Deploy &o){
+  output << "\nDeploy order: " << "\n\tOwner: " << *o.Owner << "\n\tTarget" << *o.Target << "\n\tNum of armies:" <<o.NumOfArmies << std::endl;
   return output;
 }
 
 bool Deploy::validate(){
   //If the target territory does not belong to the player that issued the order, the order is invalid
   if(this->GetTarget()->getOwner() != this->GetOwner()){
-    cout << "Order invalid: player must own the target territory" << endl;
+    std::cout << "Order invalid: player must own the target territory" << std::endl;
     return false;
   } else {
     return true;
@@ -147,14 +147,10 @@ void Deploy::execute(){
   if(valid){
     this->Target->addNumArmies(this->GetNumArmies());
   } else {
-    cout << "Invalid order" << endl;
+    std::cout << "Invalid order" << std::endl;
   }
 }
 
-ostream &operator<<(ostream &out, const Deploy &o){
-  out << "Deploy" << endl;
-  return out;
-}
 //end of Deploy class
 
 //Advance class
@@ -175,9 +171,9 @@ Territory* Advance::GetSource(){ return Source;}
 Territory* Advance::GetTarget(){ return Target; }
 
 //output stream overload
-ostream &operator<<(ostream &output, const Advance &o){
+std::ostream &operator<<(std::ostream &output, const Advance &o){
   output << "\nAdvance order: " << "\n\tOwner: " << *o.Owner << "\n\tTarget" << *o.Target << "\n\tNum of armies:" <<o.NumOfArmies;
-  output << "\n\tSource: " <<  *o.Source << endl;
+  output << "\n\tSource: " <<  *o.Source << std::endl;
   return output;
 }
 
@@ -185,15 +181,15 @@ ostream &operator<<(ostream &output, const Advance &o){
 bool Advance::validate(){
   //check if player owns the source territory
   if(this->GetSource()->getOwner() != this->GetOwner()){
-    cout << "Invalid Order: Source not owned by player." << endl;
+    std::cout << "Invalid Order: Source not owned by player." << std::endl;
     return false;
   }
   //make sure the target is not a diplomatic ally
-  vector<Player*>::iterator alliesIterate = Target->getOwner()->getDiplomaticAllies().begin();
+  std::vector<Player*>::iterator alliesIterate = Target->getOwner()->getDiplomaticAllies().begin();
   //check if players are allies
   for(alliesIterate; alliesIterate != Target->getOwner()->getDiplomaticAllies().end(); alliesIterate++){
     if(*alliesIterate == Owner){
-      cout << "Invalid order: Target is a diplomatic Ally till the end of this turn." << endl;
+      std::cout << "Invalid order: Target is a diplomatic Ally till the end of this turn." << std::endl;
       return false;
     }
   }
@@ -202,13 +198,13 @@ bool Advance::validate(){
   //check if territories are adjacent
   bool adj = false;
   //declare vector iterator
-  vector<Territory*>::iterator iter = this->GetTarget()->adj.begin();
+  std::vector<Territory*>::iterator iter = this->GetTarget()->adj.begin();
   for(iter; iter != this->GetTarget()->adj.end(); iter++){
     if(*iter == this->GetSource()){
       return true;
     }
   }
-    cout << "Invalid order: Target and source are not adjacent!" << endl;
+    std::cout << "Invalid order: Target and source are not adjacent!" << std::endl;
     return false;
 }
 
@@ -278,11 +274,11 @@ Airlift::Airlift(Territory* target, Territory* source, Player* owner, int numOfA
 bool Airlift::validate(){
   //both source and target territories have to belong to the owner of the order
   if(this->Target->getOwner() != this->Owner){
-    cout << "Order invalid: Target does not belong to the owner." << endl;
+    cout << "Order invalid: Target does not belong to the owner." << std::endl;
     return false;
   }
   if(this->Source->getOwner() != this->Owner){
-    cout << "Order invalid: Source does not belong to the owner." << endl;
+    cout << "Order invalid: Source does not belong to the owner." << std::endl;
     return false;
   }
 
@@ -301,8 +297,8 @@ void Airlift::execute(){
   } 
 }
 
-ostream &operator<<(ostream &output, const Airlift &o){
-  output << "\nAirlift order:" << "\n\tSource: " << *o.Source << "\n\tTarget: " << *o.Target << "\n\tNum of Armies: " << o.NumOfArmies << endl;
+std::ostream &operator<<(std::ostream &output, const Airlift &o){
+  output << "\nAirlift order:" << "\n\tSource: " << *o.Source << "\n\tTarget: " << *o.Target << "\n\tNum of Armies: " << o.NumOfArmies << std::endl;
   return output;
 }
 
@@ -314,15 +310,15 @@ Bomb::Bomb(Territory* target, Player* owner){
 bool Bomb::validate(){
   //target cannot belong to owner
   if(Target->getOwner() == Owner){
-    cout << "Order invalid: territory belongs to owner" << endl;
+    std::cout << "Order invalid: territory belongs to owner" << std::endl;
     return false;
   }
   //make sure the target is not a diplomatic ally
-  vector<Player*>::iterator alliesIterate = Target->getOwner()->getDiplomaticAllies().begin();
+  std::vector<Player*>::iterator alliesIterate = Target->getOwner()->getDiplomaticAllies().begin();
   //check if players are allies
   for(alliesIterate; alliesIterate != Target->getOwner()->getDiplomaticAllies().end(); alliesIterate++){
     if(*alliesIterate == Owner){
-      cout << "Invalid order: Target is a diplomatic Ally till the end of this turn." << endl;
+      std::cout << "Invalid order: Target is a diplomatic Ally till the end of this turn." << std::endl;
       return false;
     }
   }
@@ -336,7 +332,7 @@ bool Bomb::validate(){
       return true;
     }
   }
-    cout << "Invalid order: Target and source are not adjacent!" << endl;
+    std::cout << "Invalid order: Target and source are not adjacent!" << std::endl;
     return false;
   
 }
@@ -353,8 +349,8 @@ void Bomb::execute(){
 
 }
 
-ostream &operator<<(ostream &output, const Bomb &o){
-  output << "Bomb Order:\n\tOwner:  " << *o.Owner << "\n\tTarget: " << *o.Target << endl;
+std::ostream &operator<<(std::ostream &output, const Bomb &o){
+  output << "Bomb Order:\n\tOwner:  " << *o.Owner << "\n\tTarget: " << *o.Target << std::endl;
   return output;
 }
 
@@ -390,8 +386,8 @@ void Blockade::execute(){
 
 }
 
-ostream &operator<<(ostream &output, const Blockade &o){
-  output << "Blockade Order:\n\t" << *o.Owner << "\n\tTarget: " << *o.Target << endl;
+std::ostream &operator<<(std::ostream &output, const Blockade &o){
+  output << "Blockade Order:\n\t" << *o.Owner << "\n\tTarget: " << *o.Target << std::endl;
   return output;
 }
 
@@ -406,7 +402,7 @@ Negotiate::Negotiate(Territory* target, Player* owner){
 bool Negotiate::validate(){
   //target must be an enemy
   if(Target->getOwner() == Owner){
-    cout << "Invalid order: Owner cannot own the target territory" << endl;
+    std::cout << "Invalid order: Owner cannot own the target territory" << std::endl;
     return false;
   }
   return true;
@@ -423,8 +419,8 @@ void Negotiate::execute(){
   }
 }
 
-ostream &operator<<(ostream &output, const Negotiate &o){
-  output << "Negotiate Order:\n\tTarget: " << *o.Target << "\n\tOwner: " << *o.Owner << endl;
+std::ostream &operator<<(std::ostream &output, const Negotiate &o){
+  output << "Negotiate Order:\n\tTarget: " << *o.Target << "\n\tOwner: " << *o.Owner << std::endl;
   return output;
 }
 

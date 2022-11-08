@@ -1,17 +1,14 @@
-#include "Player.h"
-
 #include <cstdlib>
 #include <iostream>
 #include <list>
 #include <vector>
 
+
 #include "Cards.h"
 #include "Map.h"
 #include "Orders.h"
-#include "PlayerDriver.h"
 #include "Cards.h"
-
-using namespace std;
+#include "Player.h"
 
 // Default Constructor
 Player::Player() {
@@ -29,7 +26,7 @@ Player::Player(string name) {
   ConqueredTerritoryFlag = false;
 }
 
-/*
+
 // Parameterized constructor for testing purposes
 Player::Player(int nTerritories, int nCards, int nOrders) {
   // Populate list of Territories.
@@ -47,10 +44,10 @@ Player::Player(int nTerritories, int nCards, int nOrders) {
   // Populate OrdersList with random Orders
   orders = new OrdersList();
   for (int i = 0; i < nOrders; i++) {
-    (*orders).add(new Order(static_cast<Order::OrderType>(rand() % 6)));
+    //(*orders).add(new Order(static_cast<Order::OrderType>(rand() % 6)));
   }
 }
-*/
+
 
 // Copy Constructor makes shallow copies of members because we want functions to
 // be able to change the pointed to values.

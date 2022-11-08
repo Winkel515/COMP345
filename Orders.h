@@ -4,7 +4,10 @@
 #include <string>
 #include <vector>
 #include "Map.h"
-#include "Player.h"
+
+
+class Player;
+
 
 //abstract class
 class Order {
@@ -122,7 +125,7 @@ class OrdersList {
   void executeOrders();
 
  private:
-  std::vector<Order *> ListOfOrders;
+  std::vector<Order*> ListOfOrders;
 };
 
 #endif
