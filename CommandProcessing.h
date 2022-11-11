@@ -12,14 +12,14 @@ using std::string;
 using std::vector;
 
 class Command {
+ public:
   string command;
   string param;
-
- public:
+  string effect;
   Command(vector<string> &);
   Command(const Command &);
   ~Command();
-  void saveEffect(string);
+  void saveEffect(string &);
   string stringToLog();
 };
 
@@ -28,11 +28,11 @@ class CommandProcessor {
   set<string> *commands;
 
   vector<string> readCommand();
-  void saveCommand(vector<string> &);
+  Command &saveCommand(vector<string> &);
   bool validate(vector<string> &);
 
  public:
-  vector<string> getCommand();
+  Command &getCommand();
   CommandProcessor(set<string> *);
   CommandProcessor(const CommandProcessor &);
   ~CommandProcessor();

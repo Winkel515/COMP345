@@ -11,6 +11,7 @@
 #include "Player.h"
 
 class CommandProcessor;
+class Command;
 
 namespace GameState {
 enum GameStateEnum {
@@ -78,5 +79,9 @@ class GameEngine {
   friend std::ostream& operator<<(std::ostream&,
                                   const GameEngine&);  // stream insertion
 };
+
+void handleEffect(string&, Command&);
+void handleEffect(const char[], Command&);
+void printCommands(set<string>&);
 
 #endif

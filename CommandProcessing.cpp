@@ -28,28 +28,20 @@ CommandProcessor::~CommandProcessor() {
   for (int i = 0; i < commandList.size(); i++) delete commandList.at(i);
 }
 
-vector<string> CommandProcessor::getCommand() {
+Command& CommandProcessor::getCommand() {
   vector<string> result = readCommand();
-  saveCommand(result);
-  return result;
+  return saveCommand(result);
 }
 
 vector<string> CommandProcessor::readCommand() {
   string input = "";
-  bool invalid = false;
   vector<string> result;
 
   while (true) {
-    if (invalid) {
-      cout << "Try again.\n";
-    }
     cout << "Please enter a command: ";
     getline(cin, input);
     result = splitString(input, " ");
-    if (validate(result))
-      break;
-    else
-      invalid = true;
+    if (validate(result)) break;
   };
 
   return result;
@@ -64,11 +56,12 @@ string CommandProcessor::stringToLog() {
   return "string";
 }
 
-void CommandProcessor::saveCommand(vector<string>& result) {
+Command& CommandProcessor::saveCommand(vector<string>& result) {
   Command* newCommand = new Command(result);
   commandList.push_back(newCommand);
   cout << "CommandProcessor::saveCommand : command has been saved "
        << commandList.size() << endl;
+  return *newCommand;
   // Notify(this);
   // create Command and add to commands vector
 }
@@ -78,7 +71,10 @@ bool CommandProcessor::validate(vector<string>& result) {
   string command = result.at(0);
   // Checks if valid command
   if (commands->find(command) == commands->end()) {
-    cout << "Invalid Command.\n";
+    string invalidEffect = "Invalid Command.";
+    saveCommand(result).saveEffect(invalidEffect);
+    cout << invalidEffect << std::endl;
+    printCommands(*commands);
     return false;
   }
 
@@ -88,11 +84,13 @@ bool CommandProcessor::validate(vector<string>& result) {
 Command::Command(const Command& c) {
   command = c.command;
   param = c.param;
+  effect = c.effect;
 }
 
 Command::Command(vector<string>& result) {
   command = result.at(0);
   param = "";
+  effect = "";
   if (result.size() > 1) {
     param = result.at(1);
   }
@@ -100,6 +98,8 @@ Command::Command(vector<string>& result) {
 
 Command::~Command() {}
 
-void Command::saveEffect(string s) {
+void Command::saveEffect(string& s) {
+  effect = s;
+  cout << "Effect: \"" << s << "\" has been saved\n";
   //  Notify(this);
 }
