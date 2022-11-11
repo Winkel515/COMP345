@@ -11,7 +11,7 @@ using std::ostream;
 
 A::A() { a = 0; }
 
-void A::stringToLog() {
+string A::stringToLog() {
   ofstream output;
   output.open("gamelog.txt", std::ios_base::app);
   output << "print to gamelog" << endl;
@@ -19,7 +19,7 @@ void A::stringToLog() {
   output << "In A string to log" << endl;
   output.close();
   cout << "In A string to log" << endl;
-  
+  return "string";
 }
 
 A::A(int a) { this->a = a; }
@@ -100,40 +100,98 @@ LogObserver::LogObserver(A* s) {
 LogObserver::LogObserver(Command* c) {
   _subjectCommand = c;
   _subjectCommand->Attach(this);
+  
+  /*
+  _subjectCommandProcessor = new CommandProcessor();
+  _subjectCommandProcessor->Attach(this);
+  _subjectGameEngine = new GameEngine;
+  _subjectGameEngine->Attach(this);
+  _subjectOrder = new Order();
+  _subjectOrder->Attach(this);
+  _subjectOrdersList = new OrdersList();
+  _subjectOrdersList->Attach(this);
+  */
 }
 
 //logobserver destructor
 LogObserver::~LogObserver() {
+  /*
   _subjectCommand->Detach(this);
   _subjectCommandProcessor->Detach(this);
   _subjectGameEngine->Detach(this);
   _subjectOrder->Detach(this);
   _subjectOrdersList->Detach(this);
   _subjectCopy->Detach(this);
+  */
 }
 
 //logobserver constructor for command processor view
 LogObserver::LogObserver(CommandProcessor* commandProcessor) {
   _subjectCommandProcessor = commandProcessor;
   _subjectCommandProcessor->Attach(this);
+  
+  /*
+  _subjectGameEngine = new GameEngine;
+  _subjectGameEngine->Attach(this);
+  _subjectOrder = new Order();
+  _subjectOrder->Attach(this);
+  _subjectOrdersList = new OrdersList();
+  _subjectOrdersList->Attach(this);
+  _subjectCommand = new Command();
+  _subjectCommand->Attach(this);
+  
+*/
 }
 
 //logobserver constructor for GameEngine view
 LogObserver::LogObserver(GameEngine* ge) {
   _subjectGameEngine = ge;
   _subjectGameEngine->Attach(this);
+  
+  /*
+  _subjectGameEngine = new GameEngine;
+  _subjectGameEngine->Attach(this);
+  _subjectOrder = new Order();
+  _subjectOrder->Attach(this);
+  _subjectOrdersList = new OrdersList();
+  _subjectOrdersList->Attach(this);
+  _subjectCommand =  new Command();
+  _subjectCommand->Attach(this);
+  */
 }
 
 //logobserver constructor for order view
 LogObserver::LogObserver(Order* o) {
   _subjectOrder = o;
   _subjectOrder->Attach(this);
+  
+  /*
+  _subjectCommandProcessor = new CommandProcessor();
+  _subjectCommandProcessor->Attach(this);
+  _subjectGameEngine = new GameEngine;
+  _subjectGameEngine->Attach(this);
+  _subjectOrdersList = new OrdersList();
+  _subjectOrdersList->Attach(this);
+  _subjectCommand = new Command();
+  _subjectCommand->Attach(this);
+  */
 }
 
 //logobserver constructor for orderlist view
 LogObserver::LogObserver(OrdersList* ol) {
   _subjectOrdersList = ol;
   _subjectOrdersList->Attach(this);
+  /*
+  _subjectCommandProcessor = new CommandProcessor();
+  _subjectCommandProcessor->Attach(this);
+  _subjectGameEngine = new GameEngine;
+  _subjectGameEngine->Attach(this);
+  _subjectOrder = new Order();
+  _subjectOrder->Attach(this);
+  _subjectCommand = new Command();
+  _subjectCommand->Attach(this);
+  */
+
 }
 
 //logobserver copy constructor
@@ -157,7 +215,11 @@ ostream& operator<<(ostream& strm, LogObserver& LogObs) {
 
 //LogObserver update method
 void LogObserver::Update(ILoggable* ILog) {
-  ILog->stringToLog();
+  ofstream output;
+  output.open("gamelog.txt", std::ios_base::app);
+  output << endl << ILog->stringToLog() << endl;
+  output.close();
+  //ILog->stringToLog();
 }
 
 //ILoggable constructor

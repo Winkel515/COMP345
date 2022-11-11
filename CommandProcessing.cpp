@@ -1,6 +1,6 @@
 #include "CommandProcessing.h"
 
-#include <fstream>
+
 #include <iostream>
 #include <string>
 #include <vector>
@@ -10,10 +10,11 @@
 using std::cin;
 using std::cout;
 using std::getline;
-using std::ofstream;
 using std::set;
 using std::string;
 
+CommandProcessor::CommandProcessor() {
+};
 
 CommandProcessor::CommandProcessor(set<string>* commands) {
   this->commands = commands;
@@ -57,17 +58,20 @@ vector<string> CommandProcessor::readCommand() {
 }
 
 //overloaded stringTolog method
-void CommandProcessor::stringToLog() {
-  ofstream output;
-  output.open("gamelog.txt", std::ios_base::app);
-  output << "print to gamelog" << endl;
-  for (int i = 0; i < (this->commandList).size(); i++) {
-    output << "command " << i << " " << this->commandList[i]->command << endl;
-    output << "param " << i << " " << this->commandList[i]->param << endl;
-  }
-  output << "In command processor" << endl;
-  output.close();
-  
+string CommandProcessor::stringToLog() {
+  string s = "CommandProcessor class \ncommand " + 
+  this->commandList[(this->commandList).size()-1]->command + "\nparam " + 
+  this->commandList[(this->commandList).size()-1]->param + "\n";
+  //string s2 = this->commandList[(this->commandList).size()-1]->command + "\nparam ";
+  //string s3 = this->commandList[(this->commandList).size()-1]->param + "\n";
+  /*for (int i = 0; i < (this->commandList).size(); i++) {
+    s += "command " + i;
+    s += " " + this->commandList[i]->command + "\n";
+    s += "param " + i;
+    s += " " + this->commandList[i]->param + "\n";
+  }*/
+  //cout << endl << s1 << endl;
+  return s;
 }
 
 void CommandProcessor::saveCommand(vector<string>& result) {
@@ -93,6 +97,10 @@ bool CommandProcessor::validate(vector<string>& result) {
   return true;
 }
 
+Command::Command() {
+
+}
+
 Command::Command(const Command& c) {
   this->command = c.command;
   this->param = c.param;
@@ -110,13 +118,9 @@ Command::Command(vector<string>& result) {
 void Command::saveEffect(string s) { Notify(this); }
 
 //overloaded strinToLog method
-void Command::stringToLog() {
-  ofstream output;
-  output.open("gamelog.txt", std::ios_base::app);
-  output << "print to gamelog" << endl;
-  output << "command " << this->command << " param " << this->param << endl;
-  output << "In command " << endl;
-  output.close();
+string Command::stringToLog() {
+  string s = "command class\ncommand " + this->command + " param " + this->param;
+  return s;
 }
 
 Command::~Command(){}; //TODO: check if it is okay

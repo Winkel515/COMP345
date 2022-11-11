@@ -1,7 +1,7 @@
 #include "GameEngine.h"
 
 
-#include <fstream>
+
 #include <algorithm>
 #include <chrono>
 #include <iostream>
@@ -16,7 +16,6 @@
 using std::cin;
 using std::cout;
 using std::map;
-using std::ofstream;
 using std::ostream;
 using std::set;
 using std::string;
@@ -151,6 +150,7 @@ void GameEngine::setState(GameState::GameStateEnum state) {
   } else {
     commands = GameEngineFSA::commandsPerStateMap.at(this->state);
   }
+  Notify(this);
 }
 
 // Runs the GameEngine
@@ -256,7 +256,7 @@ bool GameEngine::handleCommand(string command) {
   // Transition the state
   GameStateEnum desiredState = GameEngineFSA::commandToStateMap.at(command);
   setState(desiredState);
-  Notify(this);
+  
 
   return true;
 }
@@ -436,11 +436,7 @@ void GameEngine::startupPhase() {
 }
 
 //overloaded stringToLog method
-void GameEngine::stringToLog() {
-  ofstream output;
-  output.open("gamelog.txt", std::ios_base::app);
-  output << "print to gamelog" << endl;
-  output << "Game engine state change " << endl;
-  output.close();
-  
+string GameEngine::stringToLog() {
+  string s = "Game engine state change to: " + getLabel(this->state);
+  return s;
 }

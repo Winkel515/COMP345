@@ -15,12 +15,13 @@ class Command : public Subject, public ILoggable {
  public:
   string command;
   string param;
+  Command();
   Command(vector<string> &);
   Command(const Command &);
   ~Command();
   void saveEffect(string);
   void callNotify();
-  void stringToLog();
+  string stringToLog();
 };
 
 class CommandProcessor : public Subject, public ILoggable {
@@ -28,15 +29,17 @@ class CommandProcessor : public Subject, public ILoggable {
   set<string> *commands;
 
   vector<string> readCommand();
-  void saveCommand(vector<string> &);
+  
   bool validate(vector<string> &);
 
  public:
+ void saveCommand(vector<string> &);
   vector<string> getCommand();
+  CommandProcessor();
   CommandProcessor(set<string> *);
   CommandProcessor(const CommandProcessor &);
   ~CommandProcessor();
-  void stringToLog();
+  string stringToLog();
 };
 
 #endif

@@ -6,6 +6,7 @@
 #include "MapDriver.h"
 #include "OrdersDriver.h"
 #include "PlayerDriver.h"
+#include "LoggingObserverDriver.h"
 
 using std::cout;
 using std::string;
@@ -37,7 +38,9 @@ int main(int argc, char *argv[]) {
       cout << "====== Testing Orders ======\n";
       testOrdersList();
       cout << "====== Testing Game Engine ======\n";
-      testGameStates();
+      //testGameStates();
+      cout << "====== Testing Logging observer ======\n";
+      testLoggingObserver();
     } else {
       cout << "Unsupported flag. Please run using supported flag.\n";
     }

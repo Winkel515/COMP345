@@ -18,7 +18,7 @@ class Order : public Subject, public ILoggable{
   void execute();
   void SetType(Order::OrderType type);
   std::string GetType() const;
-  void stringToLog();
+  string stringToLog();
 
  private:
   Order::OrderType TypeOfOrder;
@@ -36,7 +36,7 @@ class OrdersList : public Subject, public ILoggable{
   void add(Order *order);
   friend std::ostream &operator<<(std::ostream &o, const OrdersList &oL);
   void executeOrders();
-  void stringToLog();
+  string stringToLog();
 
  private:
   std::vector<Order *> ListOfOrders;

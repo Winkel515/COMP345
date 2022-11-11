@@ -14,7 +14,7 @@ class ILoggable {
   ILoggable();
   ILoggable(const ILoggable& ILog);
   ~ILoggable();
-  virtual void stringToLog() = 0;
+  virtual string stringToLog() = 0;
   ILoggable& operator=(const ILoggable& ILog);
   friend ostream& operator<<(ostream& strm, const ILoggable& ILog);
 };
@@ -52,7 +52,7 @@ class A : public Subject, public ILoggable {
   A();
   int a;
   A(int a);
-  void stringToLog();
+  string stringToLog();
   void callNotify();
 };
 

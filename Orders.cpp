@@ -1,5 +1,5 @@
 #include "Orders.h"
-#include <fstream>
+
 
 #include <sstream>
 
@@ -71,13 +71,9 @@ string Order::GetType() const {
 void Order::SetType(Order::OrderType type) { TypeOfOrder = type; }
 
 //overloaded to string method
-void Order::stringToLog() {
-  ofstream output;
-  output.open("gamelog.txt", std::ios_base::app);
-  output << "print to Order" << endl;
-  output << "type of order " << this->TypeOfOrder << endl;
-  output << "In order " << endl;
-  output.close();
+string Order::stringToLog() {
+  string s = "Order class\ntype of order: " + this->GetType();
+  return s;
 }
 
 // Default OrderList constructor
@@ -155,15 +151,12 @@ void OrdersList::executeOrders() {
   }
 }
 
-void OrdersList::stringToLog() {
-  ofstream output;
-  output.open("gamelog.txt", std::ios_base::app);
-  output << "print to Orderslist" << endl;
-  for(int i = 0; i < (this->ListOfOrders).size(); i++){
-    output << "type of order " << i << " " << this->ListOfOrders[i] << endl;
-  }
-  
-  
-  output << "In orderslist " << endl;
-  output.close();
+string OrdersList::stringToLog() {
+  string s = "OrdersList class\ntype of order " + 
+  this->ListOfOrders[(this->ListOfOrders).size()-1]->GetType() + "\n";
+  /*for(int i = 0; i < (this->ListOfOrders).size(); i++){
+    s += "type of order " + i;
+    s += " " + this->ListOfOrders[i]->GetType() + "\n";
+  }*/
+  return s;
 }
