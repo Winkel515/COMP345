@@ -1,4 +1,5 @@
 #include "Orders.h"
+#include <fstream>
 
 #include <sstream>
 
@@ -43,6 +44,7 @@ void Order::validate() {
 void Order::execute() {
   validate();
   cout << "Order " << this->GetType() << " did this" << endl;
+  Notify(this);
 }
 
 // Accessor methods
@@ -67,6 +69,16 @@ string Order::GetType() const {
 
 // Mutator methods
 void Order::SetType(Order::OrderType type) { TypeOfOrder = type; }
+
+//overloaded to string method
+void Order::stringToLog() {
+  ofstream output;
+  output.open("gamelog.txt", std::ios_base::app);
+  output << "print to Order" << endl;
+  output << "type of order " << this->TypeOfOrder << endl;
+  output << "In order " << endl;
+  output.close();
+}
 
 // Default OrderList constructor
 OrdersList::OrdersList() {
@@ -109,6 +121,7 @@ void OrdersList::remove(int index) {
 void OrdersList::add(Order *order) {
   // Not sure if we should add to the begining or the end
   ListOfOrders.push_back(order);
+  Notify(this);
 }
 
 // OrderList destructor
@@ -140,4 +153,17 @@ void OrdersList::executeOrders() {
   for (Order *order : ListOfOrders) {
     order->execute();
   }
+}
+
+void OrdersList::stringToLog() {
+  ofstream output;
+  output.open("gamelog.txt", std::ios_base::app);
+  output << "print to Orderslist" << endl;
+  for(int i = 0; i < (this->ListOfOrders).size(); i++){
+    output << "type of order " << i << " " << this->ListOfOrders[i] << endl;
+  }
+  
+  
+  output << "In orderslist " << endl;
+  output.close();
 }

@@ -14,6 +14,7 @@ using std::ofstream;
 using std::set;
 using std::string;
 
+
 CommandProcessor::CommandProcessor(set<string>* commands) {
   this->commands = commands;
 };
@@ -55,7 +56,8 @@ vector<string> CommandProcessor::readCommand() {
   return result;
 }
 
-string CommandProcessor::stringToLog() {
+//overloaded stringTolog method
+void CommandProcessor::stringToLog() {
   ofstream output;
   output.open("gamelog.txt", std::ios_base::app);
   output << "print to gamelog" << endl;
@@ -65,7 +67,7 @@ string CommandProcessor::stringToLog() {
   }
   output << "In command processor" << endl;
   output.close();
-  return "string";
+  
 }
 
 void CommandProcessor::saveCommand(vector<string>& result) {
@@ -75,8 +77,6 @@ void CommandProcessor::saveCommand(vector<string>& result) {
   cout << "CommandProcessor::saveCommand : command has been saved "
        << commandList.size() << endl;
   Notify(this);
-  // newCommand->callNotify();
-  //    create Command and add to commands vector
 }
 
 void Command::callNotify() { Notify(this); }
@@ -109,15 +109,14 @@ Command::Command(vector<string>& result) {
 
 void Command::saveEffect(string s) { Notify(this); }
 
-string Command::stringToLog() {
+//overloaded strinToLog method
+void Command::stringToLog() {
   ofstream output;
   output.open("gamelog.txt", std::ios_base::app);
   output << "print to gamelog" << endl;
   output << "command " << this->command << " param " << this->param << endl;
   output << "In command " << endl;
   output.close();
-  return "string";
-
-Command::~Command() {}
-
 }
+
+Command::~Command(){}; //TODO: check if it is okay

@@ -91,7 +91,7 @@ GameEngine::GameEngine() {
   setState(S_START);
   mapLoader = new MapLoader();
   commandProcessor = new CommandProcessor(&commands);
-  LogObserver *commandView = new LogObserver(commandProcessor);
+  LogObserver *commandProcessorView = new LogObserver(commandProcessor);
   deck = new Deck(3);
 }
 
@@ -100,6 +100,7 @@ GameEngine::GameEngine(const GameEngine &ge) {
   setState(ge.state);
   mapLoader = new MapLoader(*ge.mapLoader);
   commandProcessor = new CommandProcessor(&commands);
+  LogObserver *commandProcessorView = new LogObserver(commandProcessor);
   deck = new Deck(3);
 }
 
@@ -255,6 +256,7 @@ bool GameEngine::handleCommand(string command) {
   // Transition the state
   GameStateEnum desiredState = GameEngineFSA::commandToStateMap.at(command);
   setState(desiredState);
+  Notify(this);
 
   return true;
 }
@@ -368,7 +370,7 @@ void GameEngine::startupPhase() {
 
 
   printCommands();
-}
+
 
 
   // addPlayer implementation:
@@ -433,11 +435,12 @@ void GameEngine::startupPhase() {
   }
 }
 
-string GameEngine::stringToLog() {
+//overloaded stringToLog method
+void GameEngine::stringToLog() {
   ofstream output;
   output.open("gamelog.txt", std::ios_base::app);
   output << "print to gamelog" << endl;
-  output << "In command " << endl;
+  output << "Game engine state change " << endl;
   output.close();
-  return "string";
+  
 }

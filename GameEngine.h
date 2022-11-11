@@ -76,7 +76,7 @@ class GameEngine : public Subject, public ILoggable {
   GameEngine();                   // default constructor
   GameEngine(const GameEngine&);  // copy constructor
   ~GameEngine();
-  string stringToLog();
+  void stringToLog();
   friend std::ostream& operator<<(std::ostream&,
                                   const GameEngine&);  // stream insertion
 };
