@@ -2,6 +2,7 @@
 #include <iostream>
 #include <list>
 #include <vector>
+#include <algorithm>
 
 
 #include "Cards.h"
@@ -97,15 +98,48 @@ Player& Player::operator=(const Player& player) {
   return *this;
 }
 
+//TODO JOHN: Make this more efficient.
 // Returns a list of Territories to Attack
 list<Territory*> Player::toAttack() {
-  list<Territory*> territoriesToAttack = createTerritoryList(3);
+  list<Territory*> territoriesToAttack;
+
+  //Find all neighbouring territories
+  for (auto it1 = territories.begin(); it1 != territories.end(); ++it1) {
+    vector<Territory*> neighbours = (*it1)->adj;
+
+    //Check if adjacent territories are attackable.
+    for(auto it2 = neighbours.begin(); it2 != neighbours.end(); ++it2){
+
+      //Check if it's in our territory list. 
+      bool notInOurTerritories = true;
+      for(auto it3 = territories.begin(); it3 != territories.end(); ++it3){
+        if (*it2 = *it3){
+          notInOurTerritories = false;
+        }
+      }
+
+      //Check if already in toAttack list. 
+      bool notInToAttack = true;
+      for(auto it3 = territoriesToAttack.begin(); it3 != territoriesToAttack.end(); ++it3){
+        if (*it2 = *it3){
+          notInToAttack = false;
+        }
+      }
+
+      if(notInOurTerritories && notInToAttack){
+        territoriesToAttack.push_back(*it2);
+      }
+    }
+  }
   return territoriesToAttack;
 };
 
 // Returns a list of Territories to Defend (All of the player's currently owned
 // territories)
-list<Territory*> Player::toDefend() { return territories; };
+list<Territory*> Player::toDefend() { 
+  //TODO JOHN: Implement logic here
+  return territories; 
+};
 
 //TODO JOHN: Delete if obsolete
 void Player::issueOrder(Order* newOrder) { (*orders).add(newOrder); }
@@ -117,7 +151,19 @@ void Player::addTerritory(Territory* territory) {
 //Returns true if player issues an order, false if they are done issuing orders
 bool Player::issueOrder() {
 
+  //Deploy Reinforcements
+  if(reinforcementPool > 0){
+    // orders->add(new Deploy()); //TODO JOHN:  Make sure deploy is concrete
+
+
+  }
+  
+
   // TODO JOHN: Hardcode issueOrder() implementation.
+
+  //TODO JOHN: Deploy orders only if reinforcements > 0
+
+
   return true;
 
 
