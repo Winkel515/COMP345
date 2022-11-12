@@ -98,25 +98,16 @@ Player& Player::operator=(const Player& player) {
   return *this;
 }
 
-//TODO JOHN: Make this more efficient.
+
 // Returns a list of Territories to Attack
 list<Territory*> Player::toAttack() {
   list<Territory*> territoriesToAttack;
-
   //Find all neighbouring territories
   for (auto it1 = territories.begin(); it1 != territories.end(); ++it1) {
     vector<Territory*> neighbours = (*it1)->adj;
 
-    //Check if adjacent territories are attackable.
+    //Check if neighbour territories are attackable.
     for(auto it2 = neighbours.begin(); it2 != neighbours.end(); ++it2){
-
-      //Check if it's in our territory list. 
-      bool notInOurTerritories = true;
-      for(auto it3 = territories.begin(); it3 != territories.end(); ++it3){
-        if (*it2 = *it3){
-          notInOurTerritories = false;
-        }
-      }
 
       //Check if already in toAttack list. 
       bool notInToAttack = true;
@@ -126,7 +117,8 @@ list<Territory*> Player::toAttack() {
         }
       }
 
-      if(notInOurTerritories && notInToAttack){
+      //Add territory if it's not already in our list and we aren't the owner
+      if( notInToAttack && (**it2).getOwner() != this){
         territoriesToAttack.push_back(*it2);
       }
     }
