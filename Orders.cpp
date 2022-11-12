@@ -1,5 +1,6 @@
 #include "Orders.h"
 
+
 #include <sstream>
 
 using namespace std;
@@ -43,6 +44,7 @@ void Order::validate() {
 void Order::execute() {
   validate();
   cout << "Order " << this->GetType() << " did this" << endl;
+  Notify(this);
 }
 
 // Accessor methods
@@ -67,6 +69,12 @@ string Order::GetType() const {
 
 // Mutator methods
 void Order::SetType(Order::OrderType type) { TypeOfOrder = type; }
+
+//overloaded to string method
+string Order::stringToLog() {
+  string s = "Order class\ntype of order: " + this->GetType();
+  return s;
+}
 
 // Default OrderList constructor
 OrdersList::OrdersList() {
@@ -109,6 +117,7 @@ void OrdersList::remove(int index) {
 void OrdersList::add(Order *order) {
   // Not sure if we should add to the begining or the end
   ListOfOrders.push_back(order);
+  Notify(order);
 }
 
 // OrderList destructor
@@ -140,4 +149,14 @@ void OrdersList::executeOrders() {
   for (Order *order : ListOfOrders) {
     order->execute();
   }
+}
+
+string OrdersList::stringToLog() {
+  string s = "OrdersList class\ntype of order " + 
+  this->ListOfOrders[(this->ListOfOrders).size()-1]->GetType() + "\n";
+  /*for(int i = 0; i < (this->ListOfOrders).size(); i++){
+    s += "type of order " + i;
+    s += " " + this->ListOfOrders[i]->GetType() + "\n";
+  }*/
+  return s;
 }

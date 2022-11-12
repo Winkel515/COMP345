@@ -432,7 +432,7 @@ MapLoader::MapLoader(const MapLoader& m) {
   map = new Map(*m.map);
 }
 
-bool MapLoader::loadMap(string fileName) {
+string MapLoader::loadMap(string fileName) {
   string myText;
   fileName = "./map/" + fileName;
   this->fileName = fileName;
@@ -444,6 +444,7 @@ bool MapLoader::loadMap(string fileName) {
   vector<string> continentsNames;
   vector<Territory*> territories;
   vector<Territory*> territoriesCopy;
+  string output = "";
 
   if (map != NULL) delete map;
 
@@ -500,15 +501,15 @@ bool MapLoader::loadMap(string fileName) {
 
       this->map = new Map(territories, continentsNames);
 
-      return true;
+      return output;
     } catch (const std::exception& e) {
-      cout << "The map file does not have a correct format." << endl;
+      output = "The map file does not have a correct format.";
       this->map = NULL;
-      return false;
+      return output;
     }
   } else {
-    cout << "\"" << fileName << "\" map file does not exist." << endl;
-    return false;
+    output = "\"" + fileName + "\" map file does not exist.";
+    return output;
   }
 };
 

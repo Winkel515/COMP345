@@ -6,11 +6,14 @@
 #include <set>
 #include <string>
 
+
+#include "LoggingObserver.h"
 #include "Cards.h"
 #include "Map.h"
 #include "Player.h"
 
 class CommandProcessor;
+class Command;
 
 namespace GameState {
 enum GameStateEnum {
@@ -36,7 +39,7 @@ class GameEngineFSA {
       commandToStateMap;
 };
 
-class GameEngine {
+class GameEngine : public Subject, public ILoggable {
  private:
   // Attributes
   GameState::GameStateEnum state;
@@ -78,5 +81,9 @@ class GameEngine {
   friend std::ostream& operator<<(std::ostream&,
                                   const GameEngine&);  // stream insertion
 };
+
+void handleEffect(string&, Command&);
+void handleEffect(const char[], Command&);
+void printCommands(set<string>&);
 
 #endif
