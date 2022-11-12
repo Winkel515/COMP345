@@ -49,7 +49,6 @@ int main(int argc, char *argv[]) {
       oldTests();  // TODO
     } else {
       showHelp(supportedFlags);
-      ;
     }
   } else if (argc >= 2) {
     // cast to string
