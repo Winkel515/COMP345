@@ -69,6 +69,8 @@ Player* Territory::getOwner() { return this->owner; }
 // setter for number of armies
 void Territory::setNumArmies(int _numArmies) { this->numArmies = _numArmies; }
 
+void Territory::addNumArmies(int NumArmies){ this->numArmies += NumArmies;}
+
 // getter for number of armies
 int Territory::getNumArmies() { return this->numArmies; }
 

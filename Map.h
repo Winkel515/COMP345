@@ -1,7 +1,9 @@
+#pragma once
 #include <iostream>
 #include <string>
 #include <unordered_map>
 #include <vector>
+
 
 class Player;
 using namespace std;
@@ -15,6 +17,7 @@ class Territory {
   int numArmies;
   Player* owner;
   void setNumArmies(int _numArmies);
+  void addNumArmies(int numArmies);
   int getNumArmies();
   void setOwner(Player* _owner);
   Player* getOwner();

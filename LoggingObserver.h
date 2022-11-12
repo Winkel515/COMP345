@@ -2,7 +2,8 @@
 
 #include <list>
 #include <string>
-using std::list, std::string;
+using std::list;
+using std::string;
 class CommandProcessor;
 
 class ILoggable {

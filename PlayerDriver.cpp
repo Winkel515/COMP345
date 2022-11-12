@@ -16,7 +16,7 @@ void testPlayers() {
   cout << endl << "Demonstrating issueOrder() method for Player 1" << endl;
 
   // issue arbitrary order
-  (*p1).issueOrder();
+  //(*p1).issueOrder();
   cout << (*p1);
 
   cout << endl << "----------------------------" << endl;

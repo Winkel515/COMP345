@@ -1,4 +1,4 @@
-//#include "LoggingObserver.h"
+#include "LoggingObserver.h"
 
 #include <fstream>
 #include <iostream>
