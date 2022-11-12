@@ -2,6 +2,7 @@
 #include <iostream>
 #include <list>
 #include <vector>
+#include <algorithm>
 
 
 #include "Cards.h"
@@ -97,30 +98,74 @@ Player& Player::operator=(const Player& player) {
   return *this;
 }
 
+
 // Returns a list of Territories to Attack
-std::vector<Territory*> Player::toAttack() {
-  std::vector<Territory*> territoriesToAttack = createTerritoryList(3);
+vector<Territory*> Player::toAttack() {
+  vector<Territory*> territoriesToAttack;
+  //Find all neighbouring territories
+  for (auto it1 = territories.begin(); it1 != territories.end(); ++it1) {
+    vector<Territory*> neighbours = (*it1)->adj;
+
+    //Check if neighbour territories are attackable.
+    for(auto it2 = neighbours.begin(); it2 != neighbours.end(); ++it2){
+
+      //Check if already in toAttack list. 
+      bool notInToAttack = true;
+      for(auto it3 = territoriesToAttack.begin(); it3 != territoriesToAttack.end(); ++it3){
+        if (*it2 = *it3){
+          notInToAttack = false;
+        }
+      }
+
+      //Add territory if it's not already in our list and we aren't the owner
+      if( notInToAttack && (**it2).getOwner() != this){
+        territoriesToAttack.push_back(*it2);
+      }
+    }
+  }
   return territoriesToAttack;
 };
 
 // Returns a list of Territories to Defend (All of the player's currently owned
 // territories)
-std::vector<Territory*> Player::toDefend() { return territories; };
+vector<Territory*> Player::toDefend() { 
+  //TODO JOHN: Implement logic here
+  return territories; 
+};
 
+//TODO JOHN: Delete if obsolete
 void Player::issueOrder(Order* newOrder) { (*orders).add(newOrder); }
 
 void Player::addTerritory(Territory* territory) {
   territories.push_back(territory);
 }
 
-/*
-void Player::issueOrder() {
-  // Create and add random order to List of Orders
-  Order* newOrder = new Order(static_cast<Order::OrderType>(rand() % 6));
-  (*orders).add(newOrder);
+//Returns true if player issues an order, false if they are done issuing orders
+bool Player::issueOrder() {
+
+  //Deploy Reinforcements
+  if(reinforcementPool > 0){
+    // orders->add(new Deploy()); //TODO JOHN:  Make sure deploy is concrete
+
+
+  }
+  
+
+  // TODO JOHN: Hardcode issueOrder() implementation.
+
+  //TODO JOHN: Deploy orders only if reinforcements > 0
+
+
+  return true;
+
+
+
+  // // Create and add random order to List of Orders
+  // Order* newOrder = new Order(static_cast<Order::OrderType>(rand() % 6));
+  // (*orders).add(newOrder);
   //LogObserver *orderView = new LogObserver(newOrder);
 }
-*/
+
 
 // Helper method to create territory list
 std::vector<Territory*> Player::createTerritoryList(int nTerritories) {

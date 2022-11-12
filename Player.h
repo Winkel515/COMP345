@@ -18,6 +18,7 @@ class Player {
     string name;
     int reinforcementPool;
     std::vector<Player*> diplomaticAllies;
+    
 
  public:
   Player();
@@ -27,8 +28,8 @@ class Player {
   ~Player();
   std::vector<Territory*> toDefend();
   std::vector<Territory*> toAttack();
-  void issueOrder(Order* newOrder);
-  void issueOrder();  // For Testing
+  void issueOrder(Order* newOrder); //TODO JOHN: Delete if obsolete
+  bool issueOrder();
   void testListOrder();
   Player& operator=(const Player& player);
   friend std::ostream& operator<<(std::ostream& strm, Player& pl);
