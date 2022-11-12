@@ -37,7 +37,7 @@ class Player {
   void addReinforcements(int);
   Hand* getHand();
   std::list<Territory*> getTerritories();
-  OrdersList* Player::getOrderList();
+  OrdersList* getOrderList();
   bool getConcqueredFlag();
   void setConcqueredFlag(bool flag);
   std::vector<Player*> getDiplomaticAllies();
