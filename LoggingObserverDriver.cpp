@@ -59,8 +59,9 @@ void testLoggingObserver() {
     testGameEngine->setState(GameState::S_MAP_LOADED);
     testOrder->execute();
     testOrdersList->add(testOrder);
-    testCommands->saveEffect("Command Failed");
-    testCommandProcessor->saveCommand(commandsVec);
+    string effectString = "Command Failed";
+    testCommands->saveEffect(effectString);
+    testCommandProcessor->getCommand();
 
     output.open("gamelog.txt", std::ios_base::app);
     output << "================================\n\n" << endl;
