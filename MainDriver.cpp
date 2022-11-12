@@ -38,7 +38,7 @@ int main(int argc, char *argv[]) {
       cout << "====== Testing Orders ======\n";
       testOrdersList();
       cout << "====== Testing Game Engine ======\n";
-      //testGameStates();
+      testGameStates();
       cout << "====== Testing Logging observer ======\n";
       testLoggingObserver();
     } else {

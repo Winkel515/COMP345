@@ -70,9 +70,9 @@ string Order::GetType() const {
 // Mutator methods
 void Order::SetType(Order::OrderType type) { TypeOfOrder = type; }
 
-//overloaded to string method
+//overidden to string method
 string Order::stringToLog() {
-  string s = "Order class\ntype of order: " + this->GetType();
+  string s = "Order: " + this->GetType();
   return s;
 }
 
@@ -117,7 +117,7 @@ void OrdersList::remove(int index) {
 void OrdersList::add(Order *order) {
   // Not sure if we should add to the begining or the end
   ListOfOrders.push_back(order);
-  Notify(order);
+  Notify(this);
 }
 
 // OrderList destructor
@@ -151,12 +151,8 @@ void OrdersList::executeOrders() {
   }
 }
 
+//overidden string to log method
 string OrdersList::stringToLog() {
-  string s = "OrdersList class\ntype of order " + 
-  this->ListOfOrders[(this->ListOfOrders).size()-1]->GetType() + "\n";
-  /*for(int i = 0; i < (this->ListOfOrders).size(); i++){
-    s += "type of order " + i;
-    s += " " + this->ListOfOrders[i]->GetType() + "\n";
-  }*/
+  string s = "Order: " + this->ListOfOrders[(this->ListOfOrders).size()-1]->GetType();
   return s;
 }
