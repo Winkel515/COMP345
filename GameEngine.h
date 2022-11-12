@@ -6,6 +6,8 @@
 #include <set>
 #include <string>
 
+
+#include "LoggingObserver.h"
 #include "Cards.h"
 #include "Map.h"
 #include "Player.h"
@@ -37,7 +39,7 @@ class GameEngineFSA {
       commandToStateMap;
 };
 
-class GameEngine {
+class GameEngine : public Subject, public ILoggable {
  private:
   // Attributes
   GameState::GameStateEnum state;

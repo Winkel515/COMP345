@@ -3,8 +3,9 @@
 #include <iostream>
 #include <string>
 #include <vector>
+#include "LoggingObserver.h"
 
-class Order {
+class Order : public Subject, public ILoggable{
  public:
   enum OrderType { Deploy, Advance, Bomb, Blockade, Airlift, Negotiate };
   Order();
@@ -17,13 +18,14 @@ class Order {
   void execute();
   void SetType(Order::OrderType type);
   std::string GetType() const;
+  string stringToLog();
 
  private:
   Order::OrderType TypeOfOrder;
   std::string orderEffect;
 };
 
-class OrdersList {
+class OrdersList : public Subject, public ILoggable{
  public:
   OrdersList();
   OrdersList(const OrdersList &ordersList);
@@ -34,6 +36,7 @@ class OrdersList {
   void add(Order *order);
   friend std::ostream &operator<<(std::ostream &o, const OrdersList &oL);
   void executeOrders();
+  string stringToLog();
 
  private:
   std::vector<Order *> ListOfOrders;

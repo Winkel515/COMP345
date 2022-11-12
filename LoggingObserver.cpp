@@ -1,4 +1,4 @@
-//#include "LoggingObserver.h"
+#include "LoggingObserver.h"
 
 #include <fstream>
 #include <iostream>
@@ -7,7 +7,8 @@
 using std::cout;
 using std::endl;
 using std::ofstream;
-
+using std::ostream;
+/*
 A::A() { a = 0; }
 
 string A::stringToLog() {
@@ -21,49 +22,262 @@ string A::stringToLog() {
   return "string";
 }
 
-A::A(int a) { this->a = 1; }
+A::A(int a) { this->a = a; }
 
 void A::callNotify() {
   Notify(this);
-  cout << this->a << endl;
+  cout << "this->a" << this->a << endl;
 }
-
-B::B() { b = 0; }
-
-B::B(int b) { b = 2; }
-
+*/
+//Subject constructor
 Subject::Subject() { _observers = new list<Observer*>; }
 
+//Subject copy constructor
+Subject::Subject(const Subject& s){ 
+  list<Observer*>* obs(s._observers);
+  _observers = obs; 
+}
+
+//Subject assignment operator
+Subject& Subject::operator=(const Subject& s) {
+  list<Observer*>* obs(s._observers);
+  _observers = obs; 
+  return *this;
+}
+
+//Subject output stream operator
+ostream& operator<<(ostream& strm, Subject& s) {
+  return strm << s << endl;
+}
+
+//Subject destructor
 Subject::~Subject() { delete _observers; }
 
-Observer::Observer(){};
+//subject attach method
+void Subject::Attach(Observer* o) {
+  _observers->push_back(o);
+};
 
-Observer::~Observer(){};
-
-LogObserver::LogObserver(A* s) {
-  _subjectA = s;
-  _subjectA->Attach(this);
-}
-
-LogObserver::LogObserver(CommandProcessor* commandProcessor) {
-  _subjectCommandProcessor = commandProcessor;
-  // _subjectCommandProcessor->Attach(this);
-}
-
-void Subject::Attach(Observer* o) { _observers->push_back(o); };
-
+//subject detach method
 void Subject::Detach(Observer* o) { _observers->remove(o); };
 
+//subject notify method
 void Subject::Notify(ILoggable* ILog) {
+  this->Attach(new LogObserver);
   list<Observer*>::iterator i = _observers->begin();
   for (; i != _observers->end(); ++i) (*i)->Update(ILog);
 };
 
-void LogObserver::Update(ILoggable* ILog) { ILog->stringToLog(); }
+//observer constructor
+Observer::Observer(){};
+
+//Observer copy constructor
+Observer::Observer(const Observer& o){};
+
+//Observer destructor
+Observer::~Observer(){};
+
+//Observer assignment operator
+Observer& Observer::operator=(const Observer& o) {
+  return *this;
+}
+
+//Observer output stream operator
+ostream& operator<<(ostream& strm, Observer& o) {
+  return strm << o << endl;
+}
+
+//logobserver default constructor
+LogObserver::LogObserver(){
+
+}
+/*
+LogObserver::LogObserver(A* s) {
+  _subjectA = s;
+  _subjectA->Attach(this);
+}
+*/
+/*
+//logobserver constructor for command view
+LogObserver::LogObserver(Command* c) {
+  _subjectCommand = c;
+  _subjectCommand->Attach(this);
+  
+  
+  _subjectCommandProcessor = new CommandProcessor();
+  _subjectCommandProcessor->Attach(this);
+  _subjectGameEngine = new GameEngine;
+  _subjectGameEngine->Attach(this);
+  _subjectOrder = new Order();
+  _subjectOrder->Attach(this);
+  _subjectOrdersList = new OrdersList();
+  _subjectOrdersList->Attach(this);
+  
+}*/
+
+//logobserver destructor
+LogObserver::~LogObserver() {
+  /*
+  _subjectCommand->Detach(this);
+  _subjectCommandProcessor->Detach(this);
+  _subjectGameEngine->Detach(this);
+  _subjectOrder->Detach(this);
+  _subjectOrdersList->Detach(this);
+  _subjectCopy->Detach(this);
+  */
+}
+/*
+//logobserver constructor for command processor view
+LogObserver::LogObserver(CommandProcessor* commandProcessor) {
+  _subjectCommandProcessor = commandProcessor;
+  _subjectCommandProcessor->Attach(this);
+  
+  
+  _subjectGameEngine = new GameEngine;
+  _subjectGameEngine->Attach(this);
+  _subjectOrder = new Order();
+  _subjectOrder->Attach(this);
+  _subjectOrdersList = new OrdersList();
+  _subjectOrdersList->Attach(this);
+  _subjectCommand = new Command();
+  _subjectCommand->Attach(this);
+  
+
+}*/
+/*
+//logobserver constructor for GameEngine view
+LogObserver::LogObserver(GameEngine* ge) {
+  _subjectGameEngine = ge;
+  _subjectGameEngine->Attach(this);
+  
+  
+  _subjectGameEngine = new GameEngine;
+  _subjectGameEngine->Attach(this);
+  _subjectOrder = new Order();
+  _subjectOrder->Attach(this);
+  _subjectOrdersList = new OrdersList();
+  _subjectOrdersList->Attach(this);
+  _subjectCommand =  new Command();
+  _subjectCommand->Attach(this);
+  
+}*/
+/*
+//logobserver constructor for order view
+LogObserver::LogObserver(Order* o) {
+  _subjectOrder = o;
+  _subjectOrder->Attach(this);
+  
+  
+  _subjectCommandProcessor = new CommandProcessor();
+  _subjectCommandProcessor->Attach(this);
+  _subjectGameEngine = new GameEngine;
+  _subjectGameEngine->Attach(this);
+  _subjectOrdersList = new OrdersList();
+  _subjectOrdersList->Attach(this);
+  _subjectCommand = new Command();
+  _subjectCommand->Attach(this);
+  
+}*/
+/*
+//logobserver constructor for orderlist view
+LogObserver::LogObserver(OrdersList* ol) {
+  _subjectOrdersList = ol;
+  _subjectOrdersList->Attach(this);
+  
+  _subjectCommandProcessor = new CommandProcessor();
+  _subjectCommandProcessor->Attach(this);
+  _subjectGameEngine = new GameEngine;
+  _subjectGameEngine->Attach(this);
+  _subjectOrder = new Order();
+  _subjectOrder->Attach(this);
+  _subjectCommand = new Command();
+  _subjectCommand->Attach(this);
+  
+
+}*/
+/*
+//logobserver constructor for orderlist view
+LogObserver::LogObserver(OrdersList* ol) {
+  _subjectOrdersList = ol;
+  _subjectOrdersList->Attach(this);
+  
+  _subjectCommandProcessor = new CommandProcessor();
+  _subjectCommandProcessor->Attach(this);
+  _subjectGameEngine = new GameEngine;
+  _subjectGameEngine->Attach(this);
+  _subjectOrder = new Order();
+  _subjectOrder->Attach(this);
+  _subjectCommand = new Command();
+  _subjectCommand->Attach(this);
+  
+
+}*/
+/*
+//logobserver constructor for orderlist view
+LogObserver::LogObserver(Subject* _subject) {
+  this->_subject = _subject;
+  this->_subject->Attach(this);
+
+}
+*/
+
+
+//logobserver copy constructor
+LogObserver::LogObserver(const LogObserver& LogObs){
+
+}
+
+//logobserver assignment operator
+LogObserver& LogObserver::operator=(const LogObserver& LogObs) {
+  return *this;
+}
+
+//logobserver output stream operator
+ostream& operator<<(ostream& strm, LogObserver& LogObs) {
+  return strm << LogObs << endl;
+}
+
+//LogObserver update method
+void LogObserver::Update(ILoggable* ILog) {
+  ofstream output;
+  output.open("gamelog.txt", std::ios_base::app);
+  output << endl << ILog->stringToLog() << endl;
+  output.close();
+  //ILog->stringToLog();
+}
+
+//ILoggable constructor
+ILoggable::ILoggable(){
+
+}
+
+//ILoggable copy constructor
+ILoggable::ILoggable(const ILoggable& ILog){
+
+}
+
+//ILoggable destuctor
+ILoggable::~ILoggable(){
+
+}
+
+//ILoggable assignment operator
+ILoggable& ILoggable::operator=(const ILoggable& ILog) {
+  return *this;
+}
+
+//ILoggable output operator
+ostream& operator<<(ostream& strm, ILoggable& ILog) {
+  return strm << ILog << endl;
+}
+
+
+//LogObserver update method
+
 /*
 int main() {
   std::cout << "bla" << std::endl;
-  A* a1 = new A(1);
+  A* a1 = new A(10);
   LogObserver* view = new LogObserver(a1);
   a1->callNotify();
   cout << a1->a << endl;

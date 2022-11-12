@@ -1,5 +1,7 @@
 #include "GameEngine.h"
 
+
+
 #include <algorithm>
 #include <chrono>
 #include <iostream>
@@ -9,6 +11,7 @@
 #include <string>
 
 #include "CommandProcessing.h"
+#include "LoggingObserver.h"
 
 using std::cin;
 using std::cout;
@@ -87,6 +90,7 @@ GameEngine::GameEngine() {
   setState(S_START);
   mapLoader = new MapLoader();
   commandProcessor = new CommandProcessor(&commands);
+  //LogObserver *commandProcessorView = new LogObserver(commandProcessor);
   deck = new Deck(3);
 }
 
@@ -95,6 +99,7 @@ GameEngine::GameEngine(const GameEngine &ge) {
   setState(ge.state);
   mapLoader = new MapLoader(*ge.mapLoader);
   commandProcessor = new CommandProcessor(&commands);
+  //LogObserver *commandProcessorView = new LogObserver(commandProcessor);
   deck = new Deck(3);
 }
 
@@ -144,7 +149,9 @@ void GameEngine::setState(GameState::GameStateEnum state) {
     commands = {""};
   } else {
     commands = GameEngineFSA::commandsPerStateMap.at(this->state);
+    
   }
+  Notify(this);
 }
 
 // Runs the GameEngine
@@ -266,6 +273,7 @@ bool GameEngine::handleCommand(string command) {
   // Transition the state
   GameStateEnum desiredState = GameEngineFSA::commandToStateMap.at(command);
   setState(desiredState);
+  
 
   return true;
 }
@@ -402,6 +410,11 @@ void GameEngine::startupPhase() {
     }
   }
 
+
+  printCommands();
+
+
+
   // addPlayer implementation:
   bool done_adding_players = false;
   int nPlayers = 0;
@@ -463,4 +476,10 @@ void GameEngine::startupPhase() {
   for (int i = 0; i < players.size(); i++) {
     cout << "Player " << i + 1 << ": " << *players.at(i) << endl;
   }
+}
+
+//overloaded stringToLog method
+string GameEngine::stringToLog() {
+  string s = "Game engine state change to: " + getLabel(this->state);
+  return s;
 }

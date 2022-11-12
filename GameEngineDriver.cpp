@@ -4,6 +4,7 @@
 #include <string>
 
 #include "GameEngine.h"
+#include "LoggingObserver.h"
 
 // Tests the GameEngine class
 void testGameStates() {
