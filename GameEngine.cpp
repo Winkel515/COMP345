@@ -245,6 +245,22 @@ void GameEngine::printCommands() {
   cout << ".\n";
 }
 
+void printCommands(set<string> &commands) {
+  bool firstTime_noComma = true;
+  std::cout << "List of available commands: ";
+
+  for (set<string>::iterator i = commands.begin(); i != commands.end(); i++) {
+    if (!firstTime_noComma) {
+      cout << ", ";
+    } else {
+      firstTime_noComma = false;
+    }
+    cout << *i;
+  }
+
+  cout << ".\n";
+}
+
 // Handles the mapping between command and state
 bool GameEngine::handleCommand(string command) {
   command = splitString(command, " ").at(0);
@@ -327,17 +343,33 @@ void GameEngine::execEnd() {
   cout << "Game has ended.\n";
 }
 
+void handleEffect(const char effect[], Command &command) {
+  string s = effect;
+  command.saveEffect(s);
+  cout << effect << std::endl;
+}
+
+void handleEffect(string &s, Command &command) {
+  command.saveEffect(s);
+  cout << s << std::endl;
+}
+
 void GameEngine::startupPhase() {
   // S_START state loading a map
   while (true) {
     printCommands();
-    vector<string> result = commandProcessor->getCommand();
-    if (result.size() <= 1)
-      cout << "Enter a file name in the format loadmap <filename>" << std::endl;
-    else if (mapLoader->loadMap(result.at(1))) {
-      cout << "\"" << result.at(1) << "\" has been loaded\n";
-      setState(GameEngineFSA::commandToStateMap.at("loadmap"));
-      break;
+    Command &result = commandProcessor->getCommand();
+    if (result.param.size() == 0)
+      handleEffect("Enter a file name in the format loadmap <filename>",
+                   result);
+    else {
+      string loadMapEffect = mapLoader->loadMap(result.param);
+      if (loadMapEffect.size() == 0) {
+        loadMapEffect = "\"" + result.param + "\" has been loaded";
+        setState(GameEngineFSA::commandToStateMap.at("loadmap"));
+        break;
+      }
+      handleEffect(loadMapEffect, result);
     }
   }
 
@@ -345,26 +377,35 @@ void GameEngine::startupPhase() {
   // transition to S_MAP_VALIDATED validate is successful
   while (true) {
     printCommands();
-    vector<string> result = commandProcessor->getCommand();
+    Command &result = commandProcessor->getCommand();
 
     // 2 possible commands: loadmap/validatemap
-    if (result.at(0) == "loadmap") {
-      if (result.size() <= 1)
-        cout << "Enter a file name in the format loadmap <filename>"
-             << std::endl;
-      else if (mapLoader->loadMap(result.at(1))) {
-        cout << "\"" << result.at(1) << "\" has been loaded\n";
+    if (result.command == "loadmap") {
+      if (result.param.size() == 0)
+        handleEffect("Enter a file name in the format loadmap <filename>",
+                     result);
+      else {
+        string loadMapEffect = mapLoader->loadMap(result.param);
+        if (loadMapEffect.size() == 0) {
+          loadMapEffect = "\"" + result.param + "\" has been loaded";
+        }
+        handleEffect(loadMapEffect, result);
       }
     }
 
-    else if (result.at(0) == "validatemap") {
+    else if (result.command == "validatemap") {
+      string validateMapEffect;
       if (mapLoader->getMap()->validate()) {
-        cout << "The map passed all the tests and is a valid map to be used.\n";
+        handleEffect(
+            "The map passed all the tests and is a valid map to be used.",
+            result);
         setState(GameEngineFSA::commandToStateMap.at("validatemap"));
         break;
       } else {
-        cout << "The map has failed at least one test and is not a valid map. "
-                "Try loading another map.\n";
+        handleEffect(
+            "The map has failed at least one test and is not a valid map. "
+            "Try loading another map.",
+            result);
       }
     }
   }
@@ -384,18 +425,19 @@ void GameEngine::startupPhase() {
 
   while (!done_adding_players) {
     printCommands();
-    vector<string> result = commandProcessor->getCommand();
+    Command &result = commandProcessor->getCommand();
 
-    if (result.at(0) == "addplayer") {
-      if (result.size() <= 1) {
-        cout << "Specify the player name in the format \"addplayer "
-                "<playername>\""
-             << endl;
+    if (result.command == "addplayer") {
+      if (result.param.size() == 0) {
+        handleEffect(
+            "Specify the player name in the format \"addplayer "
+            "<playername>\"",
+            result);
         continue;
       }
-      players.push_back(new Player(result.at(1)));
+      players.push_back(new Player(result.param));
       nPlayers++;
-    } else if (result.at(0) == "gamestart") {
+    } else if (result.command == "gamestart") {
       done_adding_players = true;
     }
 

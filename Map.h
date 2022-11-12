@@ -53,7 +53,7 @@ class MapLoader {
 
  public:
   Map* getMap();
-  bool loadMap(string fileName);
+  string loadMap(string fileName);
   MapLoader();
   MapLoader(const MapLoader&);
   ~MapLoader();
