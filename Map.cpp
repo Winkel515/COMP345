@@ -500,7 +500,8 @@ string MapLoader::loadMap(string fileName) {
       }
 
       this->map = new Map(territories, continentsNames);
-
+      // Map is valid
+      this->map->nameTerritoryMap = territoryMap;
       return output;
     } catch (const std::exception& e) {
       output = "The map file does not have a correct format.";
