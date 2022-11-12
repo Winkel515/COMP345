@@ -5,12 +5,11 @@
 #include <vector>
 #include "Map.h"
 
-
 class Player;
 
+#include "LoggingObserver.h"
 
-//abstract class
-class Order {
+class Order : public Subject, public ILoggable{
  public:
   Order();
   Order(const Order &o);
@@ -20,6 +19,7 @@ class Order {
   virtual bool validate() = 0; //pure virtual
   virtual void execute() = 0; //pure virtual
   virtual std::string GetType() = 0; //pure virtual
+  string stringToLog();
 
  private:
   std::string orderEffect;
@@ -112,7 +112,7 @@ class Negotiate : public Order{
     Player* Owner;
 };
 
-class OrdersList {
+class OrdersList : public Subject, public ILoggable{
  public:
   OrdersList();
   OrdersList(const OrdersList &ordersList);
@@ -123,6 +123,7 @@ class OrdersList {
   void add(Order *order);
   friend std::ostream &operator<<(std::ostream &o, const OrdersList &oL);
   void executeOrders();
+  string stringToLog();
 
  private:
   std::vector<Order*> ListOfOrders;

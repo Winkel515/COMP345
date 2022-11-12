@@ -2,6 +2,7 @@
 build
 *.exe
 *.out
+gamelog.txt
 outputfile
 
 # Ignore tasks.json

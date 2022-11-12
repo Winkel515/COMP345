@@ -16,6 +16,7 @@ Player::Player() {
   ConqueredTerritoryFlag = false;
   cards = new Hand();
   orders = new OrdersList();
+  //LogObserver* OrdersListView = new LogObserver(orders);
 }
 
 Player::Player(string name) {
@@ -24,6 +25,7 @@ Player::Player(string name) {
   cards = new Hand();
   orders = new OrdersList();
   ConqueredTerritoryFlag = false;
+  //LogObserver* OrdersListView = new LogObserver(orders);
 }
 
 
@@ -46,6 +48,7 @@ Player::Player(int nTerritories, int nCards, int nOrders) {
   for (int i = 0; i < nOrders; i++) {
     //(*orders).add(new Order(static_cast<Order::OrderType>(rand() % 6)));
   }
+  //LogObserver* OrdersListView = new LogObserver(orders);
 }
 
 
@@ -115,6 +118,7 @@ void Player::issueOrder() {
   // Create and add random order to List of Orders
   Order* newOrder = new Order(static_cast<Order::OrderType>(rand() % 6));
   (*orders).add(newOrder);
+  //LogObserver *orderView = new LogObserver(newOrder);
 }
 */
 
