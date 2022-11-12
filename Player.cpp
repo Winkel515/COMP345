@@ -17,7 +17,7 @@ Player::Player() {
   reinforcementPool = 0;
   cards = new Hand();
   orders = new OrdersList();
-  LogObserver* OrdersListView = new LogObserver(orders);
+  //LogObserver* OrdersListView = new LogObserver(orders);
 }
 
 Player::Player(string name) {
@@ -25,7 +25,7 @@ Player::Player(string name) {
   reinforcementPool = 0;
   cards = new Hand();
   orders = new OrdersList();
-  LogObserver* OrdersListView = new LogObserver(orders);
+  //LogObserver* OrdersListView = new LogObserver(orders);
 }
 
 // Parameterized constructor for testing purposes
@@ -45,7 +45,7 @@ Player::Player(int nTerritories, int nCards, int nOrders) {
   for (int i = 0; i < nOrders; i++) {
     (*orders).add(new Order(static_cast<Order::OrderType>(rand() % 6))); //TODO: add view
   }
-  LogObserver* OrdersListView = new LogObserver(orders);
+  //LogObserver* OrdersListView = new LogObserver(orders);
 }
 
 // Copy Constructor makes shallow copies of members because we want functions to
@@ -113,7 +113,7 @@ void Player::issueOrder() {
   // Create and add random order to List of Orders
   Order* newOrder = new Order(static_cast<Order::OrderType>(rand() % 6));
   (*orders).add(newOrder);
-  LogObserver *orderView = new LogObserver(newOrder);
+  //LogObserver *orderView = new LogObserver(newOrder);
 }
 
 // Helper method to create territory list

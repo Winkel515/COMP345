@@ -117,7 +117,7 @@ void OrdersList::remove(int index) {
 void OrdersList::add(Order *order) {
   // Not sure if we should add to the begining or the end
   ListOfOrders.push_back(order);
-  Notify(this);
+  Notify(order);
 }
 
 // OrderList destructor

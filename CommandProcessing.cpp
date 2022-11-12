@@ -76,11 +76,11 @@ string CommandProcessor::stringToLog() {
 
 void CommandProcessor::saveCommand(vector<string>& result) {
   Command* newCommand = new Command(result);
-  LogObserver* commandView = new LogObserver(newCommand);
+  //LogObserver* commandView = new LogObserver(newCommand);
   commandList.push_back(newCommand);
   cout << "CommandProcessor::saveCommand : command has been saved "
        << commandList.size() << endl;
-  Notify(this);
+  Notify(newCommand); //newCommand
 }
 
 void Command::callNotify() { Notify(this); }

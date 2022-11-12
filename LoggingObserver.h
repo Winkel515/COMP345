@@ -45,7 +45,7 @@ class Subject {
  private:
   list<Observer*>* _observers;
 };
-
+/*
 class A : public Subject, public ILoggable {
  public:
   ~A();
@@ -55,23 +55,27 @@ class A : public Subject, public ILoggable {
   string stringToLog();
   void callNotify();
 };
-
+*/
 class LogObserver : public Observer {
  public:
   LogObserver();
   LogObserver(const LogObserver& LogObs);
-  LogObserver(A* s);
-  LogObserver(Command* c);
-  LogObserver(CommandProcessor* cp);
-  LogObserver(GameEngine* ge);
-  LogObserver(Order* o);
-  LogObserver(OrdersList* olist);
+  //LogObserver(A* s);
+  //LogObserver(Command* c);
+  //LogObserver(CommandProcessor* cp);
+  //LogObserver(GameEngine* ge);
+  //LogObserver(Order* o);
+  //LogObserver(OrdersList* olist);
+  //LogObserver(Subject* _subject);
   ~LogObserver();
   void Update(ILoggable* ILog);
   LogObserver& operator=(const LogObserver& LogObs);
   friend ostream& operator<<(ostream& strm, const LogObserver& LogObs);
 
  private:
+  
+
+ /*
   A* _subjectA;
   Command* _subjectCommand;
   CommandProcessor* _subjectCommandProcessor;
@@ -79,4 +83,6 @@ class LogObserver : public Observer {
   Order* _subjectOrder;
   OrdersList* _subjectOrdersList;
   Subject* _subjectCopy;
+  Subject* _subject;
+  */
 };

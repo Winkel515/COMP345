@@ -8,7 +8,7 @@ using std::cout;
 using std::endl;
 using std::ofstream;
 using std::ostream;
-
+/*
 A::A() { a = 0; }
 
 string A::stringToLog() {
@@ -28,7 +28,7 @@ void A::callNotify() {
   Notify(this);
   cout << "this->a" << this->a << endl;
 }
-
+*/
 //Subject constructor
 Subject::Subject() { _observers = new list<Observer*>; }
 
@@ -63,6 +63,7 @@ void Subject::Detach(Observer* o) { _observers->remove(o); };
 
 //subject notify method
 void Subject::Notify(ILoggable* ILog) {
+  this->Attach(new LogObserver);
   list<Observer*>::iterator i = _observers->begin();
   for (; i != _observers->end(); ++i) (*i)->Update(ILog);
 };
@@ -90,18 +91,19 @@ ostream& operator<<(ostream& strm, Observer& o) {
 LogObserver::LogObserver(){
 
 }
-
+/*
 LogObserver::LogObserver(A* s) {
   _subjectA = s;
   _subjectA->Attach(this);
 }
-
+*/
+/*
 //logobserver constructor for command view
 LogObserver::LogObserver(Command* c) {
   _subjectCommand = c;
   _subjectCommand->Attach(this);
   
-  /*
+  
   _subjectCommandProcessor = new CommandProcessor();
   _subjectCommandProcessor->Attach(this);
   _subjectGameEngine = new GameEngine;
@@ -110,8 +112,8 @@ LogObserver::LogObserver(Command* c) {
   _subjectOrder->Attach(this);
   _subjectOrdersList = new OrdersList();
   _subjectOrdersList->Attach(this);
-  */
-}
+  
+}*/
 
 //logobserver destructor
 LogObserver::~LogObserver() {
@@ -124,13 +126,13 @@ LogObserver::~LogObserver() {
   _subjectCopy->Detach(this);
   */
 }
-
+/*
 //logobserver constructor for command processor view
 LogObserver::LogObserver(CommandProcessor* commandProcessor) {
   _subjectCommandProcessor = commandProcessor;
   _subjectCommandProcessor->Attach(this);
   
-  /*
+  
   _subjectGameEngine = new GameEngine;
   _subjectGameEngine->Attach(this);
   _subjectOrder = new Order();
@@ -140,15 +142,15 @@ LogObserver::LogObserver(CommandProcessor* commandProcessor) {
   _subjectCommand = new Command();
   _subjectCommand->Attach(this);
   
-*/
-}
 
+}*/
+/*
 //logobserver constructor for GameEngine view
 LogObserver::LogObserver(GameEngine* ge) {
   _subjectGameEngine = ge;
   _subjectGameEngine->Attach(this);
   
-  /*
+  
   _subjectGameEngine = new GameEngine;
   _subjectGameEngine->Attach(this);
   _subjectOrder = new Order();
@@ -157,15 +159,15 @@ LogObserver::LogObserver(GameEngine* ge) {
   _subjectOrdersList->Attach(this);
   _subjectCommand =  new Command();
   _subjectCommand->Attach(this);
-  */
-}
-
+  
+}*/
+/*
 //logobserver constructor for order view
 LogObserver::LogObserver(Order* o) {
   _subjectOrder = o;
   _subjectOrder->Attach(this);
   
-  /*
+  
   _subjectCommandProcessor = new CommandProcessor();
   _subjectCommandProcessor->Attach(this);
   _subjectGameEngine = new GameEngine;
@@ -174,14 +176,14 @@ LogObserver::LogObserver(Order* o) {
   _subjectOrdersList->Attach(this);
   _subjectCommand = new Command();
   _subjectCommand->Attach(this);
-  */
-}
-
+  
+}*/
+/*
 //logobserver constructor for orderlist view
 LogObserver::LogObserver(OrdersList* ol) {
   _subjectOrdersList = ol;
   _subjectOrdersList->Attach(this);
-  /*
+  
   _subjectCommandProcessor = new CommandProcessor();
   _subjectCommandProcessor->Attach(this);
   _subjectGameEngine = new GameEngine;
@@ -190,21 +192,43 @@ LogObserver::LogObserver(OrdersList* ol) {
   _subjectOrder->Attach(this);
   _subjectCommand = new Command();
   _subjectCommand->Attach(this);
-  */
+  
+
+}*/
+/*
+//logobserver constructor for orderlist view
+LogObserver::LogObserver(OrdersList* ol) {
+  _subjectOrdersList = ol;
+  _subjectOrdersList->Attach(this);
+  
+  _subjectCommandProcessor = new CommandProcessor();
+  _subjectCommandProcessor->Attach(this);
+  _subjectGameEngine = new GameEngine;
+  _subjectGameEngine->Attach(this);
+  _subjectOrder = new Order();
+  _subjectOrder->Attach(this);
+  _subjectCommand = new Command();
+  _subjectCommand->Attach(this);
+  
+
+}*/
+/*
+//logobserver constructor for orderlist view
+LogObserver::LogObserver(Subject* _subject) {
+  this->_subject = _subject;
+  this->_subject->Attach(this);
 
 }
+*/
+
 
 //logobserver copy constructor
 LogObserver::LogObserver(const LogObserver& LogObs){
-  _subjectCopy = new Subject(*const_cast<Subject*>(LogObs._subjectCopy));
-  _subjectCopy->Attach(this);
 
 }
 
 //logobserver assignment operator
 LogObserver& LogObserver::operator=(const LogObserver& LogObs) {
-  _subjectCopy = new Subject(*const_cast<Subject*>(LogObs._subjectCopy));
-  _subjectCopy->Attach(this);
   return *this;
 }
 

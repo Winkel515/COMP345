@@ -90,7 +90,7 @@ GameEngine::GameEngine() {
   setState(S_START);
   mapLoader = new MapLoader();
   commandProcessor = new CommandProcessor(&commands);
-  LogObserver *commandProcessorView = new LogObserver(commandProcessor);
+  //LogObserver *commandProcessorView = new LogObserver(commandProcessor);
   deck = new Deck(3);
 }
 
@@ -99,7 +99,7 @@ GameEngine::GameEngine(const GameEngine &ge) {
   setState(ge.state);
   mapLoader = new MapLoader(*ge.mapLoader);
   commandProcessor = new CommandProcessor(&commands);
-  LogObserver *commandProcessorView = new LogObserver(commandProcessor);
+  //LogObserver *commandProcessorView = new LogObserver(commandProcessor);
   deck = new Deck(3);
 }
 
@@ -149,6 +149,7 @@ void GameEngine::setState(GameState::GameStateEnum state) {
     commands = {""};
   } else {
     commands = GameEngineFSA::commandsPerStateMap.at(this->state);
+    
   }
   Notify(this);
 }
