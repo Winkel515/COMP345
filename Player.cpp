@@ -72,7 +72,7 @@ Player::~Player() {
 // Overloaded stream insertion operator
 std::ostream& operator<<(std::ostream& strm, Player& player) {
   strm << endl << "List of player's territories: " << endl;
-  for (std::list<Territory*>::iterator it1 = player.territories.begin();
+  for (std::vector<Territory*>::iterator it1 = player.territories.begin();
        it1 != player.territories.end(); ++it1) {
     strm << **it1;
   }
@@ -98,14 +98,14 @@ Player& Player::operator=(const Player& player) {
 }
 
 // Returns a list of Territories to Attack
-list<Territory*> Player::toAttack() {
-  list<Territory*> territoriesToAttack = createTerritoryList(3);
+std::vector<Territory*> Player::toAttack() {
+  std::vector<Territory*> territoriesToAttack = createTerritoryList(3);
   return territoriesToAttack;
 };
 
 // Returns a list of Territories to Defend (All of the player's currently owned
 // territories)
-list<Territory*> Player::toDefend() { return territories; };
+std::vector<Territory*> Player::toDefend() { return territories; };
 
 void Player::issueOrder(Order* newOrder) { (*orders).add(newOrder); }
 
@@ -123,8 +123,8 @@ void Player::issueOrder() {
 */
 
 // Helper method to create territory list
-list<Territory*> Player::createTerritoryList(int nTerritories) {
-  list<Territory*> territories;
+std::vector<Territory*> Player::createTerritoryList(int nTerritories) {
+  std::vector<Territory*> territories;
 
   int i = 0;
   while (i < nTerritories) {
@@ -140,7 +140,7 @@ void Player::addReinforcements(int n) { reinforcementPool += n; }
 
 Hand* Player::getHand() { return cards; }
 
-std::list<Territory*> Player::getTerritories() { return territories; }
+std::vector<Territory*> Player::getTerritories() { return territories; }
 
 bool Player::getConcqueredFlag(){ return ConqueredTerritoryFlag; }
 

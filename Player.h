@@ -11,7 +11,7 @@
 
 class Player {
   private:
-    std::list<Territory*> territories;
+    std::vector<Territory*> territories;
     OrdersList* orders;
     Hand* cards;
     bool ConqueredTerritoryFlag;
@@ -25,8 +25,8 @@ class Player {
   Player(string name);
   Player(const Player& player);
   ~Player();
-  std::list<Territory*> toDefend();
-  std::list<Territory*> toAttack();
+  std::vector<Territory*> toDefend();
+  std::vector<Territory*> toAttack();
   void issueOrder(Order* newOrder);
   void issueOrder();  // For Testing
   void testListOrder();
@@ -35,13 +35,13 @@ class Player {
   void addTerritory(Territory*);
   void addReinforcements(int);
   Hand* getHand();
-  std::list<Territory*> getTerritories();
+  std::vector<Territory*> getTerritories();
   OrdersList* getOrderList();
   bool getConcqueredFlag();
   void setConcqueredFlag(bool flag);
   std::vector<Player*> getDiplomaticAllies();
   void addDiplomaticAlly(Player* ally);
   void clearDiplomaticAllies();
-  list<Territory*> createTerritoryList(int nTerritories);
+  std::vector<Territory*> createTerritoryList(int nTerritories);
 
 };

@@ -26,6 +26,8 @@ class Territory {
   Territory(const Territory& n);
   Territory& operator=(const Territory& n);
   friend ostream& operator<<(ostream& strm, const Territory& n);
+  string getName();
+  string getContinent();
 };
 
 class Map {
@@ -47,6 +49,8 @@ class Map {
       vector<Territory*> territoriesCopy);
   friend ostream& operator<<(ostream& strm, const Map& m);
   void distributeTerritories(vector<Player*> players);
+  vector<Territory*> getTerritories();
+  vector<string> getContinentsNames();
 };
 
 class MapLoader {

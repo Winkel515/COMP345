@@ -82,6 +82,12 @@ ostream& operator<<(
               << convertAdjToString(n.adj) << endl;
 }
 
+// Get Territory Name
+string Territory::getName() { return this->name; }
+
+// Get Continent Name
+string Territory::getContinent() { return this->continent; }
+
 // Map constructor
 Map::Map(vector<Territory*> territories, vector<string> continents) {
   this->territories = territories;
@@ -404,6 +410,9 @@ void Map::distributeTerritories(vector<Player*> players) {
     currentTerritory->setOwner(currentPlayer);
   }
 }
+
+vector<Territory*> Map::getTerritories() {return territories;}
+vector<string> Map::getContinentsNames() {return continentsNames;}
 
 string convertAdjToString(
     vector<Territory*> adj) {  // free function to convert the

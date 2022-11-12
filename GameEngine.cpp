@@ -323,9 +323,35 @@ void GameEngine::reinforcementPhase() {
   for (int i = 0; i < players.size(); i++) {
     // Get reinforcement for Player
     int reinforcements;
-    reinforcements = (players.at(i)->getTerritories().size())/3;
+    reinforcements = (int)(players.at(i)->getTerritories().size())/3;
 
-    // TODO: CHECK IF PLAYER OWNS A CONTINENT AND ADD BONUS TO REINFORCEMENTS
+    // Territoy list from player
+    std::vector<Territory*> playerList = players.at(i)->getTerritories();
+
+    // Territoy list from map
+    std::vector<string> continentList = mapLoader->getMap()->getContinentsNames();
+    std::vector<Territory*> territoryList = mapLoader->getMap()->getTerritories();
+
+    // Erase all territories in territory list that exist in player list
+    for (int j=0; j < playerList.size(); j++) {
+      for (int k=0; k < territoryList.size(); k++) {
+        if(playerList.at(j)->getName() == territoryList.at(k)->getName()) {
+          territoryList.erase(territoryList.begin() + k);
+        }
+      }
+    }
+
+    // Erase all continents in continent list that exist in territory list
+    for (int j=0; j < territoryList.size(); j++) {
+      for (int k=0; k < continentList.size(); k++) {
+        if (territoryList.at(j)->getContinent() == continentList.at(k)) {
+          continentList.erase(continentList.begin() + k);
+        }
+      }
+    }
+
+    // Remaining size of the continnent list is the bonus multiplier. Add bonus to reinforcements
+    reinforcements += continentList.size() * 3;
 
     // if lower than 3, assign 3 reinforcements
     if (reinforcements < 3)
