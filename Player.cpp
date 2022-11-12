@@ -107,20 +107,27 @@ list<Territory*> Player::toAttack() {
 // territories)
 list<Territory*> Player::toDefend() { return territories; };
 
+//TODO JOHN: Delete if obsolete
 void Player::issueOrder(Order* newOrder) { (*orders).add(newOrder); }
 
 void Player::addTerritory(Territory* territory) {
   territories.push_back(territory);
 }
 
-/*
-void Player::issueOrder() {
-  // Create and add random order to List of Orders
-  Order* newOrder = new Order(static_cast<Order::OrderType>(rand() % 6));
-  (*orders).add(newOrder);
+//Returns true if player issues an order, false if they are done issuing orders
+bool Player::issueOrder() {
+
+  // TODO JOHN: Hardcode issueOrder() implementation.
+  return true;
+
+
+
+  // // Create and add random order to List of Orders
+  // Order* newOrder = new Order(static_cast<Order::OrderType>(rand() % 6));
+  // (*orders).add(newOrder);
   //LogObserver *orderView = new LogObserver(newOrder);
 }
-*/
+
 
 // Helper method to create territory list
 list<Territory*> Player::createTerritoryList(int nTerritories) {

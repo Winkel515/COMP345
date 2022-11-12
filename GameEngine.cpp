@@ -341,25 +341,26 @@ void GameEngine::reinforcementPhase() {
 
 // Executes Issue Order state
 void GameEngine::issueOrdersPhase() {
-  // // Exec Issue order here
-  for (int i = 0; i < players.size(); i++) {
-    
-    // List of territories to attack and defend
-    // players.at(i)->toAttack();
-    // players.at(i)->toDefend();
 
-    // Issue deploy orders
-    while (true) { // TODO: Replace true with a get method for reinforcement pool (while(reinforcementPool > 0))
-      players.at(i)->issueOrder();
+  //Global flag
+  bool stillIssuingOrders = true;
+  //Create a flag for each player to determine if they are done issuing orders.
+  bool playerStillIssuing[players.size()] = {true};
+
+  while(stillIssuingOrders){
+    //Reset global flag
+    stillIssuingOrders = false;
+
+    for (int i = 0; i < players.size(); i++){
+      //Issue order and set player's flag. issueOrder() returns true if player issues an order and flase if player signifies they are done.
+      if(playerStillIssuing[i]){ 
+        playerStillIssuing[i] = players.at(i)->issueOrder();
+      }
+      //Reset global flag if any player is still issuing orders
+      if(playerStillIssuing[i]){
+        stillIssuingOrders = true;
+      }
     }
-
-    // Issue advance orders
-    while (true) { // TODO: Replace true with a condition that ends the loop through a command
-    players.at(i)->issueOrder();
-    }
-
-    // Issue card order
-    players.at(i)->issueOrder();
   }
 }
 
