@@ -92,7 +92,7 @@ std::ostream &operator<<(std::ostream &o, const OrdersList &ol) {
 
   for (Order *order : ol.ListOfOrders) {
     ss << "\t"
-       << "Order " << order->GetType() << " is present in the list,\n";
+       << "Order " << *order << " is present in the list,\n";
   }
 
   return o << ss.str() << std::endl;

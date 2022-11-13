@@ -19,7 +19,6 @@ class Order {
   friend std::ostream &operator<<(std::ostream &output, const Order &o);
   virtual bool validate() = 0; //pure virtual
   virtual void execute() = 0; //pure virtual
-  virtual std::string GetType() = 0; //pure virtual
 
  private:
   std::string orderEffect;
