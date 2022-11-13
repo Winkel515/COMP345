@@ -9,7 +9,8 @@
 #include "LoggingObserver.h"
 #include "Orders.h"
 
-using std::cout, std::endl;
+using std::cout;
+using std::endl;
 void testLoggingObserver() {
   ofstream output;
   output.open("gamelog.txt", std::ios_base::app);

@@ -2,7 +2,9 @@
 
 #include <list>
 #include <string>
-using std::list, std::string, std::ostream;
+using std::list;
+using std::string;
+using std::ostream;
 class CommandProcessor;
 class GameEngine;
 class Command;

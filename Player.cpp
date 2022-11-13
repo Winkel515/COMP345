@@ -132,7 +132,7 @@ bool playCard(Card* card, vector<Card*> hand, Deck* deck) {
 Territory* getRandomTerritory(vector<Territory*> territories) {
   std::random_device seed;
   std::mt19937 gen{seed()};  // seed the generator
-  std::uniform_int_distribution dist{
+  std::uniform_int_distribution<> dist{
       0, static_cast<int>(territories.size()) - 1};  // set min and max
   int index = dist(gen);                             // generate number
   return territories.at(index);
