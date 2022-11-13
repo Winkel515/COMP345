@@ -19,6 +19,7 @@ class Player {
     int reinforcementPool;
     std::vector<Player*> diplomaticAllies;
     int issueOrdersCount;
+    static Player* neutralPlayer;
 
     
 
