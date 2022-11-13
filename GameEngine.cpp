@@ -86,12 +86,7 @@ string GameState::getLabel(GameStateEnum state) {
 };
 
 // Default Constructor for GameEngine
-GameEngine::GameEngine() {
-  setState(S_START);
-  mapLoader = new MapLoader();
-  commandProcessor = new CommandProcessor(&commands);
-  //LogObserver *commandProcessorView = new LogObserver(commandProcessor);
-  deck = new Deck(3);
+GameEngine::GameEngine(): GameEngine(new CommandProcessor()) {
 }
 
 // Copy Constructor for GameEngine
@@ -100,6 +95,18 @@ GameEngine::GameEngine(const GameEngine &ge) {
   mapLoader = new MapLoader(*ge.mapLoader);
   commandProcessor = new CommandProcessor(&commands);
   //LogObserver *commandProcessorView = new LogObserver(commandProcessor);
+  deck = new Deck(3);
+}
+
+void GameEngine::setCommandProcessor(CommandProcessor *cProcessor) {
+  this->commandProcessor = cProcessor;
+  commandProcessor->initValidCommandsPtr(&commands);
+}
+
+GameEngine::GameEngine(CommandProcessor *cProcessor) {
+  setState(S_START);
+  mapLoader = new MapLoader();
+  setCommandProcessor(cProcessor);
   deck = new Deck(3);
 }
 

@@ -14,16 +14,22 @@ using std::cout;
 using std::string;
 using std::vector;
 
-string getFileName(int argc, char *argv[]) {
+void startGame(CommandProcessor* commandProcessor) {
+  GameEngine* gE = new GameEngine(commandProcessor);
+  gE->start();
+  delete gE;
+}
+
+string getFileName(int argc, char* argv[]) {
   string filename = "";
   bool isFirst = true;
-  for(int i = 2; i < argc; i++) {
-  // Add space after the first concat
-  if (!isFirst) {
-    filename += " ";
-  } else {
-    isFirst = false;
-  }
+  for (int i = 2; i < argc; i++) {
+    // Add space after the first concat
+    if (!isFirst) {
+      filename += " ";
+    } else {
+      isFirst = false;
+    }
     string temp(argv[i]);
     filename += temp;
   }
@@ -40,7 +46,7 @@ void oldTests() {
   testCards();
   cout << "====== Testing Orders ======\n";
   testOrdersList();
-  cout << "====== Testing Game Engine ======\n";
+  // cout << "====== Testing Game Engine ======\n";
   // testGameStates();
   cout << "====== Testing Logging observer ======\n";
   testLoggingObserver();
@@ -61,7 +67,7 @@ void showHelp(vector<string> supportedFlags) {
 int main(int argc, char* argv[]) {
   CommandProcessor* commandProcessor;
   bool isDebug = false;  // Manually toggle
-  vector<string> supportedFlags{"-help", "-oldtests"};
+  vector<string> supportedFlags{"-console", "-file <filename>","-test","-help", "-oldtests"};
 
   if (argc == 1) {
     // Run without any arguments
@@ -81,7 +87,8 @@ int main(int argc, char* argv[]) {
     } else if (flag.compare("-oldtests") == 0) {
       oldTests();
     } else if (flag.compare("-console") == 0) {
-      oldTests();  // TODO
+      commandProcessor = new CommandProcessor();
+      startGame(commandProcessor);
     } else if (flag.compare("-file") == 0) {
       std::set<string> validCommands = {"test1", "test2", "loadmap"};
       std::string filename;
@@ -90,14 +97,11 @@ int main(int argc, char* argv[]) {
         filename = getFileName(argc, argv);
       } else {
         // by default
-        filename = "commands.txt";
+        filename = "testcommands.txt";
       }
 
-      commandProcessor =
-          new FileCommandProcessorAdapter(filename);
-      commandProcessor->initCommandsPtr(&validCommands);
-      commandProcessor->getCommand();
-      delete commandProcessor;
+      commandProcessor = new FileCommandProcessorAdapter(filename);
+      startGame(commandProcessor);
 
     } else {
       cout << "Unsupported flag. Please run using supported flag.\n";

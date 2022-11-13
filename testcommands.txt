@@ -1,0 +1,5 @@
+loadmap 3D.map
+validatemap
+addplayer foo
+addplayer bar
+gamestart

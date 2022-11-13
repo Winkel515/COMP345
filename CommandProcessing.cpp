@@ -28,7 +28,29 @@ CommandProcessor::~CommandProcessor() {
   for (int i = 0; i < commandList.size(); i++) delete commandList.at(i);
 }
 
-Command& CommandProcessor::getCommand() { return readCommand(); }
+void CommandProcessor::setNextInput(string input) {
+  nextInput = input;
+}
+
+Command& CommandProcessor::getCommand() { 
+  // Run normally if nextInput is empty
+  if(nextInput.empty()) {
+    return readCommand();
+  } else {
+    // Run manually if nextInput was set manually (for testing)
+    string input = nextInput;
+    nextInput = "";
+    vector<string> inputs = splitString(input, " ");
+    if (validate(inputs)) {
+      return saveCommand(inputs);
+    } else {
+      cout << "When using nextInput, the input must be valid.\nQuitting.\n";
+      std::exit(0);
+      Command * doesntReach_keepCompilerHappy = new Command(inputs); // doesnt reach
+      return *doesntReach_keepCompilerHappy; // doesnt reach
+    }
+  }
+}
 
 Command& CommandProcessor::readCommand() {
   string input = "";
@@ -90,7 +112,7 @@ bool CommandProcessor::validate(vector<string>& result) {
   return true;
 }
 
-void CommandProcessor::initCommandsPtr(set<string> *commands) {
+void CommandProcessor::initValidCommandsPtr(set<string>* commands) {
   this->validCommands = commands;
 }
 
@@ -136,7 +158,8 @@ FileCommandProcessorAdapter::FileCommandProcessorAdapter(string filename) {
 }
 
 FileCommandProcessorAdapter::FileCommandProcessorAdapter(set<string>* commands,
-                                                         string filename): FileCommandProcessorAdapter(filename) {
+                                                         string filename)
+    : FileCommandProcessorAdapter(filename) {
   this->validCommands = commands;
 }
 
@@ -146,19 +169,26 @@ FileCommandProcessorAdapter::~FileCommandProcessorAdapter() { file.close(); }
 Command& FileCommandProcessorAdapter::readCommand() {
   string input = "";
   Command response;
-  vector<string> inputs;
+  vector<string> inputs = {""};
 
   // Read line until get a valid command
   while (true) {
     if (!file.eof()) {
       getline(file, input);
       cout << "Read \"" + input + "\" from file." << endl;
-      inputs = splitString(input, " ");
+      
+      // Protect from seg fault
+      if (input.length() > 0) {
+        // Convert into vector
+        inputs = splitString(input, " ");
+      }
+      // Validate
       if (validate(inputs)) {
         return saveCommand(inputs);
       };
     } else {
-      cout << "Cannot get line. Reached EOF." << endl;
+      // Quits app once EOF
+      cout << "Reached EOF." << endl;
       cout << "Quitting application." << endl;
       std::exit(0);
     }

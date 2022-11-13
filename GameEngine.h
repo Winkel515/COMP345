@@ -67,6 +67,7 @@ class GameEngine : public Subject, public ILoggable {
   void run();
   bool handleCommand(std::string);
   bool handleCommand(std::string, bool);
+  void setCommandProcessor(CommandProcessor *);
   std::vector<std::string> promptCommand();
   std::vector<std::string> promptCommand(bool);
   void printCommands();
@@ -76,6 +77,7 @@ class GameEngine : public Subject, public ILoggable {
   GameEngine& operator=(const GameEngine&);
   GameEngine();                   // default constructor
   GameEngine(const GameEngine&);  // copy constructor
+  GameEngine(CommandProcessor *); // switch between command processor
   ~GameEngine();
   string stringToLog();
   friend std::ostream& operator<<(std::ostream&,

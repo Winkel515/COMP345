@@ -29,21 +29,26 @@ class Command : public Subject, public ILoggable {
 
 class CommandProcessor : public Subject, public ILoggable {
   virtual Command& readCommand();
+  Command& readCommand(bool);
 
  protected:
   vector<Command *> commandList;
   set<string> *validCommands;
   Command &saveCommand(vector<string> &);
+  Command &getValidatedAndSavedCommand(string);
   bool validate(vector<string> &);
+  string nextInput = "";
 
  public:
   Command &getCommand();
+  Command &getCommand(bool);
+  void setNextInput(string); // Careful: Only implemented in CommandProcessor, Adapter doesnt use this.
   CommandProcessor();
   CommandProcessor(set<string> *);
   CommandProcessor(const CommandProcessor &);
   ~CommandProcessor();
   string stringToLog();
-  void initCommandsPtr(set<string> *);
+  void initValidCommandsPtr(set<string> *);
 };
 
 class FileCommandProcessorAdapter : public CommandProcessor {
