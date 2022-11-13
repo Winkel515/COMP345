@@ -15,7 +15,10 @@ using std::string;
 using std::vector;
 
 void startGame(CommandProcessor* commandProcessor) {
+  LogObserver logObs = LogObserver();
+  commandProcessor->Attach(&logObs);
   GameEngine* gE = new GameEngine(commandProcessor);
+  gE->Attach(&logObs);
   gE->start();
   delete gE;
 }
@@ -97,6 +100,7 @@ int main(int argc, char* argv[]) {
         filename = getFileName(argc, argv);
       } else {
         // by default
+        cout << "Using default file testcommands.txt (provide a filename to override)." << endl;
         filename = "testcommands.txt";
       }
 

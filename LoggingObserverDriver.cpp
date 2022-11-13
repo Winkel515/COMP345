@@ -73,9 +73,9 @@ void testLoggingObserver() {
     output << "the file gets correctly written into when commands are entered on the console \n\n" << endl;
     output.close();
 
-    GameEngine* testGameEngine2 = new GameEngine;
-    testGameEngine2->Attach(&logObs);
-    testGameEngine2->start();
+    // GameEngine* testGameEngine2 = new GameEngine;
+    // testGameEngine2->Attach(&logObs);
+    // testGameEngine2->start();
 
 
 
