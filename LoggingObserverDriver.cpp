@@ -29,7 +29,10 @@ void testLoggingObserver() {
        << typeid(dynamic_cast<Subject*>(testGameEngine)).name() << " and "
        << typeid(dynamic_cast<ILoggable*>(testGameEngine)).name() << endl;
 
-  Order* testOrder = new Order();
+  Player* p1 = new Player("player 1");
+  Territory* terr1 = new Territory("player1Territory", "fakeContinent");
+  terr1->setOwner(p1);
+  Order* testOrder = new Deploy(terr1, p1, 10);
   // LogObserver* orderView = new LogObserver(testOrder);
   cout << "testOrder is of type: " << typeid(testOrder).name()
        << " and inherits from "
@@ -65,8 +68,10 @@ void testLoggingObserver() {
   testGameEngine->setState(GameState::S_MAP_LOADED);
   testOrder->execute();
   testOrdersList->add(testOrder);
-  testCommands->saveEffect("Command Failed");
-  testCommandProcessor->saveCommand(commandsVec);
+  string effect = "Command Failed";
+  testCommands->saveEffect(effect);
+  testCommandProcessor->setNextInput("loadmap");
+  testCommandProcessor->getCommand();
 
   output.open("gamelog.txt", std::ios_base::app);
   output << "================================\n\n" << endl;
@@ -85,6 +90,8 @@ void testLoggingObserver() {
   // delete testOrdersList;
   delete testCommands;
   delete testCommandProcessor;
+  delete p1;
+  delete terr1;
   // delete commandProcessorView;
   cout << "end" << endl;
 }
