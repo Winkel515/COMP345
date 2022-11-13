@@ -7,7 +7,8 @@
 #include "Orders.h"
 #include "CommandProcessing.h"
 
-using std::cout, std::endl;
+using std::cout;
+using std::endl;
 void testLoggingObserver() {
 
     ofstream output;
@@ -62,6 +63,9 @@ void testLoggingObserver() {
     testOrdersList->add(testOrder);
     string effectString = "Command Failed";
     testCommands->saveEffect(effectString);
+
+    // Testing Notify from saveCommand()
+    testCommandProcessor->setNextInput("loadmap");
     testCommandProcessor->getCommand();
 
     output.open("gamelog.txt", std::ios_base::app);
@@ -69,14 +73,14 @@ void testLoggingObserver() {
     output << "the file gets correctly written into when commands are entered on the console \n\n" << endl;
     output.close();
 
-    GameEngine* testGameEngine2 = new GameEngine;
-    testGameEngine2->Attach(&logObs);
-    testGameEngine2->start();
+    // GameEngine* testGameEngine2 = new GameEngine;
+    // testGameEngine2->Attach(&logObs);
+    // testGameEngine2->start();
 
 
 
     delete testGameEngine;
-    delete testGameEngine2;
+    // delete testGameEngine2;
     delete testOrder;
     //delete testOrdersList;
     delete testCommands;

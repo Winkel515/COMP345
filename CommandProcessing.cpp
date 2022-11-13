@@ -1,6 +1,5 @@
 #include "CommandProcessing.h"
 
-
 #include <iostream>
 #include <string>
 #include <vector>
@@ -14,12 +13,11 @@ using std::set;
 using std::string;
 
 //command processor default constructor
-CommandProcessor::CommandProcessor() {
-};
+CommandProcessor::CommandProcessor(){};
 
 //command processor constructor
 CommandProcessor::CommandProcessor(set<string>* commands) {
-  this->commands = commands;
+  this->validCommands = commands;
 };
 
 //command processor copy constructor
@@ -34,28 +32,45 @@ CommandProcessor::~CommandProcessor() {
   for (int i = 0; i < commandList.size(); i++) delete commandList.at(i);
 }
 
-//command processor getCommand method
-Command& CommandProcessor::getCommand() {
-  vector<string> result = readCommand();
-  return saveCommand(result);
+void CommandProcessor::setNextInput(string input) {
+  nextInput = input;
 }
 
-//command procesor readcommand method
-vector<string> CommandProcessor::readCommand() {
+Command& CommandProcessor::getCommand() { 
+  // Run normally if nextInput is empty
+  if(nextInput.empty()) {
+    return readCommand();
+  } else {
+    // Run manually if nextInput was set manually (for testing)
+    string input = nextInput;
+    nextInput = "";
+    vector<string> inputs = splitString(input, " ");
+    if (validate(inputs)) {
+      return saveCommand(inputs);
+    } else {
+      cout << "When using nextInput, the input must be valid.\nQuitting.\n";
+      std::exit(0);
+      Command * doesntReach_keepCompilerHappy = new Command(inputs); // doesnt reach
+      return *doesntReach_keepCompilerHappy; // doesnt reach
+    }
+  }
+}
+
+Command& CommandProcessor::readCommand() {
   string input = "";
-  vector<string> result;
+  vector<string> inputs;
 
   while (true) {
     cout << "Please enter a command: ";
     getline(cin, input);
-    result = splitString(input, " ");
-    if (validate(result)) break;
-  };
-
-  return result;
+    inputs = splitString(input, " ");
+    if (validate(inputs)) {
+      return saveCommand(inputs);
+    }
+  }
 }
 
-//overloaded stringTolog method
+// overloaded stringTolog method
 string CommandProcessor::stringToLog() {
   string s = "";
   if(this->commandList[(this->commandList).size()-1]->effect.size() == 0){
@@ -86,19 +101,23 @@ bool CommandProcessor::validate(vector<string>& result) {
   // check gamestate and return if command is valid
   string command = result.at(0);
   // Checks if valid command
-  if (commands->find(command) == commands->end()) {
+  if (validCommands->find(command) == validCommands->end()) {
     string invalidEffect = "Invalid Command.";
     saveCommand(result).saveEffect(invalidEffect);
     cout << invalidEffect << std::endl;
-    printCommands(*commands);
+    printCommands(*validCommands);
     return false;
   }
 
   return true;
 }
 
+void CommandProcessor::initValidCommandsPtr(set<string>* commands) {
+  this->validCommands = commands;
+}
+
 //command default constructor
-Command::Command() {}
+Command::Command(){}
 
 //command copy constructor
 Command::Command(const Command& c) {
@@ -126,9 +145,7 @@ void Command::saveEffect(string& s) {
   Notify(this);
 }
 
-
-
-//overloaded strinToLog method
+// overloaded strinToLog method
 string Command::stringToLog() {
   string s = "";
   
@@ -144,3 +161,49 @@ string Command::stringToLog() {
 
 Command::~Command(){};
 
+FileCommandProcessorAdapter::FileCommandProcessorAdapter(string filename) {
+  file.open(filename);
+
+  if (!file.good()) {
+    cout << "Commands file \"" << filename << "\" does not exist." << endl;
+    std::exit(0);
+  }
+}
+
+FileCommandProcessorAdapter::FileCommandProcessorAdapter(set<string>* commands,
+                                                         string filename)
+    : FileCommandProcessorAdapter(filename) {
+  this->validCommands = commands;
+}
+
+// Close the file once done
+FileCommandProcessorAdapter::~FileCommandProcessorAdapter() { file.close(); }
+
+Command& FileCommandProcessorAdapter::readCommand() {
+  string input = "";
+  Command response;
+  vector<string> inputs = {""};
+
+  // Read line until get a valid command
+  while (true) {
+    if (!file.eof()) {
+      getline(file, input);
+      cout << "Read \"" + input + "\" from file." << endl;
+      
+      // Protect from seg fault
+      if (input.length() > 0) {
+        // Convert into vector
+        inputs = splitString(input, " ");
+      }
+      // Validate
+      if (validate(inputs)) {
+        return saveCommand(inputs);
+      };
+    } else {
+      // Quits app once EOF
+      cout << "Reached EOF." << endl;
+      cout << "Quitting application." << endl;
+      std::exit(0);
+    }
+  }
+}
