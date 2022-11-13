@@ -18,6 +18,8 @@ class Player {
     string name;
     int reinforcementPool;
     std::vector<Player*> diplomaticAllies;
+    int issueOrdersCount;
+
     
 
  public:

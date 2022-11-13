@@ -15,6 +15,7 @@
 
 // Default Constructor
 Player::Player() {
+  issueOrdersCount =0;
   reinforcementPool = 0;
   ConqueredTerritoryFlag = false;
   cards = new Hand();
@@ -23,6 +24,7 @@ Player::Player() {
 }
 
 Player::Player(string name) {
+  issueOrdersCount = 0;
   this->name = name;
   reinforcementPool = 0;
   cards = new Hand();
@@ -143,7 +145,6 @@ void Player::addTerritory(Territory* territory) {
 }
 
 
- 
 //TODO JOHN: Implement a counter to ensure we demonstrate all the possibilities
 //TODO JOHN: cout so we see the orders do as they are supposed to. 
 //Returns true if player issues an order, false if they are done issuing orders
@@ -161,7 +162,8 @@ bool Player::issueOrder() {
     reinforcementPool -= numOfArmies;
     return true;
   }
-  else if(true){
+
+  else if(issueOrdersCount == 0){
     //Demonstrate Advance using toDefend()
     Territory* target = getRandomTerritory(toDefend());
     Territory* source;
@@ -174,10 +176,12 @@ bool Player::issueOrder() {
     }
     //Move 2 armies from source to target
     orders->add(new Advance(target, source, this, 2));
+    issueOrdersCount++;
     return true;
   }
-  else if(true){
-    //TODO JOHN: Demonstrate Advance using toAttack()
+
+  else if(issueOrdersCount == 1){
+    // Demonstrate Advance using toAttack()
     Territory* target = getRandomTerritory(toAttack());
     Territory* source;
     vector<Territory*> adjacent = target->adj;
@@ -189,28 +193,37 @@ bool Player::issueOrder() {
     }
     //Move 2 armies from source to target
     orders->add(new Advance(target, source, this, 2));
+    issueOrdersCount++;
     return true;
   }
-  else if(true){
+
+  else if(issueOrdersCount < 6){ //Hardcoded at 6 to demonstrate multiple cards
 
     //TODO JOHN: Demonstrate cards functionality
-    vector<Card*> cardsToPlay = cards->getCards();
-    Card* cardToPlay = cards->getCards().at(0);
+    vector<Card*> hand = cards->getCards();
+    Card* cardToPlay = hand.back();
     Deck* deck = cards->getDeck();
 
-    //TODO JOHN: Figure out how to compare CardType
-    if(cardToPlay->GetType() == "Bomb"){
+    // Compare Card::CardType() to it's enum values. 
+    if(cardToPlay->GetType() == 1){
       Territory* target = getRandomTerritory(toAttack());
       orders->add(new Bomb(target, this));
+      issueOrdersCount++;
+      return playCard(cardToPlay, hand, deck);
+    }
+    else if (cardToPlay->GetType() == 2){
+      //TODO JOHN: Now that reinforcementPool > 0, do we have to deploy?
+      reinforcementPool += 5;
       return true;
     }
-    else if (cardToPlay->GetType() == "Blockade"){
+    else if (cardToPlay->GetType() == 3){
       //TODO: Implement blockade once neutral parameter is removed.
       Territory* target = getRandomTerritory(toDefend());
       //Constructor: Blockade(Territory* target, Player* owner, Player* neutral);
-
+      
+      return playCard(cardToPlay, hand, deck);
     }
-    else if (cardToPlay->GetType() == "Airlift"){
+    else if (cardToPlay->GetType() == 4){
       int numArmiesToMove = 2;
       Territory* target = getRandomTerritory(toDefend());
       Territory* source = getRandomTerritory(toDefend());
@@ -219,36 +232,41 @@ bool Player::issueOrder() {
         source = getRandomTerritory(toDefend());
       }
       orders->add(new Airlift(target, source, this, numArmiesToMove));
-      return true;
+      issueOrdersCount++;
+      return playCard(cardToPlay, hand, deck);
     }
-    else if (cardToPlay->GetType() == "Diplomacy"){
+    else if (cardToPlay->GetType() == 5){
       Territory* target = getRandomTerritory(toAttack());
       orders->add(new Negotiate(target, this));
-      return true;
+      issueOrdersCount++;
+      return playCard(cardToPlay, hand, deck);
     }
-    else if (cardToPlay->GetType() == "Reinforcement"){
-      //TODO JOHN: Now that reinforcementPool > 0, do we have to deploy?
-      reinforcementPool += 5;
-      return true;
-    }
-
-    cardToPlay->play(deck);
-    //TODO: Delete the pointer from the vector
-   
   }
-  return true;
-
+  else{
+    //No Order Issued.
+    return false;
+  }
   //LogObserver *orderView = new LogObserver(newOrder);
 }
 
+bool playCard(Card* card, vector<Card*> hand, Deck* deck){
+  //Return card to Deck
+  card->play(deck);
+  //delete pointer and remove from vector
+  delete card;
+  hand.pop_back();
+
+  return true;
+}
+
 //helper function for Deliverable 2. Can be replaced by getTerritoryChoice() or a similar method when choices are introduced
-  Territory* getRandomTerritory(vector<Territory*> territories){
-    std::random_device seed;
-    std::mt19937 gen{seed()}; // seed the generator
-    std::uniform_int_distribution dist{0, static_cast<int>(territories.size())-1}; // set min and max
-    int index = dist(gen); // generate number
-    return territories.at(index);
-  }
+Territory* getRandomTerritory(vector<Territory*> territories){
+  std::random_device seed;
+  std::mt19937 gen{seed()}; // seed the generator
+  std::uniform_int_distribution dist{0, static_cast<int>(territories.size())-1}; // set min and max
+  int index = dist(gen); // generate number
+  return territories.at(index);
+}
 
 
 // Helper method to create territory list
