@@ -33,9 +33,28 @@ std::ostream &operator<<(std::ostream &out, const Order &o) {
 
 //overloaded to string method
 string Order::stringToLog() {
-  string s = "Order class\ntype of order: " + this->GetType();
+  string s = "Order class\ntype of order: Order";
   return s;
 }
+string Deploy::stringToLog(){
+  return "Order class\ntype of order: Deploy";
+}
+string Advance::stringToLog(){
+  return "Order class\ntype of order: Advance";
+}
+string Bomb::stringToLog(){
+  return "Order class\ntype of order: Bomb";
+}
+string Blockade::stringToLog(){
+  return "Order class\ntype of order: Blockade";
+}
+string Airlift::stringToLog(){
+  return "Order class\ntype of order: Airlift";
+}
+string Negotiate::stringToLog(){
+  return "Order class\ntype of order: Negotiate";
+}
+
 
 // Default OrderList constructor
 OrdersList::OrdersList() {

@@ -18,7 +18,7 @@ class Order : public Subject, public ILoggable{
   friend std::ostream &operator<<(std::ostream &output, const Order &o);
   virtual bool validate() = 0; //pure virtual
   virtual void execute() = 0; //pure virtual
-  string stringToLog();
+  virtual string stringToLog() =0; //pure virtual
 
  private:
   std::string orderEffect;
@@ -33,6 +33,7 @@ class Deploy : public Order{
     int GetNumArmies();
     Player* GetOwner();
     Territory* GetTarget();
+    string stringToLog();
     friend std::ostream &operator<<(std::ostream &output, const Deploy &o);
 
   private:
@@ -50,6 +51,7 @@ class Advance : public Order{
     Player* GetOwner();
     Territory* GetTarget();
     Territory* GetSource();
+    string stringToLog();
     friend std::ostream &operator<<(std::ostream &output, const Advance &o);
 
   private:
@@ -66,6 +68,7 @@ class Bomb : public Order {
   void execute();
   bool validate();
   friend std::ostream &operator<<(std::ostream &output, const Bomb &o);
+  string stringToLog();
 
   private:
   Player* Owner;
@@ -78,6 +81,7 @@ class Blockade : public Order{
   void execute();
   bool validate();
   friend std::ostream &operator<<(std::ostream &output, const Blockade &o);
+  string stringToLog();
 
   private:
     Territory* Target;
@@ -91,6 +95,7 @@ class Airlift : public Order{
   void execute();
   bool validate();
   friend std::ostream &operator<<(std::ostream &output, const Airlift &o);
+  string stringToLog();
 
   private:
     Territory* Source;
@@ -105,6 +110,7 @@ class Negotiate : public Order{
   void execute();
   bool validate();
   friend std::ostream &operator<<(std::ostream &output, const Negotiate &o);
+  string stringToLog();
 
   private:
     Territory* Target;
