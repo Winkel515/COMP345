@@ -3,6 +3,8 @@
 #include <list>
 #include <vector>
 #include <algorithm>
+#include <random>
+
 
 
 #include "Cards.h"
@@ -140,31 +142,46 @@ void Player::addTerritory(Territory* territory) {
   territories.push_back(territory);
 }
 
+
+ //helper function for Deliverable 2. Can be deleted once players choose their territories.
+  Territory* getRandomTerritory(vector<Territory*> territories){
+    
+  }
+
 //Returns true if player issues an order, false if they are done issuing orders
 bool Player::issueOrder() {
 
-  //Deploy Reinforcements
+  //Deploy all Reinforcements
   if(reinforcementPool > 0){
-    // orders->add(new Deploy()); //TODO JOHN:  Make sure deploy is concrete
-
-
+    //Hardcoded to deploy in rounds of 10 to random territory
+    int numOfArmies = 10;
+    if(numOfArmies > reinforcementPool){
+      numOfArmies = reinforcementPool;
+    }
+    Territory* toDeployTo = getRandomTerritory(toDefend());
+    orders->add(new Deploy(toDeployTo, this, numOfArmies));
+    reinforcementPool -= numOfArmies;
+    return true;
   }
-  
-
-  // TODO JOHN: Hardcode issueOrder() implementation.
-
-  //TODO JOHN: Deploy orders only if reinforcements > 0
+  else{
+    //TODO JOHN: Demonstrate Advance 
+  }
 
 
   return true;
 
 
-
-  // // Create and add random order to List of Orders
-  // Order* newOrder = new Order(static_cast<Order::OrderType>(rand() % 6));
-  // (*orders).add(newOrder);
   //LogObserver *orderView = new LogObserver(newOrder);
 }
+
+//helper function for Deliverable 2. Can be deleted once players choose their territories.
+  Territory* getRandomTerritory(vector<Territory*> territories){
+    std::random_device seed;
+    std::mt19937 gen{seed()}; // seed the generator
+    std::uniform_int_distribution dist{0, static_cast<int>(territories.size())-1}; // set min and max
+    int index = dist(gen); // generate number
+    return territories.at(index);
+  }
 
 
 // Helper method to create territory list
