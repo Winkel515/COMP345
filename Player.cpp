@@ -158,13 +158,30 @@ bool Player::issueOrder() {
     if(numOfArmies > reinforcementPool){
       numOfArmies = reinforcementPool;
     }
-    Territory* toDeployTo = getRandomTerritory(toDefend());
-    orders->add(new Deploy(toDeployTo, this, numOfArmies));
+    Territory* target = getRandomTerritory(toDefend());
+    orders->add(new Deploy(target, this, numOfArmies));
     reinforcementPool -= numOfArmies;
     return true;
   }
   else{
-    //TODO JOHN: Demonstrate Advance 
+    //TODO JOHN: Demonstrate Advance toAttack()
+    Territory* target = getRandomTerritory(toDefend());
+    Territory* source;
+    vector<Territory*> adjacent = target->adj;
+    //Find an adjacent territory that is owned by this player. 
+    for(auto it = adjacent.begin(); it != adjacent.end(); ++it){
+      if((*it)->owner == this){
+        source = *it;
+      }
+    }
+    //Move 2 armies from source to target
+    orders->add(new Advance(target, source, this, 2));
+
+
+
+
+    //TODO JOHN: Demonstrate Advance toDefend()
+
   }
 
 
