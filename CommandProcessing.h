@@ -11,28 +11,31 @@ using std::set;
 using std::string;
 using std::vector;
 
-class Command {
+
+class Command : public Subject, public ILoggable {
+ public:
   string command;
   string param;
-
- public:
+  string effect;
+  Command();
   Command(vector<string> &);
   Command(const Command &);
   ~Command();
-  void saveEffect(string);
+  void saveEffect(string &);
+  void callNotify();
   string stringToLog();
 };
 
-class CommandProcessor {
+class CommandProcessor : public Subject, public ILoggable {
   vector<Command *> commandList;
   set<string> *commands;
-
   vector<string> readCommand();
-  void saveCommand(vector<string> &);
+  Command &saveCommand(vector<string> &);
   bool validate(vector<string> &);
 
  public:
-  vector<string> getCommand();
+  Command &getCommand();
+  CommandProcessor();
   CommandProcessor(set<string> *);
   CommandProcessor(const CommandProcessor &);
   ~CommandProcessor();

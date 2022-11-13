@@ -1,5 +1,7 @@
 #include "GameEngine.h"
 
+
+
 #include <algorithm>
 #include <chrono>
 #include <iostream>
@@ -9,6 +11,7 @@
 #include <string>
 
 #include "CommandProcessing.h"
+#include "LoggingObserver.h"
 
 using std::cin;
 using std::cout;
@@ -87,6 +90,7 @@ GameEngine::GameEngine() {
   setState(S_START);
   mapLoader = new MapLoader();
   commandProcessor = new CommandProcessor(&commands);
+  //LogObserver *commandProcessorView = new LogObserver(commandProcessor);
   deck = new Deck(3);
 }
 
@@ -95,6 +99,7 @@ GameEngine::GameEngine(const GameEngine &ge) {
   setState(ge.state);
   mapLoader = new MapLoader(*ge.mapLoader);
   commandProcessor = new CommandProcessor(&commands);
+  //LogObserver *commandProcessorView = new LogObserver(commandProcessor);
   deck = new Deck(3);
 }
 
@@ -144,7 +149,9 @@ void GameEngine::setState(GameState::GameStateEnum state) {
     commands = {""};
   } else {
     commands = GameEngineFSA::commandsPerStateMap.at(this->state);
+    
   }
+  Notify(this);
 }
 
 // Runs the GameEngine
@@ -179,7 +186,7 @@ void GameEngine::execSelector(GameStateEnum state) {
       issueOrdersPhase();
       break;
     case S_EXECUTE_ORDERS:
-      execExecuteOrders();
+      executeOrdersPhase();
       break;
     case S_WIN:
       execWin();
@@ -238,6 +245,22 @@ void GameEngine::printCommands() {
   cout << ".\n";
 }
 
+void printCommands(set<string> &commands) {
+  bool firstTime_noComma = true;
+  std::cout << "List of available commands: ";
+
+  for (set<string>::iterator i = commands.begin(); i != commands.end(); i++) {
+    if (!firstTime_noComma) {
+      cout << ", ";
+    } else {
+      firstTime_noComma = false;
+    }
+    cout << *i;
+  }
+
+  cout << ".\n";
+}
+
 // Handles the mapping between command and state
 bool GameEngine::handleCommand(string command) {
   command = splitString(command, " ").at(0);
@@ -250,6 +273,7 @@ bool GameEngine::handleCommand(string command) {
   // Transition the state
   GameStateEnum desiredState = GameEngineFSA::commandToStateMap.at(command);
   setState(desiredState);
+  
 
   return true;
 }
@@ -299,9 +323,35 @@ void GameEngine::reinforcementPhase() {
   for (int i = 0; i < players.size(); i++) {
     // Get reinforcement for Player
     int reinforcements;
-    reinforcements = (players.at(i)->getTerritories().size())/3;
+    reinforcements = (int)(players.at(i)->getTerritories().size())/3;
 
-    // TODO: CHECK IF PLAYER OWNS A CONTINENT AND ADD BONUS TO REINFORCEMENTS
+    // Territoy list from player
+    std::vector<Territory*> playerList = players.at(i)->getTerritories();
+
+    // Territoy list from map
+    std::vector<string> continentList = mapLoader->getMap()->getContinentsNames();
+    std::vector<Territory*> territoryList = mapLoader->getMap()->getTerritories();
+
+    // Erase all territories in territory list that exist in player list
+    for (int j=0; j < playerList.size(); j++) {
+      for (int k=0; k < territoryList.size(); k++) {
+        if(playerList.at(j)->getName() == territoryList.at(k)->getName()) {
+          territoryList.erase(territoryList.begin() + k);
+        }
+      }
+    }
+
+    // Erase all continents in continent list that exist in territory list
+    for (int j=0; j < territoryList.size(); j++) {
+      for (int k=0; k < continentList.size(); k++) {
+        if (territoryList.at(j)->getContinent() == continentList.at(k)) {
+          continentList.erase(continentList.begin() + k);
+        }
+      }
+    }
+
+    // Remaining size of the continnent list is the bonus multiplier. Add bonus to reinforcements
+    reinforcements += continentList.size() * 3;
 
     // if lower than 3, assign 3 reinforcements
     if (reinforcements < 3)
@@ -317,30 +367,31 @@ void GameEngine::reinforcementPhase() {
 
 // Executes Issue Order state
 void GameEngine::issueOrdersPhase() {
-  // // Exec Issue order here
-  for (int i = 0; i < players.size(); i++) {
-    
-    // List of territories to attack and defend
-    // players.at(i)->toAttack();
-    // players.at(i)->toDefend();
 
-    // Issue deploy orders
-    while (true) { // TODO: Replace true with a get method for reinforcement pool (while(reinforcementPool > 0))
-      players.at(i)->issueOrder();
+  //Global flag
+  bool stillIssuingOrders = true;
+  //Create a flag for each player to determine if they are done issuing orders.
+  bool playerStillIssuing[players.size()] = {true};
+
+  while(stillIssuingOrders){
+    //Reset global flag
+    stillIssuingOrders = false;
+
+    for (int i = 0; i < players.size(); i++){
+      //Issue order and set player's flag. issueOrder() returns true if player issues an order and flase if player signifies they are done.
+      if(playerStillIssuing[i]){ 
+        playerStillIssuing[i] = players.at(i)->issueOrder();
+      }
+      //Reset global flag if any player is still issuing orders
+      if(playerStillIssuing[i]){
+        stillIssuingOrders = true;
+      }
     }
-
-    // Issue advance orders
-    while (true) { // TODO: Replace true with a condition that ends the loop through a command
-    players.at(i)->issueOrder();
-    }
-
-    // Issue card order
-    players.at(i)->issueOrder();
   }
 }
 
 // Execute Execute Orders state
-void GameEngine::execExecuteOrders() {
+void GameEngine::executeOrdersPhase() {
   // // Exec Execute Orders here
   for (int i = 0; i < players.size(); i++) {
     players.at(i)->getOrderList()->executeOrders(); // TODO: Update execute order function
@@ -358,17 +409,33 @@ void GameEngine::execEnd() {
   cout << "Game has ended.\n";
 }
 
+void handleEffect(const char effect[], Command &command) {
+  string s = effect;
+  command.saveEffect(s);
+  cout << effect << std::endl;
+}
+
+void handleEffect(string &s, Command &command) {
+  command.saveEffect(s);
+  cout << s << std::endl;
+}
+
 void GameEngine::startupPhase() {
   // S_START state loading a map
   while (true) {
     printCommands();
-    vector<string> result = commandProcessor->getCommand();
-    if (result.size() <= 1)
-      cout << "Enter a file name in the format loadmap <filename>" << std::endl;
-    else if (mapLoader->loadMap(result.at(1))) {
-      cout << "\"" << result.at(1) << "\" has been loaded\n";
-      setState(GameEngineFSA::commandToStateMap.at("loadmap"));
-      break;
+    Command &result = commandProcessor->getCommand();
+    if (result.param.size() == 0)
+      handleEffect("Enter a file name in the format loadmap <filename>",
+                   result);
+    else {
+      string loadMapEffect = mapLoader->loadMap(result.param);
+      if (loadMapEffect.size() == 0) {
+        loadMapEffect = "\"" + result.param + "\" has been loaded";
+        setState(GameEngineFSA::commandToStateMap.at("loadmap"));
+        break;
+      }
+      handleEffect(loadMapEffect, result);
     }
   }
 
@@ -376,29 +443,43 @@ void GameEngine::startupPhase() {
   // transition to S_MAP_VALIDATED validate is successful
   while (true) {
     printCommands();
-    vector<string> result = commandProcessor->getCommand();
+    Command &result = commandProcessor->getCommand();
 
     // 2 possible commands: loadmap/validatemap
-    if (result.at(0) == "loadmap") {
-      if (result.size() <= 1)
-        cout << "Enter a file name in the format loadmap <filename>"
-             << std::endl;
-      else if (mapLoader->loadMap(result.at(1))) {
-        cout << "\"" << result.at(1) << "\" has been loaded\n";
+    if (result.command == "loadmap") {
+      if (result.param.size() == 0)
+        handleEffect("Enter a file name in the format loadmap <filename>",
+                     result);
+      else {
+        string loadMapEffect = mapLoader->loadMap(result.param);
+        if (loadMapEffect.size() == 0) {
+          loadMapEffect = "\"" + result.param + "\" has been loaded";
+        }
+        handleEffect(loadMapEffect, result);
       }
     }
 
-    else if (result.at(0) == "validatemap") {
+    else if (result.command == "validatemap") {
+      string validateMapEffect;
       if (mapLoader->getMap()->validate()) {
-        cout << "The map passed all the tests and is a valid map to be used.\n";
+        handleEffect(
+            "The map passed all the tests and is a valid map to be used.",
+            result);
         setState(GameEngineFSA::commandToStateMap.at("validatemap"));
         break;
       } else {
-        cout << "The map has failed at least one test and is not a valid map. "
-                "Try loading another map.\n";
+        handleEffect(
+            "The map has failed at least one test and is not a valid map. "
+            "Try loading another map.",
+            result);
       }
     }
   }
+
+
+  printCommands();
+
+
 
   // addPlayer implementation:
   bool done_adding_players = false;
@@ -410,18 +491,19 @@ void GameEngine::startupPhase() {
 
   while (!done_adding_players) {
     printCommands();
-    vector<string> result = commandProcessor->getCommand();
+    Command &result = commandProcessor->getCommand();
 
-    if (result.at(0) == "addplayer") {
-      if (result.size() <= 1) {
-        cout << "Specify the player name in the format \"addplayer "
-                "<playername>\""
-             << endl;
+    if (result.command == "addplayer") {
+      if (result.param.size() == 0) {
+        handleEffect(
+            "Specify the player name in the format \"addplayer "
+            "<playername>\"",
+            result);
         continue;
       }
-      players.push_back(new Player(result.at(1)));
+      players.push_back(new Player(result.param));
       nPlayers++;
-    } else if (result.at(0) == "gamestart") {
+    } else if (result.command == "gamestart") {
       done_adding_players = true;
     }
 
@@ -464,9 +546,23 @@ void GameEngine::startupPhase() {
 }
 
 void GameEngine::mainGameLoop() {
-  while(true) { // TODO: CHANGE TRUE TO A CONDITION WHERE no player owns all territories
+  // Stop loop if there is only 1 player left
+  while(players.size() > 1) {
   reinforcementPhase();
   issueOrdersPhase();
-  execExecuteOrders();
+  executeOrdersPhase();
+    // Check all players
+    for (int i=0; i < players.size(); i++){
+      // Remove players with less than 1 territory
+      if(players.at(i)->getTerritories().size() < 1) {
+        players.erase(players.begin() + i);
+      }
+    }
   }
+}
+
+//overloaded stringToLog method
+string GameEngine::stringToLog() {
+  string s = "Game engine state change to: " + getLabel(this->state);
+  return s;
 }

@@ -1,6 +1,6 @@
 #include "CommandProcessing.h"
 
-#include <fstream>
+
 #include <iostream>
 #include <string>
 #include <vector>
@@ -10,9 +10,11 @@
 using std::cin;
 using std::cout;
 using std::getline;
-using std::ofstream;
 using std::set;
 using std::string;
+
+CommandProcessor::CommandProcessor() {
+};
 
 CommandProcessor::CommandProcessor(set<string>* commands) {
   this->commands = commands;
@@ -28,78 +30,106 @@ CommandProcessor::~CommandProcessor() {
   for (int i = 0; i < commandList.size(); i++) delete commandList.at(i);
 }
 
-vector<string> CommandProcessor::getCommand() {
+Command& CommandProcessor::getCommand() {
   vector<string> result = readCommand();
-  saveCommand(result);
-  return result;
+  return saveCommand(result);
 }
 
 vector<string> CommandProcessor::readCommand() {
   string input = "";
-  bool invalid = false;
   vector<string> result;
 
   while (true) {
-    if (invalid) {
-      cout << "Try again.\n";
-    }
     cout << "Please enter a command: ";
     getline(cin, input);
     result = splitString(input, " ");
-    if (validate(result))
-      break;
-    else
-      invalid = true;
+    if (validate(result)) break;
   };
 
   return result;
 }
 
+//overloaded stringTolog method
 string CommandProcessor::stringToLog() {
-  ofstream output;
-  output.open("gamelog.txt", std::ios_base::app);
-  output << "print to gamelog" << endl;
-  output << "In command processor" << endl;
-  output.close();
-  return "string";
+  string s = "CommandProcessor class \ncommand " + 
+  this->commandList[(this->commandList).size()-1]->command + "\nparam " + 
+  this->commandList[(this->commandList).size()-1]->param + "\n";
+  //string s2 = this->commandList[(this->commandList).size()-1]->command + "\nparam ";
+  //string s3 = this->commandList[(this->commandList).size()-1]->param + "\n";
+  /*for (int i = 0; i < (this->commandList).size(); i++) {
+    s += "command " + i;
+    s += " " + this->commandList[i]->command + "\n";
+    s += "param " + i;
+    s += " " + this->commandList[i]->param + "\n";
+  }*/
+  //cout << endl << s1 << endl;
+  return s;
 }
 
-void CommandProcessor::saveCommand(vector<string>& result) {
+Command& CommandProcessor::saveCommand(vector<string>& result) {
   Command* newCommand = new Command(result);
+  //LogObserver* commandView = new LogObserver(newCommand);
   commandList.push_back(newCommand);
   cout << "CommandProcessor::saveCommand : command has been saved "
        << commandList.size() << endl;
-  // Notify(this);
-  // create Command and add to commands vector
+  Notify(newCommand);
+  return *newCommand;
 }
+
+void Command::callNotify() { Notify(this); }
 
 bool CommandProcessor::validate(vector<string>& result) {
   // check gamestate and return if command is valid
   string command = result.at(0);
   // Checks if valid command
   if (commands->find(command) == commands->end()) {
-    cout << "Invalid Command.\n";
+    string invalidEffect = "Invalid Command.";
+    saveCommand(result).saveEffect(invalidEffect);
+    cout << invalidEffect << std::endl;
+    printCommands(*commands);
     return false;
   }
 
   return true;
 }
 
-Command::Command(const Command& c) {
-  command = c.command;
-  param = c.param;
+Command::Command() {
+
 }
 
+Command::Command(const Command& c) {
+
+  command = c.command;
+  param = c.param;
+  effect = c.effect;
+}
+
+
+
 Command::Command(vector<string>& result) {
-  command = result.at(0);
-  param = "";
+  this->command = result.at(0);
+  this->param = "";
+
   if (result.size() > 1) {
-    param = result.at(1);
+    this->param = result.at(1);
   }
 }
 
-Command::~Command() {}
 
-void Command::saveEffect(string s) {
+
+void Command::saveEffect(string& s) {
+  effect = s;
+  cout << "Effect: \"" << s << "\" has been saved\n";
   //  Notify(this);
 }
+
+
+
+//overloaded strinToLog method
+string Command::stringToLog() {
+  string s = "command class\ncommand " + this->command + " param " + this->param;
+  return s;
+}
+
+Command::~Command(){};
+

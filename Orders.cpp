@@ -2,6 +2,7 @@
 #include "Cards.h"
 #include "Player.h"
 
+
 #include <sstream>
 #include <stdlib.h> //rand()
 #include <cmath> //floor()
@@ -30,6 +31,11 @@ std::ostream &operator<<(std::ostream &out, const Order &o) {
   return out;
 }
 
+//overloaded to string method
+string Order::stringToLog() {
+  string s = "Order class\ntype of order: " + this->GetType();
+  return s;
+}
 
 // Default OrderList constructor
 OrdersList::OrdersList() {
@@ -72,6 +78,7 @@ void OrdersList::remove(int index) {
 void OrdersList::add(Order *order) {
   // Not sure if we should add to the begining or the end
   ListOfOrders.push_back(order);
+  Notify(order);
 }
 
 // OrderList destructor
@@ -104,7 +111,6 @@ void OrdersList::executeOrders() {
     order->execute();
   }
 }
-
 
 //subclasses of Order
 
@@ -425,3 +431,12 @@ std::ostream &operator<<(std::ostream &output, const Negotiate &o){
 }
 
 //end of negotiate order implementation
+string OrdersList::stringToLog() {
+  string s = "OrdersList class\ntype of order " + 
+  this->ListOfOrders[(this->ListOfOrders).size()-1]->GetType() + "\n";
+  /*for(int i = 0; i < (this->ListOfOrders).size(); i++){
+    s += "type of order " + i;
+    s += " " + this->ListOfOrders[i]->GetType() + "\n";
+  }*/
+  return s;
+}
