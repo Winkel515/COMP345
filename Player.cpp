@@ -144,6 +144,26 @@ void Player::addTerritory(Territory* territory) {
   territories.push_back(territory);
 }
 
+//Helper function for issueOrder()
+bool playCard(Card* card, vector<Card*> hand, Deck* deck){
+  //Return card to Deck
+  card->play(deck);
+  //delete pointer and remove from vector
+  delete card;
+  hand.pop_back();
+
+  return true;
+}
+
+
+//helper function for Deliverable 2. Can be replaced by getTerritoryChoice() or a similar method when choices are introduced
+Territory* getRandomTerritory(vector<Territory*> territories){
+  std::random_device seed;
+  std::mt19937 gen{seed()}; // seed the generator
+  std::uniform_int_distribution dist{0, static_cast<int>(territories.size())-1}; // set min and max
+  int index = dist(gen); // generate number
+  return territories.at(index);
+}
 
 //TODO JOHN: Implement a counter to ensure we demonstrate all the possibilities
 //TODO JOHN: cout so we see the orders do as they are supposed to. 
@@ -247,25 +267,6 @@ bool Player::issueOrder() {
     return false;
   }
   //LogObserver *orderView = new LogObserver(newOrder);
-}
-
-bool playCard(Card* card, vector<Card*> hand, Deck* deck){
-  //Return card to Deck
-  card->play(deck);
-  //delete pointer and remove from vector
-  delete card;
-  hand.pop_back();
-
-  return true;
-}
-
-//helper function for Deliverable 2. Can be replaced by getTerritoryChoice() or a similar method when choices are introduced
-Territory* getRandomTerritory(vector<Territory*> territories){
-  std::random_device seed;
-  std::mt19937 gen{seed()}; // seed the generator
-  std::uniform_int_distribution dist{0, static_cast<int>(territories.size())-1}; // set min and max
-  int index = dist(gen); // generate number
-  return territories.at(index);
 }
 
 
