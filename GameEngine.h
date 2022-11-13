@@ -48,7 +48,7 @@ class GameEngine : public Subject, public ILoggable {
   Deck* deck;
   MapLoader* mapLoader;
   CommandProcessor* commandProcessor;
-
+  LogObserver* logObserver;
   // Methods
   void execSelector(GameState::GameStateEnum);
   void execStart();
@@ -61,6 +61,7 @@ class GameEngine : public Subject, public ILoggable {
   void execWin();
   void execEnd();
   void startupPhase();
+
 
  public:
   void start();
@@ -82,10 +83,11 @@ class GameEngine : public Subject, public ILoggable {
   string stringToLog();
   friend std::ostream& operator<<(std::ostream&,
                                   const GameEngine&);  // stream insertion
+
 };
 
-void handleEffect(string&, Command&);
-void handleEffect(const char[], Command&);
+void handleEffect(string&, Command&, Observer*);
+void handleEffect(const char[], Command&, Observer*);
 void printCommands(set<string>&);
 
 #endif

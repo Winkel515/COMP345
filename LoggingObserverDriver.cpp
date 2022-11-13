@@ -23,19 +23,20 @@ void testLoggingObserver() {
     cout << "In test logging observer" << endl;
 
     GameEngine* testGameEngine = new GameEngine;
-    //LogObserver* gameEngineView = new LogObserver(testGameEngine);
+    LogObserver logObs = LogObserver();
+    testGameEngine->Attach(&logObs);
     cout << "testGameEngine is of type: " << typeid(testGameEngine).name() << " and inherits from "
      << typeid(dynamic_cast<Subject*>(testGameEngine)).name() << " and " 
      << typeid(dynamic_cast<ILoggable*>(testGameEngine)).name() << endl;
 
     Order* testOrder = new Order();
-    //LogObserver* orderView = new LogObserver(testOrder);
+    testOrder->Attach(&logObs);
     cout << "testOrder is of type: " << typeid(testOrder).name() << " and inherits from "
      << typeid(dynamic_cast<Subject*>(testOrder)).name() << " and " 
      << typeid(dynamic_cast<ILoggable*>(testOrder)).name() << endl;
 
     OrdersList* testOrdersList = new OrdersList();
-    //LogObserver* ordersListView = new LogObserver(testOrdersList);
+    testOrdersList->Attach(&logObs);
     cout << "testOrdersList is of type: " << typeid(testOrdersList).name() << " and inherits from "
      << typeid(dynamic_cast<Subject*>(testOrdersList)).name() << " and " 
      << typeid(dynamic_cast<ILoggable*>(testOrdersList)).name() << endl;
@@ -44,7 +45,7 @@ void testLoggingObserver() {
     commandsVec.push_back("loadmap");
     commandsVec.push_back("3D.map");
     Command* testCommands = new Command(commandsVec);
-    //LogObserver* commandsView = new LogObserver(testCommands);
+    testCommands->Attach(&logObs);
     cout << "testCommands is of type: " << typeid(testCommands).name() << " and inherits from "
      << typeid(dynamic_cast<Subject*>(testCommands)).name() << " and " 
      << typeid(dynamic_cast<ILoggable*>(testCommands)).name() << endl;
@@ -52,7 +53,7 @@ void testLoggingObserver() {
     set<string> commandsSet;
     commandsSet.insert("loadmap");
     CommandProcessor* testCommandProcessor = new CommandProcessor(&commandsSet);
-    //LogObserver* commandProcessorView = new LogObserver(testCommandProcessor);
+    testCommandProcessor->Attach(&logObs);
     cout << "testCommandProcessor is of type: " << typeid(testCommandProcessor).name() << " and inherits from "
      << typeid(dynamic_cast<Subject*>(testCommandProcessor)).name() << " and " 
      << typeid(dynamic_cast<ILoggable*>(testCommandProcessor)).name() << endl;
@@ -72,9 +73,9 @@ void testLoggingObserver() {
     output << "the file gets correctly written into when commands are entered on the console \n\n" << endl;
     output.close();
 
-    // GameEngine* testGameEngine2 = new GameEngine;
-    // //LogObserver* gameEngineView2 = new LogObserver(testGameEngine2);
-    // testGameEngine2->start();
+    GameEngine* testGameEngine2 = new GameEngine;
+    testGameEngine2->Attach(&logObs);
+    testGameEngine2->start();
 
 
 
@@ -84,6 +85,5 @@ void testLoggingObserver() {
     //delete testOrdersList;
     delete testCommands;
     delete testCommandProcessor;
-    //delete commandProcessorView;
     cout << "end" << endl;
 }
