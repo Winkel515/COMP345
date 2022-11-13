@@ -1,7 +1,9 @@
 #include <iostream>
+#include <set>
 #include <vector>
 
 #include "CardsDriver.h"
+#include "CommandProcessing.h"
 #include "GameEngineDriver.h"
 #include "LoggingObserverDriver.h"
 #include "MapDriver.h"
@@ -11,6 +13,23 @@
 using std::cout;
 using std::string;
 using std::vector;
+
+string getFileName(int argc, char *argv[]) {
+  string filename = "";
+  bool isFirst = true;
+  for(int i = 2; i < argc; i++) {
+  // Add space after the first concat
+  if (!isFirst) {
+    filename += " ";
+  } else {
+    isFirst = false;
+  }
+    string temp(argv[i]);
+    filename += temp;
+  }
+
+  return filename;
+}
 
 void oldTests() {
   cout << "====== Testing Map ======\n";
@@ -39,8 +58,9 @@ void showHelp(vector<string> supportedFlags) {
   cout << "\n";
 }
 
-int main(int argc, char *argv[]) {
-  bool isDebug = true;  // Manually toggle
+int main(int argc, char* argv[]) {
+  CommandProcessor* commandProcessor;
+  bool isDebug = false;  // Manually toggle
   vector<string> supportedFlags{"-help", "-oldtests"};
 
   if (argc == 1) {
@@ -56,10 +76,29 @@ int main(int argc, char *argv[]) {
 
     if (flag.compare("-help") == 0) {
       showHelp(supportedFlags);
-    } else if (flag.compare("-test")) {
+    } else if (flag.compare("-test") == 0) {
       oldTests();  // TODO temporarily
     } else if (flag.compare("-oldtests") == 0) {
       oldTests();
+    } else if (flag.compare("-console") == 0) {
+      oldTests();  // TODO
+    } else if (flag.compare("-file") == 0) {
+      std::set<string> validCommands = {"test1", "test2", "loadmap"};
+      std::string filename;
+
+      if (argc > 2) {
+        filename = getFileName(argc, argv);
+      } else {
+        // by default
+        filename = "commands.txt";
+      }
+
+      commandProcessor =
+          new FileCommandProcessorAdapter(filename);
+      commandProcessor->initCommandsPtr(&validCommands);
+      commandProcessor->getCommand();
+      delete commandProcessor;
+
     } else {
       cout << "Unsupported flag. Please run using supported flag.\n";
     }
@@ -67,4 +106,8 @@ int main(int argc, char *argv[]) {
     showHelp(supportedFlags);
     return 0;
   }
+
+  // if (commandProcessor != nullptr) {
+  //   delete commandProcessor;
+  // }
 }

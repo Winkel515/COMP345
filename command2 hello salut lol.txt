@@ -1,0 +1,14 @@
+loadma1p 3D.map
+loadma1p 3D.map
+loadma1p 3D.map
+loadma1p 3D.map
+loadma1p 3D.map
+loadma1p 3D.map
+loadma1p 3D.map
+loadma1p 3D.map
+loadma1p 3D.map
+loadma1p 3D.map
+loadma1p 3D.map
+loadma1p 3D.map
+loadma1p 3D.map
+loadmap 3D.map
