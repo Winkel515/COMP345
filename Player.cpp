@@ -143,11 +143,9 @@ void Player::addTerritory(Territory* territory) {
 }
 
 
- //helper function for Deliverable 2. Can be deleted once players choose their territories.
-  Territory* getRandomTerritory(vector<Territory*> territories){
-    
-  }
-
+ 
+//TODO JOHN: Implement a counter to ensure we demonstrate all the possibilities
+//TODO JOHN: cout so we see the orders do as they are supposed to. 
 //Returns true if player issues an order, false if they are done issuing orders
 bool Player::issueOrder() {
 
@@ -163,12 +161,12 @@ bool Player::issueOrder() {
     reinforcementPool -= numOfArmies;
     return true;
   }
-  else{
-    //TODO JOHN: Demonstrate Advance toAttack()
+  else if(true){
+    //Demonstrate Advance using toDefend()
     Territory* target = getRandomTerritory(toDefend());
     Territory* source;
     vector<Territory*> adjacent = target->adj;
-    //Find an adjacent territory that is owned by this player. 
+    //Find an adjacent territory that is owned by the calling player. 
     for(auto it = adjacent.begin(); it != adjacent.end(); ++it){
       if((*it)->owner == this){
         source = *it;
@@ -176,22 +174,74 @@ bool Player::issueOrder() {
     }
     //Move 2 armies from source to target
     orders->add(new Advance(target, source, this, 2));
-
-
-
-
-    //TODO JOHN: Demonstrate Advance toDefend()
-
+    return true;
   }
+  else if(true){
+    //TODO JOHN: Demonstrate Advance using toAttack()
+    Territory* target = getRandomTerritory(toAttack());
+    Territory* source;
+    vector<Territory*> adjacent = target->adj;
+    //Find an adjacent territory that is owned by the calling player. 
+    for(auto it = adjacent.begin(); it != adjacent.end(); ++it){
+      if((*it)->owner == this){
+        source = *it;
+      }
+    }
+    //Move 2 armies from source to target
+    orders->add(new Advance(target, source, this, 2));
+    return true;
+  }
+  else if(true){
 
+    //TODO JOHN: Demonstrate cards functionality
+    vector<Card*> cardsToPlay = cards->getCards();
+    Card* cardToPlay = cards->getCards().at(0);
+    Deck* deck = cards->getDeck();
 
+    //TODO JOHN: Figure out how to compare CardType
+    if(cardToPlay->GetType() == "Bomb"){
+      Territory* target = getRandomTerritory(toAttack());
+      orders->add(new Bomb(target, this));
+      return true;
+    }
+    else if (cardToPlay->GetType() == "Blockade"){
+      //TODO: Implement blockade once neutral parameter is removed.
+      Territory* target = getRandomTerritory(toDefend());
+      //Constructor: Blockade(Territory* target, Player* owner, Player* neutral);
+
+    }
+    else if (cardToPlay->GetType() == "Airlift"){
+      int numArmiesToMove = 2;
+      Territory* target = getRandomTerritory(toDefend());
+      Territory* source = getRandomTerritory(toDefend());
+      //Ensure source and target are different
+      while(source == target){
+        source = getRandomTerritory(toDefend());
+      }
+      orders->add(new Airlift(target, source, this, numArmiesToMove));
+      return true;
+    }
+    else if (cardToPlay->GetType() == "Diplomacy"){
+      Territory* target = getRandomTerritory(toAttack());
+      orders->add(new Negotiate(target, this));
+      return true;
+    }
+    else if (cardToPlay->GetType() == "Reinforcement"){
+      //TODO JOHN: Now that reinforcementPool > 0, do we have to deploy?
+      reinforcementPool += 5;
+      return true;
+    }
+
+    cardToPlay->play(deck);
+    //TODO: Delete the pointer from the vector
+   
+  }
   return true;
-
 
   //LogObserver *orderView = new LogObserver(newOrder);
 }
 
-//helper function for Deliverable 2. Can be deleted once players choose their territories.
+//helper function for Deliverable 2. Can be replaced by getTerritoryChoice() or a similar method when choices are introduced
   Territory* getRandomTerritory(vector<Territory*> territories){
     std::random_device seed;
     std::mt19937 gen{seed()}; // seed the generator
