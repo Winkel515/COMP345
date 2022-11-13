@@ -3,6 +3,7 @@
 #include <iostream>
 #include <string>
 
+#include "CommandProcessing.h"
 #include "GameEngine.h"
 #include "LoggingObserver.h"
 
@@ -30,13 +31,19 @@ void testGameStates() {
 
   delete copyEngine;
 
+  // std:cout << "- Testing GameEngine: with file\n";
+  // GameEngine* fileGameEngine = new GameEngine;
+  // fileGameEngine->setCommandProcessor(new FileCommandProcessorAdapter("testcommands.txt"));
+  // fileGameEngine->start();
+
   std::cout << "- Testing GameEngine: Running Game States\n";
   GameEngine* runningGameEngine = new GameEngine;
   runningGameEngine->start();
-  // while (runningGameEngine->getState() != GameState::S_END) {
-  //   std::cout << *runningGameEngine;
-  //   runningGameEngine->promptCommand();
-  // }
+  while (runningGameEngine->getState() != GameState::S_END) {
+    std::cout << *runningGameEngine;
+    runningGameEngine->promptCommand();
+  }
 
+  // delete fileGameEngine;
   delete runningGameEngine;
 }

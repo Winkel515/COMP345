@@ -32,11 +32,11 @@ class Territory {
 };
 
 class Map {
- private:
+ public:
   vector<Territory*> territories;
   vector<string> continentsNames;
+  unordered_map<string, Territory*> nameTerritoryMap;
 
- public:
   Map(vector<Territory*> territories, vector<string> continentsNames);
   Map(const Map& m);
   ~Map();

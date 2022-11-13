@@ -1,5 +1,5 @@
 # COMP345
-Assignment 1 - Team DN09
+Assignment 2 - Team DN09
 <br/>
 Florian Charreau - 26494889
 <br/>

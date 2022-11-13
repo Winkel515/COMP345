@@ -86,10 +86,15 @@ string GameState::getLabel(GameStateEnum state) {
 };
 
 // Default Constructor for GameEngine
-GameEngine::GameEngine() {
+GameEngine::GameEngine(): GameEngine(new CommandProcessor()) {}
+
+// Constructor with command processor
+GameEngine::GameEngine(CommandProcessor *cProcessor) {
   setState(S_START);
   mapLoader = new MapLoader();
-  commandProcessor = new CommandProcessor(&commands);
+  setCommandProcessor(cProcessor);
+  logObserver = new LogObserver();
+  commandProcessor->Attach(logObserver);
   //LogObserver *commandProcessorView = new LogObserver(commandProcessor);
   deck = new Deck(3);
 }
@@ -99,9 +104,17 @@ GameEngine::GameEngine(const GameEngine &ge) {
   setState(ge.state);
   mapLoader = new MapLoader(*ge.mapLoader);
   commandProcessor = new CommandProcessor(&commands);
+  logObserver = new LogObserver();
+  commandProcessor->Attach(logObserver);
   //LogObserver *commandProcessorView = new LogObserver(commandProcessor);
   deck = new Deck(3);
 }
+
+void GameEngine::setCommandProcessor(CommandProcessor *cProcessor) {
+  this->commandProcessor = cProcessor;
+  commandProcessor->initValidCommandsPtr(&commands);
+}
+
 
 // Assignment Operator for GameEngine
 GameEngine &GameEngine::operator=(const GameEngine &copy) {
@@ -112,6 +125,7 @@ GameEngine &GameEngine::operator=(const GameEngine &copy) {
 GameEngine::~GameEngine() {
   delete mapLoader;
   delete commandProcessor;
+  delete logObserver;
   for (int i = 0; i < players.size(); i++) delete players.at(i);
   delete deck;
 }
@@ -142,7 +156,7 @@ ostream &operator<<(ostream &out, const GameEngine &gameEngine) {
 // Getter for state
 GameStateEnum GameEngine::getState() { return this->state; }
 
-// Change the values of the class according to new state
+// Change the values of the class according to new state - transition function
 void GameEngine::setState(GameState::GameStateEnum state) {
   this->state = state;
   if (state == S_END) {
@@ -409,13 +423,15 @@ void GameEngine::execEnd() {
   cout << "Game has ended.\n";
 }
 
-void handleEffect(const char effect[], Command &command) {
+void handleEffect(const char effect[], Command &command, Observer* obs) {
   string s = effect;
+  command.Attach(obs);
   command.saveEffect(s);
   cout << effect << std::endl;
 }
 
-void handleEffect(string &s, Command &command) {
+void handleEffect(string &s, Command &command, Observer* obs) {
+  command.Attach(obs);
   command.saveEffect(s);
   cout << s << std::endl;
 }
@@ -427,7 +443,7 @@ void GameEngine::startupPhase() {
     Command &result = commandProcessor->getCommand();
     if (result.param.size() == 0)
       handleEffect("Enter a file name in the format loadmap <filename>",
-                   result);
+                   result, logObserver);
     else {
       string loadMapEffect = mapLoader->loadMap(result.param);
       if (loadMapEffect.size() == 0) {
@@ -435,7 +451,7 @@ void GameEngine::startupPhase() {
         setState(GameEngineFSA::commandToStateMap.at("loadmap"));
         break;
       }
-      handleEffect(loadMapEffect, result);
+      handleEffect(loadMapEffect, result, logObserver);
     }
   }
 
@@ -449,13 +465,13 @@ void GameEngine::startupPhase() {
     if (result.command == "loadmap") {
       if (result.param.size() == 0)
         handleEffect("Enter a file name in the format loadmap <filename>",
-                     result);
+                     result, logObserver);
       else {
         string loadMapEffect = mapLoader->loadMap(result.param);
         if (loadMapEffect.size() == 0) {
           loadMapEffect = "\"" + result.param + "\" has been loaded";
         }
-        handleEffect(loadMapEffect, result);
+        handleEffect(loadMapEffect, result, logObserver);
       }
     }
 
@@ -464,14 +480,14 @@ void GameEngine::startupPhase() {
       if (mapLoader->getMap()->validate()) {
         handleEffect(
             "The map passed all the tests and is a valid map to be used.",
-            result);
+            result, logObserver);
         setState(GameEngineFSA::commandToStateMap.at("validatemap"));
         break;
       } else {
         handleEffect(
             "The map has failed at least one test and is not a valid map. "
             "Try loading another map.",
-            result);
+            result, logObserver);
       }
     }
   }
@@ -498,7 +514,7 @@ void GameEngine::startupPhase() {
         handleEffect(
             "Specify the player name in the format \"addplayer "
             "<playername>\"",
-            result);
+            result, logObserver);
         continue;
       }
       players.push_back(new Player(result.param));
