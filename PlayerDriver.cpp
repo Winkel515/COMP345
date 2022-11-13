@@ -21,18 +21,16 @@ void testPlayers() {
 
   cout << endl << "----------------------------" << endl;
   cout << endl << "Demonstrating toAttack() method" << endl;
-  list<Territory*> toAttack = (*p1).toAttack();
-  for (std::list<Territory*>::iterator it1 = toAttack.begin();
-       it1 != toAttack.end(); ++it1) {
-    cout << **it1;
+  vector<Territory*> toAttack = (*p1).toAttack();
+  for (int i=0; i < toAttack.size(); i++) {
+    cout << toAttack.at(i)->getName();
   }
 
   cout << endl << "----------------------------" << endl;
   cout << endl << "Demonstrating toDefend() method" << endl;
-  list<Territory*> toDefend = (*p1).toDefend();
-  for (std::list<Territory*>::iterator it2 = toDefend.begin();
-       it2 != toDefend.end(); ++it2) {
-    cout << **it2;
+  vector<Territory*> toDefend = (*p1).toDefend();
+  for (int i=0; i < toDefend.size(); i++) {
+    cout << toDefend.at(i)->getName();
   }
   cout << endl;
 }
