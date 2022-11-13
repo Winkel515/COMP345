@@ -473,7 +473,7 @@ string OrdersList::stringToLog() {
   // this->ListOfOrders[(this->ListOfOrders).size()-1] + "\n";
   for (int i = 0; i < (this->ListOfOrders).size(); i++) {
     s += "type of order " + i;
-    s += " :" + ListOfOrders.at(i) + "\n";
+    s += " :" + ListOfOrders.at(i)->stringToLog() + "\n";
   }
   return s;
 }
