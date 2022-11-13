@@ -8,27 +8,7 @@ using std::cout;
 using std::endl;
 using std::ofstream;
 using std::ostream;
-/*
-A::A() { a = 0; }
 
-string A::stringToLog() {
-  ofstream output;
-  output.open("gamelog.txt", std::ios_base::app);
-  output << "print to gamelog" << endl;
-  output << this->a << endl;
-  output << "In A string to log" << endl;
-  output.close();
-  cout << "In A string to log" << endl;
-  return "string";
-}
-
-A::A(int a) { this->a = a; }
-
-void A::callNotify() {
-  Notify(this);
-  cout << "this->a" << this->a << endl;
-}
-*/
 //Subject constructor
 Subject::Subject() { _observers = new list<Observer*>; }
 
@@ -63,7 +43,6 @@ void Subject::Detach(Observer* o) { _observers->remove(o); };
 
 //subject notify method
 void Subject::Notify(ILoggable* ILog) {
-  this->Attach(new LogObserver);
   list<Observer*>::iterator i = _observers->begin();
   for (; i != _observers->end(); ++i) (*i)->Update(ILog);
 };
@@ -91,136 +70,11 @@ ostream& operator<<(ostream& strm, Observer& o) {
 LogObserver::LogObserver(){
 
 }
-/*
-LogObserver::LogObserver(A* s) {
-  _subjectA = s;
-  _subjectA->Attach(this);
-}
-*/
-/*
-//logobserver constructor for command view
-LogObserver::LogObserver(Command* c) {
-  _subjectCommand = c;
-  _subjectCommand->Attach(this);
-  
-  
-  _subjectCommandProcessor = new CommandProcessor();
-  _subjectCommandProcessor->Attach(this);
-  _subjectGameEngine = new GameEngine;
-  _subjectGameEngine->Attach(this);
-  _subjectOrder = new Order();
-  _subjectOrder->Attach(this);
-  _subjectOrdersList = new OrdersList();
-  _subjectOrdersList->Attach(this);
-  
-}*/
 
 //logobserver destructor
 LogObserver::~LogObserver() {
-  /*
-  _subjectCommand->Detach(this);
-  _subjectCommandProcessor->Detach(this);
-  _subjectGameEngine->Detach(this);
-  _subjectOrder->Detach(this);
-  _subjectOrdersList->Detach(this);
-  _subjectCopy->Detach(this);
-  */
-}
-/*
-//logobserver constructor for command processor view
-LogObserver::LogObserver(CommandProcessor* commandProcessor) {
-  _subjectCommandProcessor = commandProcessor;
-  _subjectCommandProcessor->Attach(this);
-  
-  
-  _subjectGameEngine = new GameEngine;
-  _subjectGameEngine->Attach(this);
-  _subjectOrder = new Order();
-  _subjectOrder->Attach(this);
-  _subjectOrdersList = new OrdersList();
-  _subjectOrdersList->Attach(this);
-  _subjectCommand = new Command();
-  _subjectCommand->Attach(this);
-  
-
-}*/
-/*
-//logobserver constructor for GameEngine view
-LogObserver::LogObserver(GameEngine* ge) {
-  _subjectGameEngine = ge;
-  _subjectGameEngine->Attach(this);
-  
-  
-  _subjectGameEngine = new GameEngine;
-  _subjectGameEngine->Attach(this);
-  _subjectOrder = new Order();
-  _subjectOrder->Attach(this);
-  _subjectOrdersList = new OrdersList();
-  _subjectOrdersList->Attach(this);
-  _subjectCommand =  new Command();
-  _subjectCommand->Attach(this);
-  
-}*/
-/*
-//logobserver constructor for order view
-LogObserver::LogObserver(Order* o) {
-  _subjectOrder = o;
-  _subjectOrder->Attach(this);
-  
-  
-  _subjectCommandProcessor = new CommandProcessor();
-  _subjectCommandProcessor->Attach(this);
-  _subjectGameEngine = new GameEngine;
-  _subjectGameEngine->Attach(this);
-  _subjectOrdersList = new OrdersList();
-  _subjectOrdersList->Attach(this);
-  _subjectCommand = new Command();
-  _subjectCommand->Attach(this);
-  
-}*/
-/*
-//logobserver constructor for orderlist view
-LogObserver::LogObserver(OrdersList* ol) {
-  _subjectOrdersList = ol;
-  _subjectOrdersList->Attach(this);
-  
-  _subjectCommandProcessor = new CommandProcessor();
-  _subjectCommandProcessor->Attach(this);
-  _subjectGameEngine = new GameEngine;
-  _subjectGameEngine->Attach(this);
-  _subjectOrder = new Order();
-  _subjectOrder->Attach(this);
-  _subjectCommand = new Command();
-  _subjectCommand->Attach(this);
-  
-
-}*/
-/*
-//logobserver constructor for orderlist view
-LogObserver::LogObserver(OrdersList* ol) {
-  _subjectOrdersList = ol;
-  _subjectOrdersList->Attach(this);
-  
-  _subjectCommandProcessor = new CommandProcessor();
-  _subjectCommandProcessor->Attach(this);
-  _subjectGameEngine = new GameEngine;
-  _subjectGameEngine->Attach(this);
-  _subjectOrder = new Order();
-  _subjectOrder->Attach(this);
-  _subjectCommand = new Command();
-  _subjectCommand->Attach(this);
-  
-
-}*/
-/*
-//logobserver constructor for orderlist view
-LogObserver::LogObserver(Subject* _subject) {
-  this->_subject = _subject;
-  this->_subject->Attach(this);
 
 }
-*/
-
 
 //logobserver copy constructor
 LogObserver::LogObserver(const LogObserver& LogObs){
@@ -243,7 +97,6 @@ void LogObserver::Update(ILoggable* ILog) {
   output.open("gamelog.txt", std::ios_base::app);
   output << endl << ILog->stringToLog() << endl;
   output.close();
-  //ILog->stringToLog();
 }
 
 //ILoggable constructor
@@ -266,13 +119,11 @@ ILoggable& ILoggable::operator=(const ILoggable& ILog) {
   return *this;
 }
 
-//ILoggable output operator
+//ILoggable output stream operator
 ostream& operator<<(ostream& strm, ILoggable& ILog) {
   return strm << ILog << endl;
 }
 
-
-//LogObserver update method
 
 /*
 int main() {

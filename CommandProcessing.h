@@ -22,7 +22,6 @@ class Command : public Subject, public ILoggable {
   Command(const Command &);
   ~Command();
   void saveEffect(string &);
-  void callNotify();
   string stringToLog();
 };
 
@@ -40,6 +39,7 @@ class CommandProcessor : public Subject, public ILoggable {
   CommandProcessor(const CommandProcessor &);
   ~CommandProcessor();
   string stringToLog();
+  friend class Command;
 };
 
 #endif
