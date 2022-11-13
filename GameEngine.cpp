@@ -186,7 +186,7 @@ void GameEngine::execSelector(GameStateEnum state) {
       issueOrdersPhase();
       break;
     case S_EXECUTE_ORDERS:
-      execExecuteOrders();
+      executeOrdersPhase();
       break;
     case S_WIN:
       execWin();
@@ -391,7 +391,7 @@ void GameEngine::issueOrdersPhase() {
 }
 
 // Execute Execute Orders state
-void GameEngine::execExecuteOrders() {
+void GameEngine::executeOrdersPhase() {
   // // Exec Execute Orders here
   for (int i = 0; i < players.size(); i++) {
     players.at(i)->getOrderList()->executeOrders(); // TODO: Update execute order function
@@ -546,10 +546,18 @@ void GameEngine::startupPhase() {
 }
 
 void GameEngine::mainGameLoop() {
-  while(true) { // TODO: CHANGE TRUE TO A CONDITION WHERE no player owns all territories
+  // Stop loop if there is only 1 player left
+  while(players.size() > 1) {
   reinforcementPhase();
   issueOrdersPhase();
-  execExecuteOrders();
+  executeOrdersPhase();
+    // Check all players
+    for (int i=0; i < players.size(); i++){
+      // Remove players with less than 1 territory
+      if(players.at(i)->getTerritories().size() < 1) {
+        players.erase(players.begin() + i);
+      }
+    }
   }
 }
 

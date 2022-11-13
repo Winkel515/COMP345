@@ -58,7 +58,7 @@ class GameEngine : public Subject, public ILoggable {
   void execPlayersAdded();
   void reinforcementPhase();
   void issueOrdersPhase();
-  void execExecuteOrders();
+  void executeOrdersPhase();
   void execWin();
   void execEnd();
   void startupPhase();
