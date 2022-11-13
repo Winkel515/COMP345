@@ -3,3 +3,4 @@ validatemap
 addplayer foo
 addplayer bar
 gamestart
+valid

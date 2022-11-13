@@ -4,6 +4,7 @@
 
 #include "CardsDriver.h"
 #include "CommandProcessing.h"
+#include "CommandProcessingDriver.h"
 #include "GameEngineDriver.h"
 #include "LoggingObserverDriver.h"
 #include "MapDriver.h"
@@ -14,6 +15,7 @@ using std::cout;
 using std::string;
 using std::vector;
 
+// Inits and Starts GameEngine given a command processor
 void startGame(CommandProcessor* commandProcessor) {
   LogObserver logObs = LogObserver();
   commandProcessor->Attach(&logObs);
@@ -23,6 +25,7 @@ void startGame(CommandProcessor* commandProcessor) {
   delete gE;
 }
 
+// Helper to massage argv into filename
 string getFileName(int argc, char* argv[]) {
   string filename = "";
   bool isFirst = true;
@@ -40,7 +43,15 @@ string getFileName(int argc, char* argv[]) {
   return filename;
 }
 
-void oldTests() {
+void runA2Tests() {
+  cout << "====== Testing Command Processor ======\n";
+  testCommandProcessor();
+  cout << "====== Testing Logging observer ======\n";
+  testLoggingObserver();
+}
+
+// Run old tests using this method
+void runA1Tests() {
   cout << "====== Testing Map ======\n";
   testLoadMaps();
   cout << "====== Testing Players ======\n";
@@ -49,10 +60,8 @@ void oldTests() {
   testCards();
   cout << "====== Testing Orders ======\n";
   testOrdersList();
-  // cout << "====== Testing Game Engine ======\n";
-  // testGameStates();
-  cout << "====== Testing Logging observer ======\n";
-  testLoggingObserver();
+  cout << "====== Testing Game Engine ======\n";
+  testGameStates();
 }
 
 void showHelp(vector<string> supportedFlags) {
@@ -70,12 +79,13 @@ void showHelp(vector<string> supportedFlags) {
 int main(int argc, char* argv[]) {
   CommandProcessor* commandProcessor;
   bool isDebug = false;  // Manually toggle
-  vector<string> supportedFlags{"-console", "-file <filename>","-test","-help", "-oldtests"};
+  vector<string> supportedFlags{
+      "-console", "-file <filename>", "-test", "-help", "-a1", "-a2"};
 
   if (argc == 1) {
     // Run without any arguments
     if (isDebug) {
-      oldTests();  // TODO
+      runA1Tests();  // TODO
     } else {
       showHelp(supportedFlags);
     }
@@ -86,24 +96,29 @@ int main(int argc, char* argv[]) {
     if (flag.compare("-help") == 0) {
       showHelp(supportedFlags);
     } else if (flag.compare("-test") == 0) {
-      oldTests();  // TODO temporarily
-    } else if (flag.compare("-oldtests") == 0) {
-      oldTests();
+      runA2Tests();  // run the latest tests
+    } else if (flag.compare("-a2") == 0) {
+      runA2Tests();  // run the a2 tests
+    } else if (flag.compare("-a1") == 0) {
+      runA1Tests();  // run the old tests
     } else if (flag.compare("-console") == 0) {
+      // Run using console input
       commandProcessor = new CommandProcessor();
       startGame(commandProcessor);
     } else if (flag.compare("-file") == 0) {
-      std::set<string> validCommands = {"test1", "test2", "loadmap"};
+      // Massage to get filename
       std::string filename;
-
       if (argc > 2) {
         filename = getFileName(argc, argv);
       } else {
         // by default
-        cout << "Using default file testcommands.txt (provide a filename to override)." << endl;
+        cout << "Using default file testcommands.txt (provide a filename to "
+                "override)."
+             << endl;
         filename = "testcommands.txt";
       }
 
+      // Run using file input
       commandProcessor = new FileCommandProcessorAdapter(filename);
       startGame(commandProcessor);
 
@@ -111,11 +126,8 @@ int main(int argc, char* argv[]) {
       cout << "Unsupported flag. Please run using supported flag.\n";
     }
   } else {
+    // Show help by default
     showHelp(supportedFlags);
     return 0;
   }
-
-  // if (commandProcessor != nullptr) {
-  //   delete commandProcessor;
-  // }
 }
