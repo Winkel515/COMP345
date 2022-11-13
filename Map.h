@@ -28,6 +28,7 @@ class Territory {
   friend ostream& operator<<(ostream& strm, const Territory& n);
   string getName();
   string getContinent();
+  void addAdjTerritory(Territory* adjTerr); //for testing
 };
 
 class Map {

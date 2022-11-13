@@ -557,3 +557,8 @@ vector<string> splitString(string s, string delimiter) {
 
   return split;
 }
+
+//for testing only!
+void Territory::addAdjTerritory(Territory* adjTerr){
+  adj.push_back(adjTerr);
+}

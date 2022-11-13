@@ -451,11 +451,11 @@ std::ostream &operator<<(std::ostream &output, const Negotiate &o){
 
 //end of negotiate order implementation
 string OrdersList::stringToLog() {
-  string s = "OrdersList class\ntype of order " + 
-  this->ListOfOrders[(this->ListOfOrders).size()-1]->GetType() + "\n";
-  /*for(int i = 0; i < (this->ListOfOrders).size(); i++){
+  string s = "OrdersList class\ntype of order ";
+  //this->ListOfOrders[(this->ListOfOrders).size()-1] + "\n";
+  for(int i = 0; i < (this->ListOfOrders).size(); i++){
     s += "type of order " + i;
-    s += " " + this->ListOfOrders[i]->GetType() + "\n";
-  }*/
+    s += " :" + ListOfOrders.at(i) + "\n";
+  }
   return s;
 }

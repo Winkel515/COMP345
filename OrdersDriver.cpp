@@ -3,6 +3,9 @@
 #include <iostream>
 
 #include "Orders.h"
+#include "Player.h"
+#include "Cards.h"
+#include "Map.h"
 
 // Test Orders class
 void testOrdersList() {
@@ -32,5 +35,190 @@ void testOrdersList() {
 }
 
 void testOrderExecution(){
-  
+  //create one of each order
+  //deploy order
+  //A deploy order tells a certain number of army units taken from the reinforcement pool to deploy to
+  //a target territory owned by the player issuing this order
+
+  Player* p1 = new Player("player 1");
+  Player* p2 = new Player("player 2");
+  Player* neutral = new Player("Neutral");
+
+  Territory* terr1 = new Territory("player1Territory", "fakeContinent");
+  terr1->setOwner(p1);
+
+  Territory* terr2 = new Territory("player2Territory", "fakeContinent");
+  terr2->setOwner(p2);
+
+  Territory* terr3 = new Territory("player1Territory2", "fakeContinent");
+  terr3->setOwner(p1);
+
+  //make territories adjacent
+  terr1->addAdjTerritory(terr2);
+  terr1->addAdjTerritory(terr3);
+
+  terr2->addAdjTerritory(terr1);
+  terr2->addAdjTerritory(terr3);
+
+  terr3->addAdjTerritory(terr1);
+  terr3->addAdjTerritory(terr2);
+
+
+  //demonstrate that order verifies that territory is owner by player executing the card
+  Deploy* p1order1 = new Deploy(terr1, p1, 10); 
+  std::cout << "Number of armies on terr1 before order 1: " + terr1->getNumArmies()<< std::endl;
+  p1order1->execute(); 
+  std::cout << "Number of armies on terr1 after order 1: " + terr1->getNumArmies()<< std::endl;
+
+  Deploy* p1order2 = new Deploy(terr2, p1, 10); 
+  p1order2->execute(); //this should fail because territory belongs to p2
+
+  //test advance order
+  /*An advance order tells a certain number of army units to move from a source territory to a target
+adjacent territory -> will result in war simulation if territories are not owned by same people*/
+
+  //show that advance moves armies without war if source and target are owner by same player
+  //reset num of armies for terr1-3
+  terr1->setNumArmies(10);
+  terr2->setNumArmies(5);
+  terr3->setNumArmies(15);
+
+  std::cout << "Num of armies in t1 before advance 1: " + terr1->getNumArmies()<< std::endl;
+  std::cout << "Num of armies in t3 before advance 1: " + terr3->getNumArmies()<< std::endl;
+
+  Advance* p1order3 = new Advance(terr3, terr1, p1, 10);
+  p1order3->execute();
+
+  std::cout << "Num of armies in t1 after advance 1: " + terr1->getNumArmies()<< std::endl; //should be 0
+  std::cout << "Num of armies in t3 after advance 1: " + terr3->getNumArmies()<< std::endl; //should be 25
+
+  //show that advance starts war if source and target are not owner by the same player
+  //reset territories
+  terr1->setNumArmies(10);
+  terr2->setNumArmies(5);
+  terr3->setNumArmies(15);
+
+  std::cout << "Num of armies in t1 before advance 2: " + terr1->getNumArmies()<< std::endl;
+  std::cout << "Num of armies in t2 before advance 2: " + terr2->getNumArmies()<< std::endl;
+
+  Advance* p1attackp2 = new Advance(terr2, terr1, p1, 10);
+  p1attackp2->execute();
+
+  std::cout << "Num of armies in t1 after advance 2: " + terr1->getNumArmies()<< std::endl;
+  std::cout << "Num of armies in t2 after advance 2: " + terr2->getNumArmies()<< std::endl;
+
+  //show that advance wont work if territories are not adjacent
+  Territory* terr4 = new Territory("Not adjacent Territory", "fake continent");
+  terr4->setOwner(p2);
+  terr4->setNumArmies(10);
+
+  Advance* p1attackp2attempt2 = new Advance(terr4, terr1, p1, 10); 
+  p1attackp2attempt2->execute(); //result in error message
+
+
+  //bomb order test
+  //reset num of armies for terr1-3
+  terr1->setNumArmies(10);
+  terr2->setNumArmies(5);
+  terr3->setNumArmies(15);
+
+  std::cout << "p1 -> bomb p1: should result in error" << std::endl;
+  Bomb* bomb1 = new Bomb(terr1, p1);
+  bomb1->execute();
+
+  //bomb test 2
+  std::cout << "Num of armies in t1 before bomb 2: " + terr1->getNumArmies()<< std::endl;
+  std::cout << "Num of armies in t2 before bomb 2: " + terr2->getNumArmies()<< std::endl;
+
+  Bomb* bomb2 = new Bomb(terr2, p1);
+  bomb2->execute(); //should be successful
+
+  std::cout << "Num of armies in t1 after bomb 2: " + terr1->getNumArmies()<< std::endl;
+  std::cout << "Num of armies in t2 after bomb 2: " + terr2->getNumArmies()<< std::endl;
+
+  //blockade test
+  std::cout << "blockade order will transfer territory to neutral player and double army" << std::endl;
+  std::cout << "Num of armies in t1 before: " + terr1->getNumArmies() << std::endl;
+  std::cout << "Owner of t1 before: " << terr1->getOwner() << std::endl;
+
+  std::cout << "Failed blockade order validation: " << std::endl;
+  Blockade* block = new Blockade(terr1, p2, neutral);
+  block->execute(); //fails because order not owner by p2
+
+  std::cout << "Successful blockade order validation: " << std::endl;
+  Blockade* block1 = new Blockade(terr1,p1,neutral);
+  block1->execute();
+
+  std::cout << "blockade order will transfer territory to neutral player and double army" << std::endl;
+  std::cout << "Num of armies in t1 after: " + terr1->getNumArmies() << std::endl;
+  std::cout << "Owner of t1 after: " << terr1->getOwner() << std::endl;
+
+  //airlift
+    //reset num of armies for terr1-3
+  terr1->setNumArmies(10);
+  terr2->setNumArmies(5);
+  terr3->setNumArmies(15);
+
+  std::cout << "Airlift card will transfer armies from one territory to another:" << std::endl;
+  std::cout << "Num of armies in t1 before: " + terr1->getNumArmies() << std::endl;
+  std::cout << "Num of armies in t3 before: " + terr3->getNumArmies() << std::endl;
+
+  std::cout << "Unsuccessful airlift order example: " << std::endl;
+  Airlift* airlift1 = new Airlift(terr2, terr1, p1, 5); //error messor expected
+  airlift1->execute();
+
+  std::cout << "Successful airlift order example: " << std::endl;
+  Airlift* airlift2 = new Airlift(terr3, terr1, p1, 5);
+  airlift2->execute(); //success 
+
+  std::cout << "Num of armies in t1 after: " + terr1->getNumArmies() << std::endl;
+  std::cout << "Num of armies in t3 after: " + terr3->getNumArmies() << std::endl;
+
+  //negotiate card
+  std::cout << "Negotiate order will prevent 2 players from attacking each other" << std::endl;
+
+  std::cout << "Unsuccessful negotiate order example: " << std::endl;
+  std::cout << "Owner of t1: " << terr1->getOwner() << std::endl;
+  std::cout << "Owner of t2: " << terr2->getOwner() << std::endl;
+
+  std::cout << "Negotiate target: t1 from p1:" << std::endl;
+  Negotiate* nego1 = new Negotiate(terr1, p1); //error 
+  nego1->execute();
+
+  std::cout << "Negotiate target: t2 from p1:" << std::endl;
+  Negotiate* nego2 = new Negotiate(terr2, p1);
+  nego2->execute();
+
+  //try attack order now 
+  std::cout << "attempting attack from p1 on p2:" << std::endl;
+  Bomb* bomb3 = new Bomb(terr2, p1);
+  bomb3->execute(); //should result in error becuase of ally
+
+  p1->clearDiplomaticAllies();
+  p2->clearDiplomaticAllies();
+
+
+  //demonstrate that ownership is transferred if territory is concquered
+  std::cout << "territory 2 owner before: " << terr2->getOwner() << std::endl;
+  std::cout << "attack from p1 on territory 2: " << std::endl;
+
+  //reset num of armies for terr1-3
+  terr1->setNumArmies(10);
+  terr2->setNumArmies(3);
+  terr3->setNumArmies(15);
+
+  std::cout<< "Number of armies on terr2: " << terr2->getNumArmies() << std::endl;
+  std::cout << "Number of armies on terr1: " << terr1->getNumArmies() << std::endl;
+  std::cout << "Player 1 attacking with 10 units" << std::endl;
+  Advance* advance3 = new Advance(terr2, terr1, p1, 10);
+  advance3->execute();
+
+
+  std::cout << "territory 2 owner after: " << terr2->getOwner() << std::endl;
+  std::cout << "attack from p1 on territory 2: " << std::endl;
+  std::cout<< "Number of armies on terr2 after: " << terr2->getNumArmies() << std::endl;
+  std::cout << "Number of armies on terr1 after: " << terr1->getNumArmies() << std::endl;
+
+
+
 }
