@@ -328,7 +328,8 @@ void GameEngine::execMapValidated() {
 
 // Executes Players Added state
 void GameEngine::execPlayersAdded() {
-  // // Exec Players Added here
+  // // Exec Players Added here. Add 2 players.
+  
 }
 
 // Executes Assign Reinforcement state
@@ -519,6 +520,7 @@ void GameEngine::startupPhase() {
       }
       players.push_back(new Player(result.param));
       nPlayers++;
+      cout << "Player named " << result.param << " has been added.";
     } else if (result.command == "gamestart") {
       done_adding_players = true;
     }
@@ -540,7 +542,6 @@ void GameEngine::startupPhase() {
 
   // gamestart phase:
 
-  // TODO: Set territory owners in distributeTerritories
   mapLoader->getMap()->distributeTerritories(players);
 
   //  Randomly shuffle player vector to determine player order.

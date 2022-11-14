@@ -31,20 +31,16 @@ std::ostream &operator<<(std::ostream &out, const Order &o) {
   return out;
 }
 
-// overloaded to string method
-string Order::stringToLog() {
-  string s = "Order class\ntype of order: Order";
-  return s;
-}
-string Deploy::stringToLog() { return "Order class\ntype of order: Deploy"; }
-string Advance::stringToLog() { return "Order class\ntype of order: Advance"; }
-string Bomb::stringToLog() { return "Order class\ntype of order: Bomb"; }
+//Overridden stringtolog methods
+string Deploy::stringToLog() { return "type of order: Deploy"; }
+string Advance::stringToLog() { return "type of order: Advance"; }
+string Bomb::stringToLog() { return "type of order: Bomb"; }
 string Blockade::stringToLog() {
-  return "Order class\ntype of order: Blockade";
+  return "type of order: Blockade";
 }
-string Airlift::stringToLog() { return "Order class\ntype of order: Airlift"; }
+string Airlift::stringToLog() { return "type of order: Airlift"; }
 string Negotiate::stringToLog() {
-  return "Order class\ntype of order: Negotiate";
+  return "type of order: Negotiate";
 }
 
 // Default OrderList constructor
@@ -170,6 +166,7 @@ void Deploy::execute() {
   } else {
     std::cout << "Invalid order" << std::endl;
   }
+  Notify(this);
 }
 
 // end of Deploy class
@@ -292,6 +289,7 @@ void Advance::execute() {
       }
     }
   }
+  Notify(this);
 }
 
 // end of Advance order class
@@ -329,6 +327,7 @@ void Airlift::execute() {
     // move them to target
     Target->addNumArmies(NumOfArmies);
   }
+  Notify(this);
 }
 
 std::ostream &operator<<(std::ostream &output, const Airlift &o) {
@@ -387,6 +386,7 @@ void Bomb::execute() {
     int numOfarmies = std::floor(Target->getNumArmies() / 2.0);
     Target->setNumArmies(numOfarmies);
   }
+  Notify(this);
 }
 
 std::ostream &operator<<(std::ostream &output, const Bomb &o) {
@@ -424,6 +424,7 @@ void Blockade::execute() {
     // give territory to neutral player
     Target->setOwner(this->NeutralPlayer);
   }
+  Notify(this);
 }
 
 std::ostream &operator<<(std::ostream &output, const Blockade &o) {
@@ -459,6 +460,7 @@ void Negotiate::execute() {
     Owner->addDiplomaticAlly(Target->getOwner());
     Target->getOwner()->addDiplomaticAlly(Owner);
   }
+  Notify(this);
 }
 
 std::ostream &operator<<(std::ostream &output, const Negotiate &o) {

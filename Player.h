@@ -31,7 +31,6 @@ class Player {
   ~Player();
   std::vector<Territory*> toDefend();
   std::vector<Territory*> toAttack();
-  void issueOrder(Order* newOrder); //TODO JOHN: Delete if obsolete
   bool issueOrder();
   void testListOrder();
   Player& operator=(const Player& player);

@@ -1,1 +1,2 @@
 void testGameStates();
+void testMainGameLoop();

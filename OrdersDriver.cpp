@@ -39,6 +39,7 @@ void testOrderExecution(){
   //deploy order
   //A deploy order tells a certain number of army units taken from the reinforcement pool to deploy to
   //a target territory owned by the player issuing this order
+  //(1) demonstrate that each order is validated before execution
 
   Player* p1 = new Player("player 1");
   Player* p2 = new Player("player 2");
@@ -151,6 +152,7 @@ adjacent territory -> will result in war simulation if territories are not owned
 
   std::cout << "blockade order will transfer territory to neutral player and double army" << std::endl;
   std::cout << "Num of armies in t1 after: " + terr1->getNumArmies() << std::endl;
+  //(5) demonstrate that they blockade owner will transfer ownership to the neutral player
   std::cout << "Owner of t1 after: " << terr1->getOwner() << std::endl;
 
   //airlift
@@ -190,6 +192,7 @@ adjacent territory -> will result in war simulation if territories are not owned
   nego2->execute();
 
   //try attack order now 
+  //(4) demonstrate that the negotiate order will prevent attacks between the two players
   std::cout << "attempting attack from p1 on p2:" << std::endl;
   Bomb* bomb3 = new Bomb(terr2, p1);
   bomb3->execute(); //should result in error becuase of ally
@@ -209,6 +212,8 @@ adjacent territory -> will result in war simulation if territories are not owned
 
   std::cout<< "Number of armies on terr2: " << terr2->getNumArmies() << std::endl;
   std::cout << "Number of armies on terr1: " << terr1->getNumArmies() << std::endl;
+  //demonstrate that a player will receive a card if he concquered a territory part 1:
+  std::cout << "Did player 1 conquer a territory this turn: " << p1->getConcqueredFlag();
   std::cout << "Player 1 attacking with 10 units" << std::endl;
   Advance* advance3 = new Advance(terr2, terr1, p1, 10);
   advance3->execute();
@@ -218,7 +223,11 @@ adjacent territory -> will result in war simulation if territories are not owned
   std::cout << "attack from p1 on territory 2: " << std::endl;
   std::cout<< "Number of armies on terr2 after: " << terr2->getNumArmies() << std::endl;
   std::cout << "Number of armies on terr1 after: " << terr1->getNumArmies() << std::endl;
+  //demonstrate that a player will receive a card if he concquered a territory part 2:
+  std::cout << "Did player 1 conquer a territory this turn: " << p1->getConcqueredFlag();
 
 
+  
+  
 
 }
