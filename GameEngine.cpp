@@ -551,6 +551,7 @@ void GameEngine::startupPhase() {
     players.at(i)->getHand()->setDeck(deck);
     players.at(i)->getHand()->drawCard();
     players.at(i)->getHand()->drawCard();
+    players.at(i)->getOrderList()->Attach(logObserver);
   }
 
   for (int i = 0; i < players.size(); i++) {
@@ -561,7 +562,10 @@ void GameEngine::startupPhase() {
 void GameEngine::mainGameLoop() {
   cout << " PLAYER SIZE: " << players.size() << endl;
   // Stop loop if there is only 1 player left
+  int count = 0;
   while (players.size() > 1) {
+    if (count == 1) break;
+    count++;
     reinforcementPhase();
     issueOrdersPhase();
     executeOrdersPhase();

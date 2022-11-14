@@ -32,7 +32,7 @@ std::ostream& operator<<(std::ostream& out, const Card& c) {
   int type = c.GetType();
   std::string types[] = {"Bomb", "Reinforcement", "Blockade", "Airlift",
                          "Diplomacy"};
-  out << types[type] << std::endl;
+  cout << types[type] << std::endl;
   return out;
 }
 
