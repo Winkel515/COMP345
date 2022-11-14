@@ -121,7 +121,7 @@ class OrdersList : public Subject, public ILoggable{
  public:
   OrdersList();
   OrdersList(const OrdersList &ordersList);
-  ~OrdersList();
+  //~OrdersList();
   OrdersList &operator=(const OrdersList &ordersList);
   void move(int initial, int final);
   void remove(int index);

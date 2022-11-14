@@ -33,7 +33,7 @@ CommandProcessor::~CommandProcessor() {
 }
 
 void CommandProcessor::setNextInput(string input) {
-  nextInput = input;
+  nextInput.push(input);
 }
 
 Command& CommandProcessor::getCommand() { 
@@ -42,8 +42,8 @@ Command& CommandProcessor::getCommand() {
     return readCommand();
   } else {
     // Run manually if nextInput was set manually (for testing)
-    string input = nextInput;
-    nextInput = "";
+    string input = nextInput.front();
+    nextInput.pop();
     vector<string> inputs = splitString(input, " ");
     if (validate(inputs)) {
       return saveCommand(inputs);
@@ -201,8 +201,13 @@ Command& FileCommandProcessorAdapter::readCommand() {
       };
     } else {
       // Quits app once EOF
+      // Command* cmd;
       cout << "Reached EOF." << endl;
       cout << "Quitting application." << endl;
+      // input = "eof";
+      // inputs = splitString(input, " ");
+      // cmd = new Command(inputs);
+      // return Command(cmd);
       std::exit(0);
     }
   }

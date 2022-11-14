@@ -76,8 +76,6 @@ void OrdersList::remove(int index) {
   // Index must be lower than size
   if (index >= ListOfOrders.size() || index < 0) return;
 
-  // Delete the pointer
-  delete ListOfOrders[index];
   ListOfOrders.erase(ListOfOrders.begin() + index);
 }
 
@@ -85,16 +83,6 @@ void OrdersList::add(Order *order) {
   // Not sure if we should add to the begining or the end
   ListOfOrders.push_back(order);
   Notify(this);
-}
-
-// OrderList destructor
-OrdersList::~OrdersList() {
-  // Remove all the pointers in the vector
-  for (int i = 0; i < this->ListOfOrders.size(); i++) {
-    delete this->ListOfOrders[i];
-    this->ListOfOrders[i] = nullptr;
-  }
-  this->ListOfOrders.clear();
 }
 
 // Stream insertion operator
@@ -404,6 +392,7 @@ Blockade::Blockade(Territory *target, Player *owner, Player *neutral) {
   NeutralPlayer = neutral;
 }
 
+//blockade validate implementation
 bool Blockade::validate() {
   // target cannot belong to another player
   if (Target->getOwner() != Owner) {
@@ -412,6 +401,7 @@ bool Blockade::validate() {
   return true;
 }
 
+//Blockage execute implementation
 void Blockade::execute() {
   // validate order
   bool validate = this->validate();
@@ -427,6 +417,7 @@ void Blockade::execute() {
   Notify(this);
 }
 
+
 std::ostream &operator<<(std::ostream &output, const Blockade &o) {
   output << "Blockade Order:\n\t" << *o.Owner << "\n\tTarget: " << *o.Target
          << std::endl;
@@ -441,6 +432,7 @@ Negotiate::Negotiate(Territory *target, Player *owner) {
   Owner = owner;
 }
 
+//validate negotiate implementation
 bool Negotiate::validate() {
   // target must be an enemy
   if (Target->getOwner() == Owner) {
@@ -451,6 +443,7 @@ bool Negotiate::validate() {
   return true;
 }
 
+//execute negotiate implementation
 void Negotiate::execute() {
   // validate order
   bool validate = this->validate();
@@ -470,12 +463,16 @@ std::ostream &operator<<(std::ostream &output, const Negotiate &o) {
 }
 
 // end of negotiate order implementation
+
+//overidden stringtolog method for orderslist
 string OrdersList::stringToLog() {
-  string s = "OrdersList class\ntype of order ";
+  string s = ListOfOrders.at((this->ListOfOrders).size()-1)->stringToLog();
   // this->ListOfOrders[(this->ListOfOrders).size()-1] + "\n";
+  /*
   for (int i = 0; i < (this->ListOfOrders).size(); i++) {
     s += "type of order " + i;
     s += " :" + ListOfOrders.at(i)->stringToLog() + "\n";
   }
+  */
   return s;
 }

@@ -58,10 +58,10 @@ std::ostream& operator<<(std::ostream& strm, Player& player) {
   }
 
   strm << endl << "List of player's cards: " << endl;
-  strm << *player.cards;
+  strm << *(player.cards);
 
   strm << endl << "List of player's orders: " << endl;
-  strm << *player.orders;
+  strm << *(player.orders);
 
   return strm;
 }
@@ -148,6 +148,7 @@ bool Player::issueOrder() {
     Territory* target = getRandomTerritory(toDefend());
     orders->add(new Deploy(target, this, numOfArmies));
     reinforcementPool -= numOfArmies;
+    cout << (*this).name << " deployed " << numOfArmies << " to " << *target << " territory \n";
     return true;
   }
 
@@ -165,6 +166,7 @@ bool Player::issueOrder() {
     // Move 2 armies from source to target
     orders->add(new Advance(target, source, this, 2));
     issueOrdersCount++;
+    cout << (*this).name << " advanced 2 armies \n";
     return true;
   }
 
@@ -182,11 +184,12 @@ bool Player::issueOrder() {
     // Move 2 armies from source to target
     orders->add(new Advance(target, source, this, 2));
     issueOrdersCount++;
+    cout << (*this).name << " advanced 2 armies from  \n";
     return true;
   }
 
   else if (issueOrdersCount <
-           6) {  // Hardcoded at 6 to demonstrate multiple cards
+           4) {  // Hardcoded at 4 to demonstrate multiple cards
 
     // Cards functionality
     vector<Card*> hand = cards->getCards();
@@ -202,6 +205,7 @@ bool Player::issueOrder() {
     } else if (cardToPlay->GetType() == 2) {
       // TODO JOHN: Now that reinforcementPool > 0, do we have to deploy?
       reinforcementPool += 5;
+       cout << (*this).name <<" played a reinforcement card \n";
       return true;
     } else if (cardToPlay->GetType() == 3) {
       // Blockade implementation

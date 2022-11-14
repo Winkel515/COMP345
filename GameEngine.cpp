@@ -329,7 +329,6 @@ void GameEngine::execMapValidated() {
 // Executes Players Added state
 void GameEngine::execPlayersAdded() {
   // // Exec Players Added here. Add 2 players.
-  
 }
 
 // Executes Assign Reinforcement state
@@ -409,7 +408,7 @@ void GameEngine::issueOrdersPhase() {
 void GameEngine::executeOrdersPhase() {
   // // Exec Execute Orders here
   for (int i = 0; i < players.size(); i++) {
-    players.at(i)->getOrderList()->executeOrders(); // TODO: Update execute order function
+    players.at(i)->getOrderList()->executeOrders();
   }
 }
 
@@ -520,7 +519,7 @@ void GameEngine::startupPhase() {
       }
       players.push_back(new Player(result.param));
       nPlayers++;
-      cout << "Player named " << result.param << " has been added.";
+      cout << "Player named " << result.param << " has been added." << endl;
     } else if (result.command == "gamestart") {
       done_adding_players = true;
     }
@@ -563,6 +562,7 @@ void GameEngine::startupPhase() {
 }
 
 void GameEngine::mainGameLoop() {
+  cout << " PLAYER SIZE: " << players.size() << endl;
   // Stop loop if there is only 1 player left
   while(players.size() > 1) {
   reinforcementPhase();
@@ -573,6 +573,19 @@ void GameEngine::mainGameLoop() {
       // Remove players with less than 1 territory
       if(players.at(i)->getTerritories().size() < 1) {
         players.erase(players.begin() + i);
+      }
+    }
+    //check if player should draw a new card
+    for(int i =0; i<players.size(); i++){
+      if(players.at(i)->getConcqueredFlag() == true){
+        players.at(i)->getHand()->drawCard();
+        players.at(i)->setConcqueredFlag(false);
+      }
+    }
+    //reset diplomatic allies
+    for(int i =0; i<players.size(); i++){
+      if(players.at(i)->getDiplomaticAllies().size() > 0){
+        players.at(i)->clearDiplomaticAllies();
       }
     }
   }

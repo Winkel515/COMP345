@@ -56,7 +56,6 @@ class GameEngine : public Subject, public ILoggable {
   void execMapValidated();
   void execPlayersAdded();
   void reinforcementPhase();
-  void issueOrdersPhase();
   void executeOrdersPhase();
   void execWin();
   void execEnd();
@@ -84,6 +83,7 @@ class GameEngine : public Subject, public ILoggable {
                                   const GameEngine&);  // stream insertion
   void startupPhase();
   void mainGameLoop();
+  void issueOrdersPhase();
 };
 
 void handleEffect(string&, Command&, Observer*);

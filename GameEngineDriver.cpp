@@ -54,15 +54,12 @@ void testMainGameLoop() {
   CommandProcessor* cp = testEngine->commandProcessor;
   
   cp->setNextInput("loadmap 3D.map");
-  cp->getCommand();
   cp->setNextInput("validatemap");
-  cp->getCommand();
   cp->setNextInput("addplayer a");
-  cp->getCommand();
   cp->setNextInput("addplayer b");
-  cp->getCommand();
   cp->setNextInput("gamestart");
-  cp->getCommand();
+  
+  testEngine->startupPhase();
   testEngine->mainGameLoop();
 
   delete testEngine;

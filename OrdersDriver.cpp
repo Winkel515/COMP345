@@ -6,6 +6,8 @@
 #include "Player.h"
 #include "Cards.h"
 #include "Map.h"
+#include "GameEngine.h"
+#include "CommandProcessing.h"
 
 // Test Orders class
 void testOrdersList() {
@@ -47,12 +49,15 @@ void testOrderExecution(){
 
   Territory* terr1 = new Territory("player1Territory", "fakeContinent");
   terr1->setOwner(p1);
+  p1->addTerritory(terr1);
 
   Territory* terr2 = new Territory("player2Territory", "fakeContinent");
   terr2->setOwner(p2);
+  p2->addTerritory(terr2);
 
   Territory* terr3 = new Territory("player1Territory2", "fakeContinent");
   terr3->setOwner(p1);
+  p1->addTerritory(terr3);
 
   //make territories adjacent
   terr1->addAdjTerritory(terr2);
@@ -63,6 +68,10 @@ void testOrderExecution(){
 
   terr3->addAdjTerritory(terr1);
   terr3->addAdjTerritory(terr2);
+
+  terr1->setNumArmies(10);
+  terr2->setNumArmies(5);
+  terr3->setNumArmies(15);
 
 
   //demonstrate that order verifies that territory is owner by player executing the card
@@ -140,7 +149,7 @@ adjacent territory -> will result in war simulation if territories are not owned
   //blockade test
   std::cout << "blockade order will transfer territory to neutral player and double army" << std::endl;
   std::cout << "Num of armies in t1 before: " + terr1->getNumArmies() << std::endl;
-  std::cout << "Owner of t1 before: " << terr1->getOwner() << std::endl;
+  std::cout << "Owner of t1 before: " << *(terr1->getOwner()) << std::endl;
 
   std::cout << "Failed blockade order validation: " << std::endl;
   Blockade* block = new Blockade(terr1, p2, neutral);
@@ -153,7 +162,7 @@ adjacent territory -> will result in war simulation if territories are not owned
   std::cout << "blockade order will transfer territory to neutral player and double army" << std::endl;
   std::cout << "Num of armies in t1 after: " + terr1->getNumArmies() << std::endl;
   //(5) demonstrate that they blockade owner will transfer ownership to the neutral player
-  std::cout << "Owner of t1 after: " << terr1->getOwner() << std::endl;
+  std::cout << "Owner of t1 after: " << *(terr1->getOwner()) << std::endl;
 
   //airlift
     //reset num of armies for terr1-3
@@ -180,8 +189,8 @@ adjacent territory -> will result in war simulation if territories are not owned
   std::cout << "Negotiate order will prevent 2 players from attacking each other" << std::endl;
 
   std::cout << "Unsuccessful negotiate order example: " << std::endl;
-  std::cout << "Owner of t1: " << terr1->getOwner() << std::endl;
-  std::cout << "Owner of t2: " << terr2->getOwner() << std::endl;
+  std::cout << "Owner of t1: " << *(terr1->getOwner()) << std::endl;
+  std::cout << "Owner of t2: " << *(terr2->getOwner()) << std::endl;
 
   std::cout << "Negotiate target: t1 from p1:" << std::endl;
   Negotiate* nego1 = new Negotiate(terr1, p1); //error 
@@ -202,7 +211,7 @@ adjacent territory -> will result in war simulation if territories are not owned
 
 
   //demonstrate that ownership is transferred if territory is concquered
-  std::cout << "territory 2 owner before: " << terr2->getOwner() << std::endl;
+  std::cout << "territory 2 owner before: " << *(terr2->getOwner()) << std::endl;
   std::cout << "attack from p1 on territory 2: " << std::endl;
 
   //reset num of armies for terr1-3
@@ -219,7 +228,7 @@ adjacent territory -> will result in war simulation if territories are not owned
   advance3->execute();
 
 
-  std::cout << "territory 2 owner after: " << terr2->getOwner() << std::endl;
+  std::cout << "territory 2 owner after: " << *(terr2->getOwner()) << std::endl;
   std::cout << "attack from p1 on territory 2: " << std::endl;
   std::cout<< "Number of armies on terr2 after: " << terr2->getNumArmies() << std::endl;
   std::cout << "Number of armies on terr1 after: " << terr1->getNumArmies() << std::endl;
@@ -227,7 +236,56 @@ adjacent territory -> will result in war simulation if territories are not owned
   std::cout << "Did player 1 conquer a territory this turn: " << p1->getConcqueredFlag();
 
 
+  //demonstrate that a the game engine works with order execution
+  GameEngine* testEngine = new GameEngine();
+  CommandProcessor* cp = testEngine->commandProcessor;
+  
+  cp->setNextInput("loadmap 3D.map");
+  cp->getCommand();
+  testEngine->setState(GameEngineFSA::commandToStateMap.at("loadmap"));
+  cp->setNextInput("validatemap");
+  cp->getCommand();
+  testEngine->setState(GameEngineFSA::commandToStateMap.at("validatemap"));
+  cp->setNextInput("addplayer a");
+  cp->getCommand();
+  cp->setNextInput("addplayer b");
+  cp->getCommand();
+  testEngine->setState(GameEngineFSA::commandToStateMap.at("addplayer"));
+  //issue order command
+
+  testEngine->issueOrdersPhase();
+
+  delete testEngine;
+
+  // receive correct number of units during reinforcements
+  // issue only deploy orders if they still have reinforcements
+  // issue atttack/defend orders
+  // issue card orders
+  // removing player from game (no territories)
+  // game ends 
   
   
+  delete p1;
+  delete p2;
+  delete terr1;
+  delete terr2;
+  delete terr3;
+  delete terr4;
+  delete neutral;
+  delete p1order1;
+  delete p1order2;
+  delete p1order3;
+  delete p1attackp2;
+  delete p1attackp2attempt2;
+  delete bomb1;
+  delete bomb2;
+  delete bomb3;
+  delete block;
+  delete block1;
+  delete airlift1;
+  delete airlift2;
+  delete nego1;
+  delete nego2;
+  delete advance3;
 
 }

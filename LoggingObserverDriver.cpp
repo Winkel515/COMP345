@@ -29,21 +29,19 @@ void testLoggingObserver() {
 
   cout << "================================" << endl;
   cout << "In test logging observer" << endl;
-
+  // prints types of GameEngine
   GameEngine* testGameEngine = new GameEngine;
-  // LogObserver* gameEngineView = new LogObserver(testGameEngine);
   cout << "testGameEngine is of type: " << typeid(testGameEngine).name()
        << " and inherits from "
        << typeid(dynamic_cast<Subject*>(testGameEngine)).name() << " and "
        << typeid(dynamic_cast<ILoggable*>(testGameEngine)).name() << endl;
-
+  // prints types of orders
   Player* p1 = new Player("player 1");
   Territory* terr1 = new Territory("player1Territory", "fakeContinent");
   terr1->setOwner(p1);
-  Order* testOrder = new Deploy(terr1, p1, 10);
+  Deploy* testOrder = new Deploy(terr1, p1, 10);
   LogObserver logObs = LogObserver();
   testOrder->Attach(&logObs);
-  // LogObserver* orderView = new LogObserver(testOrder);
   cout << "testOrder is of type: " << typeid(testOrder).name()
        << " and inherits from "
        << typeid(dynamic_cast<Subject*>(testOrder)).name() << " and "
@@ -59,7 +57,6 @@ void testLoggingObserver() {
   // prints types of command
   vector<string> commandsVec;
   commandsVec.push_back("loadmap");
-  commandsVec.push_back("3D.map");
   Command* testCommands = new Command(commandsVec);
   testCommands->Attach(&logObs);
   cout << "testCommands is of type: " << typeid(testCommands).name()
@@ -79,9 +76,9 @@ void testLoggingObserver() {
 
   // Testing Notify from GameEngine, Order and Commands
   testGameEngine->setState(GameState::S_MAP_LOADED);
-  // TODO
-  // testOrder->execute();
-  // testOrdersList->add(testOrder);
+  
+  testOrder->execute();
+  testOrdersList->add(testOrder);
   string effectString = "Command Failed";
   testCommands->saveEffect(effectString);
 
@@ -104,11 +101,11 @@ void testLoggingObserver() {
   delete testGameEngine;
   delete testGameEngine2;
   delete testOrder;
-  // delete testOrdersList;
+  delete testOrdersList;
   delete testCommands;
   delete testCommandProcessor;
   delete p1;
   delete terr1;
-  // delete commandProcessorView;
+
   cout << "end" << endl;
 }
