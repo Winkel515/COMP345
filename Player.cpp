@@ -11,6 +11,8 @@
 #include "Map.h"
 #include "Orders.h"
 
+Player* Player::neutralPlayer = NULL;
+
 // Default Constructor
 Player::Player() {
   issueOrdersCount = 0;
@@ -79,16 +81,16 @@ Player& Player::operator=(const Player& player) {
 vector<Territory*> Player::toAttack() {
   vector<Territory*> territoriesToAttack;
   // Find all neighbouring territories
-  for (auto it1 = territories.begin(); it1 != territories.end(); ++it1) {
+  for (std::vector<Territory*>::iterator it1 = territories.begin(); it1 != territories.end(); ++it1) {
     vector<Territory*> neighbours = (*it1)->adj;
 
     // Check if neighbour territories are attackable.
-    for (auto it2 = neighbours.begin(); it2 != neighbours.end(); ++it2) {
-      // Check if already in toAttack list.
+    for (std::vector<Territory*>::iterator it2 = neighbours.begin(); it2 != neighbours.end(); ++it2) {
+      // // Check if already in toAttack list.
       bool notInToAttack = true;
-      for (auto it3 = territoriesToAttack.begin();
+      for (std::vector<Territory*>::iterator it3 = territoriesToAttack.begin();
            it3 != territoriesToAttack.end(); ++it3) {
-        if (*it2 = *it3) {
+        if (*it2 == *it3) {
           notInToAttack = false;
         }
       }
@@ -105,12 +107,8 @@ vector<Territory*> Player::toAttack() {
 // Returns a list of Territories to Defend (All of the player's currently owned
 // territories)
 vector<Territory*> Player::toDefend() {
-  // TODO JOHN: Implement logic here
   return territories;
 };
-
-// TODO JOHN: Delete if obsolete
-void Player::issueOrder(Order* newOrder) { (*orders).add(newOrder); }
 
 void Player::addTerritory(Territory* territory) {
   territories.push_back(territory);
@@ -138,8 +136,6 @@ Territory* getRandomTerritory(vector<Territory*> territories) {
   return territories.at(index);
 }
 
-// TODO JOHN: Implement a counter to ensure we demonstrate all the possibilities
-// TODO JOHN: cout so we see the orders do as they are supposed to.
 // Returns true if player issues an order, false if they are done issuing orders
 bool Player::issueOrder() {
   // Deploy all Reinforcements
@@ -192,7 +188,7 @@ bool Player::issueOrder() {
   else if (issueOrdersCount <
            6) {  // Hardcoded at 6 to demonstrate multiple cards
 
-    // TODO JOHN: Demonstrate cards functionality
+    // Cards functionality
     vector<Card*> hand = cards->getCards();
     Card* cardToPlay = hand.back();
     Deck* deck = cards->getDeck();
@@ -208,13 +204,13 @@ bool Player::issueOrder() {
       reinforcementPool += 5;
       return true;
     } else if (cardToPlay->GetType() == 3) {
-      // TODO: Implement blockade once neutral parameter is removed.
+      // Blockade implementation
       Territory* target = getRandomTerritory(toDefend());
-      // Constructor: Blockade(Territory* target, Player* owner, Player*
-      // neutral);
-
+      orders->add(new Blockade(target, this, neutralPlayer));
+      issueOrdersCount++;
       return playCard(cardToPlay, hand, deck);
     } else if (cardToPlay->GetType() == 4) {
+      //Airlift Implementation
       int numArmiesToMove = 2;
       Territory* target = getRandomTerritory(toDefend());
       Territory* source = getRandomTerritory(toDefend());
@@ -226,16 +222,21 @@ bool Player::issueOrder() {
       issueOrdersCount++;
       return playCard(cardToPlay, hand, deck);
     } else if (cardToPlay->GetType() == 5) {
+      //Diplomacy Implementation
       Territory* target = getRandomTerritory(toAttack());
       orders->add(new Negotiate(target, this));
       issueOrdersCount++;
       return playCard(cardToPlay, hand, deck);
     }
-  } else {
-    // No Order Issued.
+    issueOrdersCount=0;
     return false;
   }
+
   // LogObserver *orderView = new LogObserver(newOrder);
+
+  //No order Issued
+  issueOrdersCount = 0;
+  return false;
 }
 
 // Helper method to create territory list
