@@ -31,17 +31,13 @@ std::ostream &operator<<(std::ostream &out, const Order &o) {
   return out;
 }
 
-//Overridden stringtolog methods
+// Overridden stringtolog methods
 string Deploy::stringToLog() { return "type of order: Deploy"; }
 string Advance::stringToLog() { return "type of order: Advance"; }
 string Bomb::stringToLog() { return "type of order: Bomb"; }
-string Blockade::stringToLog() {
-  return "type of order: Blockade";
-}
+string Blockade::stringToLog() { return "type of order: Blockade"; }
 string Airlift::stringToLog() { return "type of order: Airlift"; }
-string Negotiate::stringToLog() {
-  return "type of order: Negotiate";
-}
+string Negotiate::stringToLog() { return "type of order: Negotiate"; }
 
 // Default OrderList constructor
 OrdersList::OrdersList() {
@@ -135,8 +131,8 @@ bool Deploy::validate() {
   // If the target territory does not belong to the player that issued the
   // order, the order is invalid
   if (this->GetTarget()->getOwner() != this->GetOwner()) {
-    std::cout << "Order invalid: player must own the target territory"
-              << std::endl;
+    std::cout << "Deploy Order invalid: player must own the target territory "
+              << *this->GetOwner() << std::endl;
     return false;
   } else {
     return true;
@@ -152,7 +148,8 @@ void Deploy::execute() {
   if (valid) {
     this->Target->addNumArmies(this->GetNumArmies());
   } else {
-    std::cout << "Invalid order" << std::endl;
+    std::cout << "Deploying"
+              << ": invalid order" << std::endl;
   }
   Notify(this);
 }
@@ -190,7 +187,8 @@ std::ostream &operator<<(std::ostream &output, const Advance &o) {
 bool Advance::validate() {
   // check if player owns the source territory
   if (this->GetSource()->getOwner() != this->GetOwner()) {
-    std::cout << "Invalid Order: Source not owned by player." << std::endl;
+    std::cout << "Advance: "
+              << "Invalid Order: Source not owned by player." << std::endl;
     return false;
   }
   // make sure the target is not a diplomatic ally
@@ -201,7 +199,8 @@ bool Advance::validate() {
        alliesIterate != Target->getOwner()->getDiplomaticAllies().end();
        alliesIterate++) {
     if (*alliesIterate == Owner) {
-      std::cout << "Invalid order: Target is a diplomatic Ally till the end of "
+      std::cout << "Advance: "
+                << "Invalid order: Target is a diplomatic Ally till the end of "
                    "this turn."
                 << std::endl;
       return false;
@@ -217,7 +216,8 @@ bool Advance::validate() {
       return true;
     }
   }
-  std::cout << "Invalid order: Target and source are not adjacent!"
+  std::cout << "Advance: "
+            << "Invalid order: Target and source are not adjacent!"
             << std::endl;
   return false;
 }
@@ -344,7 +344,8 @@ bool Bomb::validate() {
        alliesIterate != Target->getOwner()->getDiplomaticAllies().end();
        alliesIterate++) {
     if (*alliesIterate == Owner) {
-      std::cout << "Invalid order: Target is a diplomatic Ally till the end of "
+      std::cout << "Bomb: "
+                << "Invalid order: Target is a diplomatic Ally till the end of "
                    "this turn."
                 << std::endl;
       return false;
@@ -360,7 +361,8 @@ bool Bomb::validate() {
       return true;
     }
   }
-  std::cout << "Invalid order: Target and source are not adjacent!"
+  std::cout << "Bomb: "
+            << "Invalid order: Target and source are not adjacent!"
             << std::endl;
   return false;
 }
@@ -392,21 +394,25 @@ Blockade::Blockade(Territory *target, Player *owner, Player *neutral) {
   NeutralPlayer = neutral;
 }
 
-//blockade validate implementation
+// blockade validate implementation
 bool Blockade::validate() {
   // target cannot belong to another player
+
   if (Target->getOwner() != Owner) {
     return false;
   }
   return true;
 }
 
-//Blockage execute implementation
+// Blockage execute implementation
 void Blockade::execute() {
   // validate order
   bool validate = this->validate();
 
   if (validate) {
+    if (NeutralPlayer == NULL) {
+      NeutralPlayer = new Player("neutral");
+    }
     // double the num of armies
     int numArmies = Target->getNumArmies() * 2;
     Target->setNumArmies(numArmies);
@@ -416,7 +422,6 @@ void Blockade::execute() {
   }
   Notify(this);
 }
-
 
 std::ostream &operator<<(std::ostream &output, const Blockade &o) {
   output << "Blockade Order:\n\t" << *o.Owner << "\n\tTarget: " << *o.Target
@@ -432,18 +437,19 @@ Negotiate::Negotiate(Territory *target, Player *owner) {
   Owner = owner;
 }
 
-//validate negotiate implementation
+// validate negotiate implementation
 bool Negotiate::validate() {
   // target must be an enemy
   if (Target->getOwner() == Owner) {
-    std::cout << "Invalid order: Owner cannot own the target territory"
+    std::cout << "Negotiate "
+              << "Invalid order: Owner cannot own the target territory"
               << std::endl;
     return false;
   }
   return true;
 }
 
-//execute negotiate implementation
+// execute negotiate implementation
 void Negotiate::execute() {
   // validate order
   bool validate = this->validate();
@@ -464,9 +470,9 @@ std::ostream &operator<<(std::ostream &output, const Negotiate &o) {
 
 // end of negotiate order implementation
 
-//overidden stringtolog method for orderslist
+// overidden stringtolog method for orderslist
 string OrdersList::stringToLog() {
-  string s = ListOfOrders.at((this->ListOfOrders).size()-1)->stringToLog();
+  string s = ListOfOrders.at((this->ListOfOrders).size() - 1)->stringToLog();
   // this->ListOfOrders[(this->ListOfOrders).size()-1] + "\n";
   /*
   for (int i = 0; i < (this->ListOfOrders).size(); i++) {

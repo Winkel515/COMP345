@@ -41,6 +41,7 @@ void testLoggingObserver() {
   terr1->setOwner(p1);
   Deploy* testOrder = new Deploy(terr1, p1, 10);
   LogObserver logObs = LogObserver();
+  testGameEngine->Attach(&logObs);
   testOrder->Attach(&logObs);
   cout << "testOrder is of type: " << typeid(testOrder).name()
        << " and inherits from "
@@ -76,7 +77,7 @@ void testLoggingObserver() {
 
   // Testing Notify from GameEngine, Order and Commands
   testGameEngine->setState(GameState::S_MAP_LOADED);
-  
+
   testOrder->execute();
   testOrdersList->add(testOrder);
   string effectString = "Command Failed";

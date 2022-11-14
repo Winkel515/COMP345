@@ -173,8 +173,6 @@ std::vector<Card*> Deck::getCards() { return this->cards; }
 // hand constructor
 Hand::Hand() {}
 
-
-
 // destructor
 Hand::~Hand() {
   std::cout << "Hand Destroyed!" << std::endl;
@@ -242,6 +240,6 @@ void Hand::removeCard(int indexOfCard) {
   cards.erase(cards.begin() + indexOfCard);
 }
 
-Deck* Hand::getDeck(){ return deck; }
+Deck* Hand::getDeck() { return deck; }
 
-void Hand::setDeck(Deck* ndeck) { this->deck = ndeck;}
+void Hand::setDeck(Deck* ndeck) { this->deck = ndeck; }

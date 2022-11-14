@@ -54,6 +54,8 @@ void runA2Tests() {
   testMainGameLoop();
   // cout << "====== Testing Order Execution ======\n";
   // testOrderExecution();
+
+  cout << "End of Tests\n";
 }
 
 // Run old tests using this method
@@ -90,8 +92,9 @@ int main(int argc, char* argv[]) {
 
   if (argc == 1) {
     // Run without any arguments
+    isDebug = true;
     if (isDebug) {
-      runA1Tests();  // TODO
+      runA2Tests();
     } else {
       showHelp(supportedFlags);
     }
