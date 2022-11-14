@@ -32,7 +32,7 @@ std::ostream& operator<<(std::ostream& out, const Card& c) {
   int type = c.GetType();
   std::string types[] = {"Bomb", "Reinforcement", "Blockade", "Airlift",
                          "Diplomacy"};
-  out << types[type] << std::endl;
+  cout << types[type] << std::endl;
   return out;
 }
 
@@ -49,34 +49,26 @@ void Card::SetType(Card::CardType type) { TypeOfCard = type; }
 // game, must give a pointer to a deck to put the card back into after the
 // method is called. Must also have a order pointer to set the type of the order
 // depending on the card.
-void Card::play(Deck* deck, Order* order) {
+void Card::play(Deck* deck) {
   switch (TypeOfCard) {
     case Bomb:
-      std::cout << "Special bomb order created\n";
-      // create card order
-      order->SetType(Order::Bomb);
-      // place card back in the deck
+      std::cout << "Bomb card used!\n";
       deck->addCard(this);
       break;
     case Reinforcement:
-      std::cout << "Special Reinforcement order created\n";
-      // adds five armies to the reinforcement pool of the play who called this
-      // card
+      std::cout << "Special Reinforcement card used!\n";
       deck->addCard(this);
       break;
     case Blockade:
-      std::cout << "Special Blockade order created\n";
-      order->SetType(Order::Blockade);
+      std::cout << "Special Blockade card used!\n";
       deck->addCard(this);
       break;
     case Airlift:
-      std::cout << "Special Airlift order created\n";
-      order->SetType(Order::Airlift);
+      std::cout << "Special Airlift card used!\n";
       deck->addCard(this);
       break;
     case Diplomacy:
-      std::cout << "Special Diplomacy order created\n";
-      order->SetType(Order::Negotiate);
+      std::cout << "Special Diplomacy card used!\n";
       deck->addCard(this);
       break;
     default:
@@ -222,7 +214,7 @@ std::ostream& operator<<(std::ostream& out, const Hand& h) {
 
 // pick a card from a deck at random and add it to the hand, removing it from
 // the deck.
-void Hand::drawCard(Deck* deck) {
+void Hand::drawCard() {
   Card* card = deck->draw();
   cards.push_back(card);
 }
@@ -247,3 +239,7 @@ std::vector<Card*> Hand::getCards() { return cards; }
 void Hand::removeCard(int indexOfCard) {
   cards.erase(cards.begin() + indexOfCard);
 }
+
+Deck* Hand::getDeck() { return deck; }
+
+void Hand::setDeck(Deck* ndeck) { this->deck = ndeck; }

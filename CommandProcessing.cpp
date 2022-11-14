@@ -12,46 +12,45 @@ using std::getline;
 using std::set;
 using std::string;
 
-//command processor default constructor
+// command processor default constructor
 CommandProcessor::CommandProcessor(){};
 
-//command processor constructor
+// command processor constructor
 CommandProcessor::CommandProcessor(set<string>* commands) {
   this->validCommands = commands;
 };
 
-//command processor copy constructor
+// command processor copy constructor
 CommandProcessor::CommandProcessor(const CommandProcessor& cp) {
   for (int i = 0; i < cp.commandList.size(); i++) {
     commandList.push_back(new Command(*cp.commandList.at(i)));
   }
 };
 
-//command processor destructor
+// command processor destructor
 CommandProcessor::~CommandProcessor() {
   for (int i = 0; i < commandList.size(); i++) delete commandList.at(i);
 }
 
-void CommandProcessor::setNextInput(string input) {
-  nextInput = input;
-}
+void CommandProcessor::setNextInput(string input) { nextInput.push(input); }
 
-Command& CommandProcessor::getCommand() { 
+Command& CommandProcessor::getCommand() {
   // Run normally if nextInput is empty
-  if(nextInput.empty()) {
+  if (nextInput.empty()) {
     return readCommand();
   } else {
     // Run manually if nextInput was set manually (for testing)
-    string input = nextInput;
-    nextInput = "";
+    string input = nextInput.front();
+    nextInput.pop();
     vector<string> inputs = splitString(input, " ");
     if (validate(inputs)) {
       return saveCommand(inputs);
     } else {
       cout << "When using nextInput, the input must be valid.\nQuitting.\n";
       std::exit(0);
-      Command * doesntReach_keepCompilerHappy = new Command(inputs); // doesnt reach
-      return *doesntReach_keepCompilerHappy; // doesnt reach
+      Command* doesntReach_keepCompilerHappy =
+          new Command(inputs);                // doesnt reach
+      return *doesntReach_keepCompilerHappy;  // doesnt reach
     }
   }
 }
@@ -73,38 +72,38 @@ Command& CommandProcessor::readCommand() {
 // overloaded stringTolog method
 string CommandProcessor::stringToLog() {
   string s = "";
-  if(this->commandList[(this->commandList).size()-1]->effect.size() == 0){
-    s = this->commandList[(this->commandList).size()-1]->command 
-    + " " + this->commandList[(this->commandList).size()-1]->param + " -> no effect";
-  }
-  else{
-    s = this->commandList[(this->commandList).size()-1]->command 
-    + " " + this->commandList[(this->commandList).size()-1]->param + " -> " 
-    + this->commandList[(this->commandList).size()-1]->effect;
+  if (this->commandList[(this->commandList).size() - 1]->effect.size() == 0) {
+    s = this->commandList[(this->commandList).size() - 1]->command + " " +
+        this->commandList[(this->commandList).size() - 1]->param +
+        " -> no effect";
+  } else {
+    s = this->commandList[(this->commandList).size() - 1]->command + " " +
+        this->commandList[(this->commandList).size() - 1]->param + " -> " +
+        this->commandList[(this->commandList).size() - 1]->effect;
   }
 
   return s;
 }
 
-//command processor save command method
+// command processor save command method
 Command& CommandProcessor::saveCommand(vector<string>& result) {
   Command* newCommand = new Command(result);
   commandList.push_back(newCommand);
   cout << "CommandProcessor::saveCommand : command has been saved "
        << commandList.size() << endl;
-  Notify(this); //newCommand
+  Notify(this);  // newCommand
   return *newCommand;
 }
 
-//command processor validate method
+// command processor validate method
 bool CommandProcessor::validate(vector<string>& result) {
   // check gamestate and return if command is valid
   string command = result.at(0);
   // Checks if valid command
   if (validCommands->find(command) == validCommands->end()) {
-    string invalidEffect = "Invalid Command.";
+    string invalidEffect = "is an invalid Command.";
     saveCommand(result).saveEffect(invalidEffect);
-    cout << invalidEffect << std::endl;
+    cout << command << invalidEffect << std::endl;
     printCommands(*validCommands);
     return false;
   }
@@ -116,18 +115,17 @@ void CommandProcessor::initValidCommandsPtr(set<string>* commands) {
   this->validCommands = commands;
 }
 
-//command default constructor
-Command::Command(){}
+// command default constructor
+Command::Command() {}
 
-//command copy constructor
+// command copy constructor
 Command::Command(const Command& c) {
   command = c.command;
   param = c.param;
   effect = c.effect;
 }
 
-
-//command constructor
+// command constructor
 Command::Command(vector<string>& result) {
   this->command = result.at(0);
   this->param = "";
@@ -137,8 +135,7 @@ Command::Command(vector<string>& result) {
   }
 }
 
-
-//command saveeffect method
+// command saveeffect method
 void Command::saveEffect(string& s) {
   effect = s;
   cout << "Effect: \"" << s << "\" has been saved\n";
@@ -148,14 +145,15 @@ void Command::saveEffect(string& s) {
 // overloaded strinToLog method
 string Command::stringToLog() {
   string s = "";
-  
-  if(this->effect.size() == 0){
-    s = this->command + " " + this->param + " -> no effect"; //effect length = 0 say no effect
+
+  if (this->effect.size() == 0) {
+    s = this->command + " " + this->param +
+        " -> no effect";  // effect length = 0 say no effect
+  } else {
+    s = this->command + " " + this->param + " -> " +
+        this->effect;  // effect length = 0 say no effect
   }
-  else{
-    s = this->command + " " + this->param + " -> " + this->effect; //effect length = 0 say no effect
-  }
-  
+
   return s;
 }
 
@@ -189,7 +187,7 @@ Command& FileCommandProcessorAdapter::readCommand() {
     if (!file.eof()) {
       getline(file, input);
       cout << "Read \"" + input + "\" from file." << endl;
-      
+
       // Protect from seg fault
       if (input.length() > 0) {
         // Convert into vector
@@ -201,8 +199,13 @@ Command& FileCommandProcessorAdapter::readCommand() {
       };
     } else {
       // Quits app once EOF
+      // Command* cmd;
       cout << "Reached EOF." << endl;
       cout << "Quitting application." << endl;
+      // input = "eof";
+      // inputs = splitString(input, " ");
+      // cmd = new Command(inputs);
+      // return Command(cmd);
       std::exit(0);
     }
   }

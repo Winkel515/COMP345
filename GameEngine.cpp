@@ -1,7 +1,5 @@
 #include "GameEngine.h"
 
-
-
 #include <algorithm>
 #include <chrono>
 #include <iostream>
@@ -86,7 +84,7 @@ string GameState::getLabel(GameStateEnum state) {
 };
 
 // Default Constructor for GameEngine
-GameEngine::GameEngine(): GameEngine(new CommandProcessor()) {}
+GameEngine::GameEngine() : GameEngine(new CommandProcessor()) {}
 
 // Constructor with command processor
 GameEngine::GameEngine(CommandProcessor *cProcessor) {
@@ -95,7 +93,7 @@ GameEngine::GameEngine(CommandProcessor *cProcessor) {
   setCommandProcessor(cProcessor);
   logObserver = new LogObserver();
   commandProcessor->Attach(logObserver);
-  //LogObserver *commandProcessorView = new LogObserver(commandProcessor);
+  // LogObserver *commandProcessorView = new LogObserver(commandProcessor);
   deck = new Deck(3);
 }
 
@@ -106,7 +104,7 @@ GameEngine::GameEngine(const GameEngine &ge) {
   commandProcessor = new CommandProcessor(&commands);
   logObserver = new LogObserver();
   commandProcessor->Attach(logObserver);
-  //LogObserver *commandProcessorView = new LogObserver(commandProcessor);
+  // LogObserver *commandProcessorView = new LogObserver(commandProcessor);
   deck = new Deck(3);
 }
 
@@ -114,7 +112,6 @@ void GameEngine::setCommandProcessor(CommandProcessor *cProcessor) {
   this->commandProcessor = cProcessor;
   commandProcessor->initValidCommandsPtr(&commands);
 }
-
 
 // Assignment Operator for GameEngine
 GameEngine &GameEngine::operator=(const GameEngine &copy) {
@@ -163,7 +160,6 @@ void GameEngine::setState(GameState::GameStateEnum state) {
     commands = {""};
   } else {
     commands = GameEngineFSA::commandsPerStateMap.at(this->state);
-    
   }
   Notify(this);
 }
@@ -194,13 +190,13 @@ void GameEngine::execSelector(GameStateEnum state) {
       execPlayersAdded();
       break;
     case S_ASSIGN_REINFORCEMENT:
-      execAssignReinforcement();
+      reinforcementPhase();
       break;
     case S_ISSUE_ORDERS:
-      execIssueOrders();
+      issueOrdersPhase();
       break;
     case S_EXECUTE_ORDERS:
-      execExecuteOrders();
+      executeOrdersPhase();
       break;
     case S_WIN:
       execWin();
@@ -280,14 +276,13 @@ bool GameEngine::handleCommand(string command) {
   command = splitString(command, " ").at(0);
   // Checks if valid command
   if (commands.find(command) == commands.end()) {
-    cout << "Invalid Command.\n";
+    cout << command << "is invalid Command.\n";
     return false;
   }
 
   // Transition the state
   GameStateEnum desiredState = GameEngineFSA::commandToStateMap.at(command);
   setState(desiredState);
-  
 
   return true;
 }
@@ -296,7 +291,7 @@ bool GameEngine::handleCommand(string command, bool transitionState) {
   command = splitString(command, " ").at(0);
   // Checks if valid command
   if (commands.find(command) == commands.end()) {
-    cout << "Invalid Command.\n";
+    cout << command << " is an invalid command.\n";
     return false;
   }
 
@@ -328,22 +323,93 @@ void GameEngine::execMapValidated() {
 
 // Executes Players Added state
 void GameEngine::execPlayersAdded() {
-  // // Exec Players Added here
+  // // Exec Players Added here. Add 2 players.
 }
 
 // Executes Assign Reinforcement state
-void GameEngine::execAssignReinforcement() {
+void GameEngine::reinforcementPhase() {
   // // Exec Assign Reinforcement here
+  for (int i = 0; i < players.size(); i++) {
+    // Get reinforcement for Player
+    int reinforcements;
+    reinforcements = (int)(players.at(i)->getTerritories().size()) / 3;
+
+    // Territoy list from player
+    std::vector<Territory *> playerList = players.at(i)->getTerritories();
+
+    // Territoy list from map
+    std::vector<string> continentList =
+        mapLoader->getMap()->getContinentsNames();
+    std::vector<Territory *> territoryList =
+        mapLoader->getMap()->getTerritories();
+
+    // Erase all territories in territory list that exist in player list
+    for (int j = 0; j < playerList.size(); j++) {
+      for (int k = 0; k < territoryList.size(); k++) {
+        if (playerList.at(j)->getName() == territoryList.at(k)->getName()) {
+          territoryList.erase(territoryList.begin() + k);
+        }
+      }
+    }
+
+    // Erase all continents in continent list that exist in territory list
+    for (int j = 0; j < territoryList.size(); j++) {
+      for (int k = 0; k < continentList.size(); k++) {
+        if (territoryList.at(j)->getContinent() == continentList.at(k)) {
+          continentList.erase(continentList.begin() + k);
+        }
+      }
+    }
+
+    // Remaining size of the continnent list is the bonus multiplier. Add bonus
+    // to reinforcements
+    reinforcements += continentList.size() * 3;
+
+    // if lower than 3, assign 3 reinforcements
+    if (reinforcements < 3) {
+      reinforcements = 3;
+    }
+
+    players.at(i)->addReinforcements(reinforcements);
+
+    cout << "Added " << reinforcements << " units to player " << i
+         << " reinforcement pool" << std::endl;
+  }
 }
 
 // Executes Issue Order state
-void GameEngine::execIssueOrders() {
-  // // Exec Issue order here
+void GameEngine::issueOrdersPhase() {
+  // Global flag
+  bool stillIssuingOrders = true;
+  // Create a flag for each player to determine if they are done issuing orders.
+  bool playerStillIssuing[players.size()];
+
+  for (int i = 0; i < players.size(); i++) {
+    playerStillIssuing[i] = true;
+  }
+
+  while (stillIssuingOrders) {
+    // Reset global flag
+    stillIssuingOrders = false;
+
+    for (int i = 0; i < players.size(); i++) {
+      // Issue order and set player's flag. issueOrder() returns true if player
+      // issues an order and flase if player signifies they are done.
+      if (playerStillIssuing[i]) {
+        playerStillIssuing[i] = players.at(i)->issueOrder();
+        // Reset global flag if any player is still issuing orders
+        stillIssuingOrders = true;
+      }
+    }
+  }
 }
 
 // Execute Execute Orders state
-void GameEngine::execExecuteOrders() {
+void GameEngine::executeOrdersPhase() {
   // // Exec Execute Orders here
+  for (int i = 0; i < players.size(); i++) {
+    players.at(i)->getOrderList()->executeOrders();
+  }
 }
 
 // Execute Win state
@@ -357,14 +423,14 @@ void GameEngine::execEnd() {
   cout << "Game has ended.\n";
 }
 
-void handleEffect(const char effect[], Command &command, Observer* obs) {
+void handleEffect(const char effect[], Command &command, Observer *obs) {
   string s = effect;
   command.Attach(obs);
   command.saveEffect(s);
   cout << effect << std::endl;
 }
 
-void handleEffect(string &s, Command &command, Observer* obs) {
+void handleEffect(string &s, Command &command, Observer *obs) {
   command.Attach(obs);
   command.saveEffect(s);
   cout << s << std::endl;
@@ -376,8 +442,8 @@ void GameEngine::startupPhase() {
     printCommands();
     Command &result = commandProcessor->getCommand();
     if (result.param.size() == 0)
-      handleEffect("Enter a file name in the format loadmap <filename>",
-                   result, logObserver);
+      handleEffect("Enter a file name in the format loadmap <filename>", result,
+                   logObserver);
     else {
       string loadMapEffect = mapLoader->loadMap(result.param);
       if (loadMapEffect.size() == 0) {
@@ -426,10 +492,7 @@ void GameEngine::startupPhase() {
     }
   }
 
-
   printCommands();
-
-
 
   // addPlayer implementation:
   bool done_adding_players = false;
@@ -453,6 +516,7 @@ void GameEngine::startupPhase() {
       }
       players.push_back(new Player(result.param));
       nPlayers++;
+      cout << "Player named " << result.param << " has been added." << endl;
     } else if (result.command == "gamestart") {
       done_adding_players = true;
     }
@@ -474,7 +538,6 @@ void GameEngine::startupPhase() {
 
   // gamestart phase:
 
-  // TODO: Set territory owners in distributeTerritories
   mapLoader->getMap()->distributeTerritories(players);
 
   //  Randomly shuffle player vector to determine player order.
@@ -485,8 +548,10 @@ void GameEngine::startupPhase() {
   // Each player gets 50 reincforcements and draws 2 cards
   for (int i = 0; i < players.size(); i++) {
     players.at(i)->addReinforcements(50);
-    players.at(i)->getHand()->drawCard(deck);
-    players.at(i)->getHand()->drawCard(deck);
+    players.at(i)->getHand()->setDeck(deck);
+    players.at(i)->getHand()->drawCard();
+    players.at(i)->getHand()->drawCard();
+    players.at(i)->getOrderList()->Attach(logObserver);
   }
 
   for (int i = 0; i < players.size(); i++) {
@@ -494,7 +559,37 @@ void GameEngine::startupPhase() {
   }
 }
 
-//overloaded stringToLog method
+void GameEngine::mainGameLoop() {
+  cout << " PLAYER SIZE: " << players.size() << endl;
+  // Stop loop if there is only 1 player left
+  int count = 0;
+  while (players.size() > 1) {
+    if (count == 1) break;
+    count++;
+    reinforcementPhase();
+    issueOrdersPhase();
+    executeOrdersPhase();
+    // Check all players
+    for (int i = 0; i < players.size(); i++) {
+      // Remove players with less than 1 territory
+      if (players.at(i)->getTerritories().size() < 1) {
+        players.erase(players.begin() + i);
+        cout << "DELETED" << endl;
+      }
+      // check if player should draw a new card
+      if (players.at(i)->getConcqueredFlag() == true) {
+        players.at(i)->getHand()->drawCard();
+        players.at(i)->setConcqueredFlag(false);
+      }
+      // reset diplomatic allies
+      if (!players.at(i)->getDiplomaticAllies().empty()) {
+        players.at(i)->clearDiplomaticAllies();
+      }
+    }
+  }
+}
+
+// overloaded stringToLog method
 string GameEngine::stringToLog() {
   string s = "Game engine state change to: " + getLabel(this->state);
   return s;

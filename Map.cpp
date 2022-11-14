@@ -69,6 +69,8 @@ Player* Territory::getOwner() { return this->owner; }
 // setter for number of armies
 void Territory::setNumArmies(int _numArmies) { this->numArmies = _numArmies; }
 
+void Territory::addNumArmies(int NumArmies){ this->numArmies += NumArmies;}
+
 // getter for number of armies
 int Territory::getNumArmies() { return this->numArmies; }
 
@@ -79,6 +81,12 @@ ostream& operator<<(
   return strm << "continent: " << n.continent << " Territory: " << n.name << " "
               << convertAdjToString(n.adj) << endl;
 }
+
+// Get Territory Name
+string Territory::getName() { return this->name; }
+
+// Get Continent Name
+string Territory::getContinent() { return this->continent; }
 
 // Map constructor
 Map::Map(vector<Territory*> territories, vector<string> continents) {
@@ -403,6 +411,9 @@ void Map::distributeTerritories(vector<Player*> players) {
   }
 }
 
+vector<Territory*> Map::getTerritories() {return territories;}
+vector<string> Map::getContinentsNames() {return continentsNames;}
+
 string convertAdjToString(
     vector<Territory*> adj) {  // free function to convert the
                                // adjacency lists to strings
@@ -546,4 +557,9 @@ vector<string> splitString(string s, string delimiter) {
   }
 
   return split;
+}
+
+//for testing only!
+void Territory::addAdjTerritory(Territory* adjTerr){
+  adj.push_back(adjTerr);
 }

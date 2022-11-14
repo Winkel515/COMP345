@@ -12,6 +12,7 @@
 #include "Map.h"
 #include "Player.h"
 
+class Card;
 class CommandProcessor;
 class Command;
 
@@ -47,7 +48,6 @@ class GameEngine : public Subject, public ILoggable {
   std::vector<Player*> players;
   Deck* deck;
   MapLoader* mapLoader;
-  CommandProcessor* commandProcessor;
   LogObserver* logObserver;
   // Methods
   void execSelector(GameState::GameStateEnum);
@@ -55,15 +55,13 @@ class GameEngine : public Subject, public ILoggable {
   void execMapLoaded();
   void execMapValidated();
   void execPlayersAdded();
-  void execAssignReinforcement();
-  void execIssueOrders();
-  void execExecuteOrders();
+  void reinforcementPhase();
+  void executeOrdersPhase();
   void execWin();
   void execEnd();
-  void startupPhase();
-
 
  public:
+  CommandProcessor* commandProcessor;
   void start();
   void run();
   bool handleCommand(std::string);
@@ -83,7 +81,9 @@ class GameEngine : public Subject, public ILoggable {
   string stringToLog();
   friend std::ostream& operator<<(std::ostream&,
                                   const GameEngine&);  // stream insertion
-
+  void startupPhase();
+  void mainGameLoop();
+  void issueOrdersPhase();
 };
 
 void handleEffect(string&, Command&, Observer*);

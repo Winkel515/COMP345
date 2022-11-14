@@ -44,10 +44,18 @@ string getFileName(int argc, char* argv[]) {
 }
 
 void runA2Tests() {
-  cout << "====== Testing Command Processor ======\n";
-  testCommandProcessor();
-  cout << "====== Testing Logging observer ======\n";
-  testLoggingObserver();
+  // cout << "====== Testing Command Processor ======\n";
+  // testCommandProcessor();
+  // cout << "====== Testing Logging observer ======\n";
+  // testLoggingObserver();
+  // cout << "====== Testing Startup Phase ======\n";
+  // testStartupPhase();
+  cout << "====== Testing Main Game Loop ======\n";
+  testMainGameLoop();
+  // cout << "====== Testing Order Execution ======\n";
+  // testOrderExecution();
+
+  cout << "End of Tests\n";
 }
 
 // Run old tests using this method
@@ -84,8 +92,9 @@ int main(int argc, char* argv[]) {
 
   if (argc == 1) {
     // Run without any arguments
+    isDebug = true;
     if (isDebug) {
-      runA1Tests();  // TODO
+      runA2Tests();
     } else {
       showHelp(supportedFlags);
     }

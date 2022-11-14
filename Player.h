@@ -3,20 +3,25 @@
 #include <iostream>
 #include <list>
 #include <string>
+#include "Cards.h"
+#include "Map.h"
+#include "Orders.h"
 
-class Card;
-class Territory;
-class OrdersList;
-class Hand;
-class Order;
-using namespace std;
+
 
 class Player {
-  std::list<Territory*> territories;
-  OrdersList* orders;
-  Hand* cards;
-  string name;
-  int reinforcementPool;
+  private:
+    std::vector<Territory*> territories;
+    OrdersList* orders;
+    Hand* cards;
+    bool ConqueredTerritoryFlag;
+    string name;
+    int reinforcementPool;
+    std::vector<Player*> diplomaticAllies;
+    int issueOrdersCount;
+    static Player* neutralPlayer;
+
+    
 
  public:
   Player();
@@ -24,17 +29,22 @@ class Player {
   Player(string name);
   Player(const Player& player);
   ~Player();
-  std::list<Territory*> toDefend();
-  std::list<Territory*> toAttack();
-  void issueOrder(Order* newOrder);
-  void issueOrder();  // For Testing
+  std::vector<Territory*> toDefend();
+  std::vector<Territory*> toAttack();
+  bool issueOrder();
   void testListOrder();
   Player& operator=(const Player& player);
   friend std::ostream& operator<<(std::ostream& strm, Player& pl);
   void addTerritory(Territory*);
   void addReinforcements(int);
   Hand* getHand();
-  std::list<Territory*> getTerritories();
-};
+  std::vector<Territory*> getTerritories();
+  OrdersList* getOrderList();
+  bool getConcqueredFlag();
+  void setConcqueredFlag(bool flag);
+  std::vector<Player*> getDiplomaticAllies();
+  void addDiplomaticAlly(Player* ally);
+  void clearDiplomaticAllies();
+  std::vector<Territory*> createTerritoryList(int nTerritories);
 
-list<Territory*> createTerritoryList(int nTerritories);
+};

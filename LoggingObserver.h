@@ -3,8 +3,8 @@
 #include <list>
 #include <string>
 using std::list;
-using std::ostream;
 using std::string;
+using std::ostream;
 class CommandProcessor;
 class GameEngine;
 class Command;

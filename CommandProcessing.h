@@ -4,6 +4,7 @@
 #include <fstream>
 #include <string>
 #include <vector>
+#include <queue>
 
 #include "GameEngine.h"
 #include "LoggingObserver.h"
@@ -12,6 +13,7 @@ using std::ifstream;
 using std::set;
 using std::string;
 using std::vector;
+using std::queue;
 
 class Command : public Subject, public ILoggable {
  public:
@@ -36,7 +38,7 @@ class CommandProcessor : public Subject, public ILoggable {
   Command &saveCommand(vector<string> &);
   Command &getValidatedAndSavedCommand(string);
   bool validate(vector<string> &);
-  string nextInput = "";
+  queue<string> nextInput;
 
  public:
   Command &getCommand();
@@ -45,7 +47,7 @@ class CommandProcessor : public Subject, public ILoggable {
   CommandProcessor();
   CommandProcessor(set<string> *);
   CommandProcessor(const CommandProcessor &);
-  ~CommandProcessor();
+  virtual ~CommandProcessor();
   string stringToLog();
   void initValidCommandsPtr(set<string> *);
   friend class Command;

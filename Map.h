@@ -1,7 +1,9 @@
+#pragma once
 #include <iostream>
 #include <string>
 #include <unordered_map>
 #include <vector>
+
 
 class Player;
 using namespace std;
@@ -15,6 +17,7 @@ class Territory {
   int numArmies;
   Player* owner;
   void setNumArmies(int _numArmies);
+  void addNumArmies(int numArmies);
   int getNumArmies();
   void setOwner(Player* _owner);
   Player* getOwner();
@@ -23,6 +26,9 @@ class Territory {
   Territory(const Territory& n);
   Territory& operator=(const Territory& n);
   friend ostream& operator<<(ostream& strm, const Territory& n);
+  string getName();
+  string getContinent();
+  void addAdjTerritory(Territory* adjTerr); //for testing
 };
 
 class Map {
@@ -44,6 +50,8 @@ class Map {
       vector<Territory*> territoriesCopy);
   friend ostream& operator<<(ostream& strm, const Map& m);
   void distributeTerritories(vector<Player*> players);
+  vector<Territory*> getTerritories();
+  vector<string> getContinentsNames();
 };
 
 class MapLoader {
