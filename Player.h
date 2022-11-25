@@ -6,11 +6,13 @@
 #include "Cards.h"
 #include "Map.h"
 #include "Orders.h"
+#include "PlayerStrategies.h"
 
 
 
 class Player {
   private:
+    PlayerStrategy* strategy;
     std::vector<Territory*> territories;
     OrdersList* orders;
     Hand* cards;
@@ -29,9 +31,9 @@ class Player {
   Player(string name);
   Player(const Player& player);
   ~Player();
-  std::vector<Territory*> toDefend();
-  std::vector<Territory*> toAttack();
-  bool issueOrder();
+  std::vector<Territory*> toDefend(); //TODO: change for strategy
+  std::vector<Territory*> toAttack(); //TODO: change for strategy
+  bool issueOrder(); //TODO: change for strategy
   void testListOrder();
   Player& operator=(const Player& player);
   friend std::ostream& operator<<(std::ostream& strm, Player& pl);
@@ -46,5 +48,6 @@ class Player {
   void addDiplomaticAlly(Player* ally);
   void clearDiplomaticAllies();
   std::vector<Territory*> createTerritoryList(int nTerritories);
+  void setStrategy(PlayerStrategy* newStrategy);
 
 };

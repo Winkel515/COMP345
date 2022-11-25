@@ -20,6 +20,7 @@ Player::Player() {
   ConqueredTerritoryFlag = false;
   cards = new Hand();
   orders = new OrdersList();
+  //TODO: strategy = new HumanPlayerStrategy();
 }
 
 Player::Player(string name) {
@@ -29,7 +30,7 @@ Player::Player(string name) {
   cards = new Hand();
   orders = new OrdersList();
   ConqueredTerritoryFlag = false;
-  // LogObserver* OrdersListView = new LogObserver(orders);
+  //TODO: strategy = new HumanPlayerStrategy();
 }
 
 // Copy Constructor makes shallow copies of members because we want functions to
@@ -41,6 +42,8 @@ Player::Player(const Player& player) {
   name = player.name;
   reinforcementPool = player.reinforcementPool;
   ConqueredTerritoryFlag = false;
+  //TODO: strategy = player.strategy;
+
 }
 
 // Destructor
@@ -78,7 +81,7 @@ Player& Player::operator=(const Player& player) {
 }
 
 // Returns a list of Territories to Attack
-vector<Territory*> Player::toAttack() {
+vector<Territory*> Player::toAttack() { //TODO: implement strategy
   vector<Territory*> territoriesToAttack;
   // Find all neighbouring territories
   for (std::vector<Territory*>::iterator it1 = territories.begin();
@@ -108,7 +111,7 @@ vector<Territory*> Player::toAttack() {
 
 // Returns a list of Territories to Defend (All of the player's currently owned
 // territories)
-vector<Territory*> Player::toDefend() { return territories; };
+vector<Territory*> Player::toDefend() { return territories; }; //TODO: implement strategy
 
 void Player::addTerritory(Territory* territory) {
   territories.push_back(territory);
@@ -137,7 +140,7 @@ Territory* getRandomTerritory(vector<Territory*> territories) {
 }
 
 // Returns true if player issues an order, false if they are done issuing orders
-bool Player::issueOrder() {
+bool Player::issueOrder() { //TODO: implement strategy
   // Deploy all Reinforcements
   if (reinforcementPool > 0) {
     // Hardcoded to deploy in rounds of 10 to random territory
@@ -286,3 +289,8 @@ void Player::addDiplomaticAlly(Player* ally) {
 void Player::clearDiplomaticAllies() { diplomaticAllies.clear(); }
 
 OrdersList* Player::getOrderList() { return orders; }
+
+//Method to set a new player strategy
+void Player::setStrategy(PlayerStrategy* newStrategy){
+  this->strategy = newStrategy;
+}
