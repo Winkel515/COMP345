@@ -44,16 +44,16 @@ string getFileName(int argc, char* argv[]) {
 }
 
 void runA2Tests() {
-  // cout << "====== Testing Command Processor ======\n";
-  // testCommandProcessor();
-  // cout << "====== Testing Logging observer ======\n";
-  // testLoggingObserver();
-  // cout << "====== Testing Startup Phase ======\n";
-  // testStartupPhase();
+  //cout << "====== Testing Command Processor ======\n";
+  //testCommandProcessor();
+  //cout << "====== Testing Logging observer ======\n";
+  //testLoggingObserver();
+  //cout << "====== Testing Startup Phase ======\n";
+  //testStartupPhase();
   cout << "====== Testing Main Game Loop ======\n";
   testMainGameLoop();
-  // cout << "====== Testing Order Execution ======\n";
-  // testOrderExecution();
+  //cout << "====== Testing Order Execution ======\n";
+  //testOrderExecution();
 
   cout << "End of Tests\n";
 }

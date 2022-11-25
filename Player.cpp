@@ -209,12 +209,12 @@ bool Player::issueOrder() {
       orders->add(new Bomb(target, this));
       issueOrdersCount++;
       return playCard(cardToPlay, hand, deck);
-    } else if (cardToPlay->GetType() == 2) {
+    } /*else if (cardToPlay->GetType() == 2) {
       // TODO JOHN: Now that reinforcementPool > 0, do we have to deploy?
       cout << (*this).name << " played a reinforcement card \n";
       reinforcementPool += 5;
       return playCard(cardToPlay, hand, deck);
-    } else if (cardToPlay->GetType() == 3) {
+    }*/ else if (cardToPlay->GetType() == 3) {
       // Blockade implementation
       cout << (*this).name << " played a blockade card \n";
       Territory* target = getRandomTerritory(toDefend());

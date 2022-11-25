@@ -102,7 +102,7 @@ void testLoggingObserver() {
   delete testGameEngine;
   delete testGameEngine2;
   delete testOrder;
-  delete testOrdersList;
+  //delete testOrdersList;
   delete testCommands;
   delete testCommandProcessor;
   delete p1;
