@@ -38,6 +38,7 @@ class Player {
   void addTerritory(Territory*);
   void addReinforcements(int);
   Hand* getHand();
+  string getName();
   std::vector<Territory*> getTerritories();
   OrdersList* getOrderList();
   bool getConcqueredFlag();

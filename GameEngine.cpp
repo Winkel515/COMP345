@@ -564,8 +564,21 @@ void GameEngine::startupPhase() {
 
 void GameEngine::mainGameLoop() {
   cout << " PLAYER SIZE: " << players.size() << endl;
+  int turnCounter = 1;
   // Stop loop if there is only 1 player left
   while (players.size() > 1) {
+
+    cout << "================ Beginning of turn " << turnCounter << " ================" << endl;
+    
+    cout << endl << "Printing Deck: " << endl;
+    cout << *deck << endl << endl;
+
+    cout << "Printing Players: " << endl;
+    for(Player* p : players)
+      {
+        cout << *p << endl;
+      }
+
     reinforcementPhase();
     issueOrdersPhase();
     executeOrdersPhase();
@@ -587,6 +600,8 @@ void GameEngine::mainGameLoop() {
         players.erase(players.begin() + i);
       }
     }
+    
+    cout << "================ End of turn " << turnCounter++ << " ================" << endl << endl;
   }
 }
 

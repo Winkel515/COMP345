@@ -58,6 +58,7 @@ std::ostream& operator<<(std::ostream& strm, Player& player) {
   }
 
   strm << endl << "List of player's cards: " << endl;
+
   strm << *(player.cards);
 
   strm << endl << "List of player's orders: " << endl;
@@ -116,6 +117,9 @@ void Player::addTerritory(Territory* territory) {
 
 // Helper function for issueOrder()
 bool playCard(Card* card, vector<Card*> hand, Deck* deck) {
+
+  cout << "Player is playing card " << *card << endl;
+
   // Return card to Deck
   card->play(deck);
   // delete pointer and remove from vector
@@ -202,46 +206,57 @@ bool Player::issueOrder() {
     Card* cardToPlay = hand.back();
     Deck* deck = cards->getDeck();
 
-    // Compare Card::CardType() to it's enum values.
-    if (cardToPlay->GetType() == 0) {
-      cout << (*this).name << " played a bomb card \n";
-      Territory* target = getRandomTerritory(toAttack());
-      orders->add(new Bomb(target, this));
-      issueOrdersCount++;
-      return playCard(cardToPlay, hand, deck);
-    } else if (cardToPlay->GetType() == 1) {
-      // TODO JOHN: Now that reinforcementPool > 0, do we have to deploy?
-      cout << (*this).name << " played a reinforcement card \n";
-      reinforcementPool += 5;
-      return playCard(cardToPlay, hand, deck);
-    } else if (cardToPlay->GetType() == 2) {
-      // Blockade implementation
-      cout << (*this).name << " played a blockade card \n";
-      Territory* target = getRandomTerritory(toDefend());
-      orders->add(new Blockade(target, this, neutralPlayer));
-      issueOrdersCount++;
-      return playCard(cardToPlay, hand, deck);
-    } else if (cardToPlay->GetType() == 3) {
-      // Airlift Implementation
-      cout << (*this).name << " played an Airlift card \n";
-      int numArmiesToMove = 2;
-      Territory* target = getRandomTerritory(toDefend());
-      Territory* source = getRandomTerritory(toDefend());
-      // Ensure source and target are different
-      while (source == target) {
-        source = getRandomTerritory(toDefend());
+    switch(cardToPlay->GetType()) {
+
+      case 0: {
+        cout << (*this).name << " played a bomb card \n";
+        Territory* target = getRandomTerritory(toAttack());
+        orders->add(new Bomb(target, this));
+        issueOrdersCount++;
+        return playCard(cardToPlay, hand, deck);
       }
-      orders->add(new Airlift(target, source, this, numArmiesToMove));
-      issueOrdersCount++;
-      return playCard(cardToPlay, hand, deck);
-    } else if (cardToPlay->GetType() == 4) {
-      // Diplomacy Implementation
-      cout << (*this).name << " played a Diplomacy card \n";
-      Territory* target = getRandomTerritory(toAttack());
-      orders->add(new Negotiate(target, this));
-      issueOrdersCount++;
-      return playCard(cardToPlay, hand, deck);
+
+      case 1: {
+        // TODO JOHN: Now that reinforcementPool > 0, do we have to deploy?
+        cout << (*this).name << " played a reinforcement card \n";
+        reinforcementPool += 5;
+        return playCard(cardToPlay, hand, deck);
+      }
+
+      case 2: {
+        // Blockade implementation
+        cout << (*this).name << " played a blockade card \n";
+        Territory* target = getRandomTerritory(toDefend());
+        orders->add(new Blockade(target, this, neutralPlayer));
+        issueOrdersCount++;
+        return playCard(cardToPlay, hand, deck);
+      }
+
+      case 3: {
+        // Airlift Implementation
+        cout << (*this).name << " played an Airlift card \n";
+        int numArmiesToMove = 2;
+        Territory* target = getRandomTerritory(toDefend());
+        Territory* source = getRandomTerritory(toDefend());
+        // Ensure source and target are different
+        while (source == target) {
+          source = getRandomTerritory(toDefend());
+        }
+        orders->add(new Airlift(target, source, this, numArmiesToMove));
+        issueOrdersCount++;
+        return playCard(cardToPlay, hand, deck);
+      }
+
+      case 4: {
+        // Diplomacy Implementation
+        cout << (*this).name << " played a Diplomacy card \n";
+        Territory* target = getRandomTerritory(toAttack());
+        orders->add(new Negotiate(target, this));
+        issueOrdersCount++;
+        return playCard(cardToPlay, hand, deck);
+      }
     }
+
     issueOrdersCount = 0;
     return false;
   }
@@ -286,3 +301,5 @@ void Player::addDiplomaticAlly(Player* ally) {
 void Player::clearDiplomaticAllies() { diplomaticAllies.clear(); }
 
 OrdersList* Player::getOrderList() { return orders; }
+
+string Player::getName() { return name; }
