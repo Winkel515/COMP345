@@ -382,7 +382,7 @@ void GameEngine::issueOrdersPhase() {
   // Global flag
   bool stillIssuingOrders = true;
   // Create a flag for each player to determine if they are done issuing orders.
-  bool playerStillIssuing[players.size()];
+  bool* playerStillIssuing = new bool[players.size()];
 
   for (int i = 0; i < players.size(); i++) {
     playerStillIssuing[i] = true;
@@ -402,6 +402,9 @@ void GameEngine::issueOrdersPhase() {
       }
     }
   }
+
+  // Delete the flags
+  delete[] playerStillIssuing;
 }
 
 // Execute Execute Orders state
@@ -562,28 +565,26 @@ void GameEngine::startupPhase() {
 void GameEngine::mainGameLoop() {
   cout << " PLAYER SIZE: " << players.size() << endl;
   // Stop loop if there is only 1 player left
-  int count = 0;
   while (players.size() > 1) {
-    if (count == 1) break;
-    count++;
     reinforcementPhase();
     issueOrdersPhase();
     executeOrdersPhase();
     // Check all players
     for (int i = 0; i < players.size(); i++) {
-      // Remove players with less than 1 territory
-      if (players.at(i)->getTerritories().size() < 1) {
-        players.erase(players.begin() + i);
-        cout << "DELETED" << endl;
-      }
+      // reset diplomatic allies
+      players.at(i)->clearDiplomaticAllies();
       // check if player should draw a new card
       if (players.at(i)->getConcqueredFlag() == true) {
         players.at(i)->getHand()->drawCard();
         players.at(i)->setConcqueredFlag(false);
       }
-      // reset diplomatic allies
-      if (!players.at(i)->getDiplomaticAllies().empty()) {
-        players.at(i)->clearDiplomaticAllies();
+
+    }
+    // Removed Players with no Territories
+    for (int i = 0; i < players.size(); i++) {
+      // Remove players with less than 1 territory
+      if (players.at(i)->getTerritories().size() < 1) {
+        players.erase(players.begin() + i);
       }
     }
   }

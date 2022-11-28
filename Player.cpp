@@ -203,25 +203,25 @@ bool Player::issueOrder() {
     Deck* deck = cards->getDeck();
 
     // Compare Card::CardType() to it's enum values.
-    if (cardToPlay->GetType() == 1) {
+    if (cardToPlay->GetType() == 0) {
       cout << (*this).name << " played a bomb card \n";
       Territory* target = getRandomTerritory(toAttack());
       orders->add(new Bomb(target, this));
       issueOrdersCount++;
       return playCard(cardToPlay, hand, deck);
-    } /*else if (cardToPlay->GetType() == 2) {
+    } else if (cardToPlay->GetType() == 1) {
       // TODO JOHN: Now that reinforcementPool > 0, do we have to deploy?
       cout << (*this).name << " played a reinforcement card \n";
       reinforcementPool += 5;
       return playCard(cardToPlay, hand, deck);
-    }*/ else if (cardToPlay->GetType() == 3) {
+    } else if (cardToPlay->GetType() == 2) {
       // Blockade implementation
       cout << (*this).name << " played a blockade card \n";
       Territory* target = getRandomTerritory(toDefend());
       orders->add(new Blockade(target, this, neutralPlayer));
       issueOrdersCount++;
       return playCard(cardToPlay, hand, deck);
-    } else if (cardToPlay->GetType() == 4) {
+    } else if (cardToPlay->GetType() == 3) {
       // Airlift Implementation
       cout << (*this).name << " played an Airlift card \n";
       int numArmiesToMove = 2;
@@ -234,7 +234,7 @@ bool Player::issueOrder() {
       orders->add(new Airlift(target, source, this, numArmiesToMove));
       issueOrdersCount++;
       return playCard(cardToPlay, hand, deck);
-    } else if (cardToPlay->GetType() == 5) {
+    } else if (cardToPlay->GetType() == 4) {
       // Diplomacy Implementation
       cout << (*this).name << " played a Diplomacy card \n";
       Territory* target = getRandomTerritory(toAttack());

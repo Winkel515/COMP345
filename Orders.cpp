@@ -131,8 +131,8 @@ bool Deploy::validate() {
   // If the target territory does not belong to the player that issued the
   // order, the order is invalid
   if (this->GetTarget()->getOwner() != this->GetOwner()) {
-    std::cout << "Deploy Order invalid: player must own the target territory "
-              << *this->GetOwner() << std::endl;
+    std::cout << "Deploy Order invalid: player must own the target territory " << std::endl << this->GetTarget()->getOwner()
+              << this->GetOwner() << std::endl;
     return false;
   } else {
     return true;
@@ -188,7 +188,10 @@ bool Advance::validate() {
   // check if player owns the source territory
   if (this->GetSource()->getOwner() != this->GetOwner()) {
     std::cout << "Advance: "
-              << "Invalid Order: Source not owned by player." << std::endl;
+              << "Invalid Order: Source not owned by player." 
+              << "Source: " << this->GetSource()->getOwner()
+              << "Owner: " << this->GetOwner()
+              << std::endl;
     return false;
   }
   // make sure the target is not a diplomatic ally
@@ -202,6 +205,8 @@ bool Advance::validate() {
       std::cout << "Advance: "
                 << "Invalid order: Target is a diplomatic Ally till the end of "
                    "this turn."
+                << " Diplomatic Allies: "
+                << Target->getOwner()
                 << std::endl;
       return false;
     }
