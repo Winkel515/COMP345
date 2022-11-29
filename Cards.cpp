@@ -125,7 +125,7 @@ Deck& Deck::operator=(const Deck& copy) {  // TODO: Shallow
 std::ostream& operator<<(std::ostream& out, const Deck& d) {
   int size = d.cards.size();
   for (int i = 0; i < size; i++) {
-    out << *(d.cards[i]) << "\n";
+    out << *(d.cards[i]);
   }
   return out;
 }
@@ -205,7 +205,7 @@ std::ostream& operator<<(std::ostream& out, const Hand& h) {
   int size = h.cards.size();
 
   for (int i = 0; i < size; i++) {
-    out << *h.cards[i] << "\n";
+    out << *h.cards[i];
   }
   return out;
 }
