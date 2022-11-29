@@ -127,7 +127,6 @@ std::ostream& operator<<(std::ostream& out, const Deck& d) {
   for (int i = 0; i < size; i++) {
     out << *(d.cards[i]) << "\n";
   }
-  out << std::endl;
   return out;
 }
 
@@ -208,7 +207,6 @@ std::ostream& operator<<(std::ostream& out, const Hand& h) {
   for (int i = 0; i < size; i++) {
     out << *h.cards[i] << "\n";
   }
-  out << std::endl;
   return out;
 }
 

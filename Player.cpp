@@ -122,8 +122,7 @@ bool playCard(Card* card, vector<Card*> hand, Deck* deck) {
 
   // Return card to Deck
   card->play(deck);
-  // delete pointer and remove from vector
-  delete card;
+  // remove pointer from vector
   hand.pop_back();
 
   return true;
@@ -143,7 +142,7 @@ Territory* getRandomTerritory(vector<Territory*> territories) {
 // Returns true if player issues an order, false if they are done issuing orders
 bool Player::issueOrder() {
   // Deploy all Reinforcements
-  if (reinforcementPool > 0) {
+  if (reinforcementPool > 0 && issueOrdersCount == 0) {
     // Hardcoded to deploy in rounds of 10 to random territory
     int numOfArmies = 10;
     if (numOfArmies > reinforcementPool) {
@@ -200,7 +199,7 @@ bool Player::issueOrder() {
     return true;
   }
   // Hardcoded at 4 to demonstrate multiple cards
-  else if (issueOrdersCount < 4 || cards->getCards().size() != 0) {
+  else if (issueOrdersCount < 4 && cards->getCards().size() != 0) {
     // Cards functionality
     vector<Card*> hand = cards->getCards();
     Card* cardToPlay = hand.back();
@@ -216,10 +215,12 @@ bool Player::issueOrder() {
         return playCard(cardToPlay, hand, deck);
       }
 
-      case 1: {
+      case 1: { // Reinforcement
         // TODO JOHN: Now that reinforcementPool > 0, do we have to deploy?
         cout << (*this).name << " played a reinforcement card \n";
         reinforcementPool += 5;
+        issueOrdersCount++;
+        cout << "issueOrdersCount = " << issueOrdersCount << endl;
         return playCard(cardToPlay, hand, deck);
       }
 
