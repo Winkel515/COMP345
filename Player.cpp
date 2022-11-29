@@ -116,9 +116,9 @@ void Player::addTerritory(Territory* territory) {
 }
 
 // Helper function for issueOrder()
-bool playCard(Card* card, vector<Card*> hand, Deck* deck) {
+bool playCard(Player* player, Card* card, vector<Card*> hand, Deck* deck) {
 
-  cout << "Player is playing card " << *card << endl;
+  cout << "\n" << player->getName() << " is adding an order: " << *card << endl;
 
   // Return card to Deck
   card->play(deck);
@@ -151,7 +151,7 @@ bool Player::issueOrder() {
     Territory* target = getRandomTerritory(toDefend());
     orders->add(new Deploy(target, this, numOfArmies));
     reinforcementPool -= numOfArmies;
-    cout << (*this).name << " deployed " << numOfArmies << " to "
+    cout << (*this).name << " added a Deploy Order: " << numOfArmies << " armies to "
          << target->getName() << " territory \n";
     return true;
   }
@@ -171,7 +171,7 @@ bool Player::issueOrder() {
     if (source != NULL) {
       // Move 2 armies from source to target
       orders->add(new Advance(target, source, this, 2));
-      cout << (*this).name << " advanced 2 armies from " << source->getName()
+      cout << (*this).name << " added an Advance Order:  2 armies from " << source->getName()
            << " to " << target->getName() << "\n";
     }
     issueOrdersCount++;
@@ -192,7 +192,7 @@ bool Player::issueOrder() {
     // Move 2 armies from source to target
     if (source != NULL) {
       orders->add(new Advance(target, source, this, 2));
-      cout << (*this).name << " advanced 2 armies from " << source->getName()
+      cout << (*this).name << " added an Advance Order: 2 armies from " << source->getName()
            << " to " << target->getName() << "\n";
     }
     issueOrdersCount++;
@@ -207,35 +207,33 @@ bool Player::issueOrder() {
 
     switch(cardToPlay->GetType()) {
 
+      //Bomb
       case 0: {
-        cout << (*this).name << " played a bomb card \n";
         Territory* target = getRandomTerritory(toAttack());
         orders->add(new Bomb(target, this));
         issueOrdersCount++;
-        return playCard(cardToPlay, hand, deck);
+        return playCard(this, cardToPlay, hand, deck);
       }
 
-      case 1: { // Reinforcement
+      //Reinforcement
+      case 1: {
         // TODO JOHN: Now that reinforcementPool > 0, do we have to deploy?
-        cout << (*this).name << " played a reinforcement card \n";
         reinforcementPool += 5;
         issueOrdersCount++;
         cout << "issueOrdersCount = " << issueOrdersCount << endl;
-        return playCard(cardToPlay, hand, deck);
+        return playCard(this, cardToPlay, hand, deck);
       }
 
+      //Blockade
       case 2: {
-        // Blockade implementation
-        cout << (*this).name << " played a blockade card \n";
         Territory* target = getRandomTerritory(toDefend());
         orders->add(new Blockade(target, this, neutralPlayer));
         issueOrdersCount++;
-        return playCard(cardToPlay, hand, deck);
+        return playCard(this, cardToPlay, hand, deck);
       }
 
+      //Airlift
       case 3: {
-        // Airlift Implementation
-        cout << (*this).name << " played an Airlift card \n";
         int numArmiesToMove = 2;
         Territory* target = getRandomTerritory(toDefend());
         Territory* source = getRandomTerritory(toDefend());
@@ -245,21 +243,17 @@ bool Player::issueOrder() {
         }
         orders->add(new Airlift(target, source, this, numArmiesToMove));
         issueOrdersCount++;
-        return playCard(cardToPlay, hand, deck);
+        return playCard(this, cardToPlay, hand, deck);
       }
 
+      //Diplomacy
       case 4: {
-        // Diplomacy Implementation
-        cout << (*this).name << " played a Diplomacy card \n";
         Territory* target = getRandomTerritory(toAttack());
         orders->add(new Negotiate(target, this));
         issueOrdersCount++;
-        return playCard(cardToPlay, hand, deck);
+        return playCard(this, cardToPlay, hand, deck);
       }
     }
-
-    issueOrdersCount = 0;
-    return false;
   }
 
   // LogObserver *orderView = new LogObserver(newOrder);

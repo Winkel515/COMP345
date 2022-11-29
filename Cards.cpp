@@ -32,7 +32,7 @@ std::ostream& operator<<(std::ostream& out, const Card& c) {
   int type = c.GetType();
   std::string types[] = {"Bomb", "Reinforcement", "Blockade", "Airlift",
                          "Diplomacy"};
-  cout << types[type] << std::endl;
+  cout << types[type];
   return out;
 }
 
@@ -125,7 +125,7 @@ Deck& Deck::operator=(const Deck& copy) {  // TODO: Shallow
 std::ostream& operator<<(std::ostream& out, const Deck& d) {
   int size = d.cards.size();
   for (int i = 0; i < size; i++) {
-    out << *(d.cards[i]);
+    out << *(d.cards[i]) << endl;
   }
   return out;
 }
@@ -205,7 +205,7 @@ std::ostream& operator<<(std::ostream& out, const Hand& h) {
   int size = h.cards.size();
 
   for (int i = 0; i < size; i++) {
-    out << *h.cards[i];
+    out << *h.cards[i] << endl;
   }
   return out;
 }
