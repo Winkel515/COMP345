@@ -205,9 +205,9 @@ bool Advance::validate() {
     if (*alliesIterate == Owner) {
       std::cout << "Advance: "
                 << "Invalid order: Target is a diplomatic Ally till the end of "
-                   "this turn."
-                << " Diplomatic Allies: "
-                << *(Target->getOwner())
+                   "this turn." << endl
+                << " Diplomatic Allies: " << endl
+                << (Target->getOwner())->getName()
                 << std::endl;
       return false;
     }

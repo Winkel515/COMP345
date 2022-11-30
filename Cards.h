@@ -56,6 +56,7 @@ class Hand {
   void removeCard(int indexOfCard);
   Deck* getDeck();
   void setDeck(Deck* deck);
+  void setCards(vector<Card*>);
 
  private:
   std::vector<Card*> cards;

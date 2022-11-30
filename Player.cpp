@@ -116,25 +116,15 @@ void Player::addTerritory(Territory* territory) {
 }
 
 // Helper function for issueOrder()
-bool playCard(Player* player, Card* card, vector<Card*>& hand, Deck* deck) {
+bool playCard(Player* player, Card* card, vector<Card*> hand, Deck* deck) {
 
   cout << "\n" << player->getName() << " is adding a special order: " << *card << endl;
 
   // Return card to Deck
   card->play(deck);
-  // remove pointer from vector
-  cout << "Printing hand before removing card." << endl;
-  for (Card* c : hand){
-    cout << *c << endl;
-  }
-
   // remove card from hand after playing
   hand.erase(find(hand.begin(),hand.end(), card), hand.end());
-
-  cout << "Printing hand after removing card." << endl;
-  for (Card* c : hand){
-    cout << *c << endl;
-  }
+  player->getHand()->setCards(hand);
 
   return true;
 }
@@ -218,7 +208,7 @@ bool Player::issueOrder() {
     Card* cardToPlay = hand.back();
     Deck* deck = cards->getDeck();
 
-    cout << "Card picked to play: " << *cardToPlay << endl;
+    cout << endl << getName() << " is choosing a card to play: " << *cardToPlay;
 
     switch(cardToPlay->GetType()) {
       // Bomb
@@ -256,15 +246,8 @@ bool Player::issueOrder() {
       //end of switch
     }
 
-    cout << "issueOrdersCount = " << issueOrdersCount++;
-
-    bool stillIssuingOrders = playCard(this, cardToPlay, hand, deck);
-    cout << "Printing hand after playing it." << endl;
-    for (Card* c : hand){
-      cout << *c << endl;
-    }
-    cout << endl;
-    //inside while loop to play cards, but outside of switch
+    return playCard(this, cardToPlay, hand, deck);
+    // End of while loop to play cards
   }
 
   // LogObserver *orderView = new LogObserver(newOrder);
@@ -309,3 +292,5 @@ void Player::clearDiplomaticAllies() { diplomaticAllies.clear(); }
 OrdersList* Player::getOrderList() { return orders; }
 
 string Player::getName() { return name; }
+
+void Player::setHand(Hand* hand){cards = hand;}

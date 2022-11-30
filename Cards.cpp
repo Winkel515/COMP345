@@ -242,3 +242,5 @@ void Hand::removeCard(int indexOfCard) {
 Deck* Hand::getDeck() { return deck; }
 
 void Hand::setDeck(Deck* ndeck) { this->deck = ndeck; }
+
+void Hand::setCards(vector<Card*> ncards) {this->cards = ncards;}
