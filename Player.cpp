@@ -123,7 +123,7 @@ bool playCard(Player* player, Card* card, vector<Card*> hand, Deck* deck) {
   // Return card to Deck
   card->play(deck);
   // remove pointer from vector
-  hand.pop_back();
+  remove(hand.begin(),hand.end(), card);
 
   return true;
 }
@@ -204,6 +204,8 @@ bool Player::issueOrder() {
     vector<Card*> hand = cards->getCards();
     Card* cardToPlay = hand.back();
     Deck* deck = cards->getDeck();
+
+    cout << "Card picked to play: " << *cardToPlay << endl;
 
     switch(cardToPlay->GetType()) {
 
