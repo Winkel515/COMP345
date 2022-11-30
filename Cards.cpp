@@ -214,6 +214,7 @@ std::ostream& operator<<(std::ostream& out, const Hand& h) {
 // the deck.
 void Hand::drawCard() {
   Card* card = deck->draw();
+  cout << "card Drawn: " << *card << endl;
   cards.push_back(card);
 }
 

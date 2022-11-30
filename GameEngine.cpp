@@ -588,6 +588,8 @@ void GameEngine::mainGameLoop() {
       players.at(i)->clearDiplomaticAllies();
       // check if player should draw a new card
       if (players.at(i)->getConcqueredFlag() == true) {
+        //TODO John: make sure the card is removed from the deck as well.
+        cout << players.at(i)->getName() << " is drawing a card.";
         players.at(i)->getHand()->drawCard();
         players.at(i)->setConcqueredFlag(false);
       }
