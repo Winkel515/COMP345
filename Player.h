@@ -11,7 +11,6 @@
 
 class Player {
   private:
-    std::vector<Territory*> territories;
     OrdersList* orders;
     Hand* cards;
     bool ConqueredTerritoryFlag;
@@ -20,6 +19,7 @@ class Player {
     std::vector<Player*> diplomaticAllies;
     int issueOrdersCount;
     static Player* neutralPlayer;
+    std::vector<Territory*> territories;
 
     
 
@@ -34,7 +34,7 @@ class Player {
   bool issueOrder();
   void testListOrder();
   Player& operator=(const Player& player);
-  friend std::ostream& operator<<(std::ostream& strm, Player& pl);
+  friend std::ostream& operator<<(std::ostream& strm, const Player& player);
   void addTerritory(Territory*);
   void addReinforcements(int);
   Hand* getHand();

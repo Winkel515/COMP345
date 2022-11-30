@@ -50,11 +50,11 @@ Player::~Player() {
 }
 
 // Overloaded stream insertion operator
-std::ostream& operator<<(std::ostream& strm, Player& player) {
-  strm << endl << "List of player's territories: " << endl;
-  for (std::vector<Territory*>::iterator it1 = player.territories.begin();
-       it1 != player.territories.end(); ++it1) {
-    strm << **it1;
+std::ostream& operator<<(std::ostream& strm, const Player& player) {
+  strm << "\nList of player's territories: " << endl;
+
+  for(int i =0; i < player.territories.size(); i++){
+    strm << *(player.territories[i]);
   }
 
   strm << endl << "List of player's cards: " << endl;
@@ -118,7 +118,7 @@ void Player::addTerritory(Territory* territory) {
 // Helper function for issueOrder()
 bool playCard(Player* player, Card* card, vector<Card*> hand, Deck* deck) {
 
-  cout << "\n" << player->getName() << " is adding an order: " << *card << endl;
+  cout << "\n" << player->getName() << " is adding a special order: " << *card << endl;
 
   // Return card to Deck
   card->play(deck);

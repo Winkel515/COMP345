@@ -27,9 +27,10 @@ Order::~Order() { std::cout << "Destroyed Order" << std::endl; }
 
 // Order insertion stream operator
 std::ostream &operator<<(std::ostream &out, const Order &o) {
-  out << "Order insertion stream called" << std::endl;
+  o.Print(out); // call to virtual function print()
   return out;
 }
+
 
 // Overridden stringtolog methods
 string Deploy::stringToLog() { return "type of order: Deploy"; }
@@ -89,7 +90,7 @@ std::ostream &operator<<(std::ostream &o, const OrdersList &ol) {
 
   for (Order *order : ol.ListOfOrders) {
     ss << "\t"
-       << "Order " << *order << " is present in the list,\n";
+       << "Order " << *(order) << " is present in the list,\n";
   }
 
   return o << ss.str() << std::endl;
@@ -99,7 +100,9 @@ std::ostream &operator<<(std::ostream &o, const OrdersList &ol) {
 void OrdersList::executeOrders() {
   for (Order *order : ListOfOrders) {
     order->execute();
+    delete order;
   }
+  this->ListOfOrders.clear();
 }
 
 // subclasses of Order
@@ -120,19 +123,18 @@ Player *Deploy::GetOwner() { return Owner; }
 // getter for target territory
 Territory *Deploy::GetTarget() { return Target; }
 
-std::ostream &operator<<(std::ostream &output, const Deploy &o) {
+void Deploy::Print(std::ostream &output) const{
   output << "\nDeploy order: "
-         << "\n\tOwner: " << *o.Owner << "\n\tTarget" << *o.Target
-         << "\n\tNum of armies:" << o.NumOfArmies << std::endl;
-  return output;
+         << "\n\tOwner: " << *(this->Owner) << "\n\tTarget" << *(this->Target)
+         << "\n\tNum of armies: " << this->NumOfArmies << std::endl;
 }
 
 bool Deploy::validate() {
   // If the target territory does not belong to the player that issued the
   // order, the order is invalid
   if (this->GetTarget()->getOwner() != this->GetOwner()) {
-    std::cout << "Deploy Order invalid: player must own the target territory " << std::endl << this->GetTarget()->getOwner()
-              << this->GetOwner() << std::endl;
+    std::cout << "Deploy Order invalid: player must own the target territory " << std::endl << *(this->GetTarget()->getOwner())
+              << *(this->GetOwner()) << std::endl;
     return false;
   } else {
     return true;
@@ -175,12 +177,11 @@ Territory *Advance::GetSource() { return Source; }
 Territory *Advance::GetTarget() { return Target; }
 
 // output stream overload
-std::ostream &operator<<(std::ostream &output, const Advance &o) {
+void Advance::Print(std::ostream &output) const {
   output << "\nAdvance order: "
-         << "\n\tOwner: " << *o.Owner << "\n\tTarget" << *o.Target
-         << "\n\tNum of armies:" << o.NumOfArmies;
-  output << "\n\tSource: " << *o.Source << std::endl;
-  return output;
+         << "\n\tOwner: " << *(this->Owner) << "\n\tTarget" << this->Target
+         << "\n\tNum of armies:" << this->NumOfArmies;
+  output << "\n\tSource: " << *(this->Source) << std::endl;
 }
 
 // Advance order validation
@@ -189,8 +190,8 @@ bool Advance::validate() {
   if (this->GetSource()->getOwner() != this->GetOwner()) {
     std::cout << "Advance: "
               << "Invalid Order: Source not owned by player." 
-              << "Source: " << this->GetSource()->getOwner()
-              << "Owner: " << this->GetOwner()
+              << "Source: " << *(this->GetSource()->getOwner())
+              << "Owner: " << *(this->GetOwner())
               << std::endl;
     return false;
   }
@@ -206,7 +207,7 @@ bool Advance::validate() {
                 << "Invalid order: Target is a diplomatic Ally till the end of "
                    "this turn."
                 << " Diplomatic Allies: "
-                << Target->getOwner()
+                << *(Target->getOwner())
                 << std::endl;
       return false;
     }
@@ -323,11 +324,10 @@ void Airlift::execute() {
   Notify(this);
 }
 
-std::ostream &operator<<(std::ostream &output, const Airlift &o) {
+void Airlift::Print(std::ostream &output) const {
   output << "\nAirlift order:"
-         << "\n\tSource: " << *o.Source << "\n\tTarget: " << *o.Target
-         << "\n\tNum of Armies: " << o.NumOfArmies << std::endl;
-  return output;
+         << "\n\tSource: " << *(this->Source) << "\n\tTarget: " << this->Target
+         << "\n\tNum of Armies: " << this->NumOfArmies << std::endl;
 }
 
 Bomb::Bomb(Territory *target, Player *owner) {
@@ -384,10 +384,9 @@ void Bomb::execute() {
   Notify(this);
 }
 
-std::ostream &operator<<(std::ostream &output, const Bomb &o) {
-  output << "Bomb Order:\n\tOwner:  " << *o.Owner << "\n\tTarget: " << *o.Target
+void Bomb::Print(std::ostream &output) const {
+  output << "Bomb Order:\n\tOwner:  " << *(this->Owner) << "\n\tTarget: " << *(this->Target)
          << std::endl;
-  return output;
 }
 
 // end of Bomb order implementation
@@ -428,10 +427,9 @@ void Blockade::execute() {
   Notify(this);
 }
 
-std::ostream &operator<<(std::ostream &output, const Blockade &o) {
-  output << "Blockade Order:\n\t" << *o.Owner << "\n\tTarget: " << *o.Target
+void Blockade::Print(std::ostream &output) const {
+  output << "Blockade Order:\n\t" << *(this->Owner) << "\n\tTarget: " << *(this->Target)
          << std::endl;
-  return output;
 }
 
 // end of blockade implementation
@@ -467,10 +465,9 @@ void Negotiate::execute() {
   Notify(this);
 }
 
-std::ostream &operator<<(std::ostream &output, const Negotiate &o) {
-  output << "Negotiate Order:\n\tTarget: " << *o.Target
-         << "\n\tOwner: " << *o.Owner << std::endl;
-  return output;
+void Negotiate::Print(std::ostream &output) const {
+  output << "Negotiate Order:\n\tTarget: " << *(this->Target)
+         << "\n\tOwner: " << *(this->Owner) << std::endl;
 }
 
 // end of negotiate order implementation
