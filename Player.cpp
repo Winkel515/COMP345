@@ -118,7 +118,7 @@ void Player::addTerritory(Territory* territory) {
 // Helper function for issueOrder()
 bool playCard(Player* player, Card* card, vector<Card*> hand, Deck* deck) {
 
-  cout << "\n" << player->getName() << " is adding a special order: " << *card << endl;
+  cout << player->getName() << " is adding a special order: " << *card << endl;
 
   // Return card to Deck
   card->play(deck);
@@ -208,23 +208,28 @@ bool Player::issueOrder() {
     Card* cardToPlay = hand.back();
     Deck* deck = cards->getDeck();
 
-    cout << endl << getName() << " is choosing a card to play: " << *cardToPlay;
+    cout << endl << getName() << " is choosing a card to play: " << *cardToPlay << endl;
 
     switch(cardToPlay->GetType()) {
       // Bomb
       case 0: {
         Territory* target = getRandomTerritory(toAttack());
         orders->add(new Bomb(target, this));
+        cout << "Bombing " << *target << endl;
+        break;
       }
       // Reinforcement
       case 1: {
         // TODO JOHN: Now that reinforcementPool > 0, do we have to deploy?
         reinforcementPool += 5;
+        break;
       }
       // Blockade
       case 2: {
         Territory* target = getRandomTerritory(toDefend());
         orders->add(new Blockade(target, this, neutralPlayer));
+        cout << "Blockading " << *target << endl;
+        break;
       }
       // Airlift
       case 3: {
@@ -237,11 +242,14 @@ bool Player::issueOrder() {
           source = getRandomTerritory(toDefend());
         }
         orders->add(new Airlift(target, source, this, numArmiesToMove));
+        cout << "Airlifting from " << *target << " to " << *source << endl;
+        break;
       }
       // Diplomacy
       case 4: {
         Territory* target = getRandomTerritory(toAttack());
         orders->add(new Negotiate(target, this));
+        cout << "Negotiating with " << *target << endl;
       }
       //end of switch
     }

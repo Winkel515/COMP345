@@ -570,17 +570,19 @@ void GameEngine::mainGameLoop() {
 
     cout << "================ Beginning of turn " << turnCounter << " ================" << endl;
     
-    cout << endl << "Printing Deck: " << endl;
+    cout << endl << "-------- Printing Deck -------- " << endl;
     cout << *deck << endl << endl;
 
-    cout << "Printing Players: " << endl;
-    for(Player* p : players)
-      {
+    cout << endl << "-------- Printing Players -------- " << endl;
+    for(Player* p : players){
         cout << *p << endl;
-      }
-
+    }
+    
+    cout << endl << "-------- Reinforcement Phase --------"<< endl << endl;
     reinforcementPhase();
+    cout << endl << "-------- Issue Orders Phase --------"<< endl << endl;
     issueOrdersPhase();
+    cout << endl << "-------- Execute Orders Phase --------"<< endl << endl;
     executeOrdersPhase();
     // Check all players
     for (int i = 0; i < players.size(); i++) {
