@@ -116,14 +116,25 @@ void Player::addTerritory(Territory* territory) {
 }
 
 // Helper function for issueOrder()
-bool playCard(Player* player, Card* card, vector<Card*> hand, Deck* deck) {
+bool playCard(Player* player, Card* card, vector<Card*>& hand, Deck* deck) {
 
   cout << "\n" << player->getName() << " is adding a special order: " << *card << endl;
 
   // Return card to Deck
   card->play(deck);
   // remove pointer from vector
-  remove(hand.begin(),hand.end(), card);
+  cout << "Printing hand before removing card." << endl;
+  for (Card* c : hand){
+    cout << *c << endl;
+  }
+
+  // remove card from hand after playing
+  hand.erase(find(hand.begin(),hand.end(), card), hand.end());
+
+  cout << "Printing hand after removing card." << endl;
+  for (Card* c : hand){
+    cout << *c << endl;
+  }
 
   return true;
 }
@@ -198,6 +209,8 @@ bool Player::issueOrder() {
     issueOrdersCount++;
     return true;
   }
+
+  // Playing Card Functionality
   // Hardcoded at 4 to demonstrate multiple cards
   else if (issueOrdersCount < 4 && cards->getCards().size() != 0) {
     // Cards functionality
@@ -208,54 +221,50 @@ bool Player::issueOrder() {
     cout << "Card picked to play: " << *cardToPlay << endl;
 
     switch(cardToPlay->GetType()) {
-
-      //Bomb
+      // Bomb
       case 0: {
         Territory* target = getRandomTerritory(toAttack());
         orders->add(new Bomb(target, this));
-        issueOrdersCount++;
-        return playCard(this, cardToPlay, hand, deck);
       }
-
-      //Reinforcement
+      // Reinforcement
       case 1: {
         // TODO JOHN: Now that reinforcementPool > 0, do we have to deploy?
         reinforcementPool += 5;
-        issueOrdersCount++;
-        cout << "issueOrdersCount = " << issueOrdersCount << endl;
-        return playCard(this, cardToPlay, hand, deck);
       }
-
-      //Blockade
+      // Blockade
       case 2: {
         Territory* target = getRandomTerritory(toDefend());
         orders->add(new Blockade(target, this, neutralPlayer));
-        issueOrdersCount++;
-        return playCard(this, cardToPlay, hand, deck);
       }
-
-      //Airlift
+      // Airlift
       case 3: {
         int numArmiesToMove = 2;
         Territory* target = getRandomTerritory(toDefend());
         Territory* source = getRandomTerritory(toDefend());
         // Ensure source and target are different
+        //TODO JOHN: Account for if player only has 1 territory
         while (source == target) {
           source = getRandomTerritory(toDefend());
         }
         orders->add(new Airlift(target, source, this, numArmiesToMove));
-        issueOrdersCount++;
-        return playCard(this, cardToPlay, hand, deck);
       }
-
-      //Diplomacy
+      // Diplomacy
       case 4: {
         Territory* target = getRandomTerritory(toAttack());
         orders->add(new Negotiate(target, this));
-        issueOrdersCount++;
-        return playCard(this, cardToPlay, hand, deck);
       }
+      //end of switch
     }
+
+    cout << "issueOrdersCount = " << issueOrdersCount++;
+
+    bool stillIssuingOrders = playCard(this, cardToPlay, hand, deck);
+    cout << "Printing hand after playing it." << endl;
+    for (Card* c : hand){
+      cout << *c << endl;
+    }
+    cout << endl;
+    //inside while loop to play cards, but outside of switch
   }
 
   // LogObserver *orderView = new LogObserver(newOrder);
