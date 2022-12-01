@@ -51,7 +51,9 @@ Player::~Player() {
 
 // Overloaded stream insertion operator
 std::ostream& operator<<(std::ostream& strm, const Player& player) {
-  strm << "\nList of player's territories: " << endl;
+
+  strm << endl << "         Player: " << player.name << endl << endl;
+  strm << "List of player's territories: " << endl;
 
   for(int i =0; i < player.territories.size(); i++){
     strm << *(player.territories[i]);
