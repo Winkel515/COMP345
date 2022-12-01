@@ -317,7 +317,14 @@ std::vector<Territory*> Player::createTerritoryList(int nTerritories) {
 
 //Given a territory pointer, remove that territory from player if it is in territory list. 
 void Player::removeTerritory(Territory* t){
-  //TODO: Implement this method and use in Cheater strategy
+  // remove territory from territories vector
+  vector<Territory*> terr = this->getTerritories();
+  terr.erase(find(terr.begin(),terr.end(), t), terr.end());
+  this->setTerritories(terr);
+}
+
+void Player::setTerritories(vector<Territory*> territories){
+  this->territories = territories;
 }
 
 void Player::addReinforcements(int n) { reinforcementPool += n; }

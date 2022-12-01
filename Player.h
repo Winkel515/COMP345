@@ -53,4 +53,5 @@ class Player {
   PlayerStrategy* getStrategy();
   std::vector<Territory*> getAdjacentTerritories();
   void removeTerritory(Territory*);
+  void setTerritories(vector<Territory*>);
 };

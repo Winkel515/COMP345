@@ -36,14 +36,16 @@ CheaterPlayerStrategy::CheaterPlayerStrategy(Player* p) : PlayerStrategy(p) {
 
 bool CheaterPlayerStrategy::issueOrder(){
 
-    //TODO: Automatically conquer all adjacent territories
     vector<Territory*> toConquer =  p->getAdjacentTerritories();
+    
     for (Territory* t : toConquer){
-        //TODO: Remove territory from opponents' territory vector
+        //Remove territory from opponents' territory vector
         Player* oldOwner = t->getOwner();
+        oldOwner->removeTerritory(t);
 
-        //TODO: Set new Owner
+        //Set new Owner
         t->setOwner(p);
+        p->addTerritory(t);
     }
 
     //No more orders needed
