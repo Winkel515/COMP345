@@ -14,7 +14,6 @@ class PlayerStrategy {
         virtual vector<Territory*> toDefend() = 0;
         virtual vector<Territory*> toAttack() = 0;
         virtual bool issueOrder() = 0;
-        PlayerStrategy(Player*);
 };
 
 class HumanPlayerStrategy : public PlayerStrategy {

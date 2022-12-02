@@ -8,8 +8,6 @@
 #include "Orders.h"
 #include "PlayerStrategies.h"
 
-
-
 class Player {
   private:
     PlayerStrategy* strategy;

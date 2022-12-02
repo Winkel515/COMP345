@@ -43,6 +43,12 @@ string getFileName(int argc, char* argv[]) {
   return filename;
 }
 
+void runA3Tests() {
+
+
+  cout << "End of Tests A3 \n";
+}
+
 void runA2Tests() {
   //cout << "====== Testing Command Processor ======\n";
   //testCommandProcessor();
@@ -88,7 +94,7 @@ int main(int argc, char* argv[]) {
   CommandProcessor* commandProcessor;
   bool isDebug = false;  // Manually toggle
   vector<string> supportedFlags{
-      "-console", "-file <filename>", "-test", "-help", "-a1", "-a2"};
+      "-console", "-file <filename>", "-test", "-help", "-a1", "-a2", "-a3"};
 
   if (argc == 1) {
     // Run without any arguments
@@ -106,6 +112,8 @@ int main(int argc, char* argv[]) {
       showHelp(supportedFlags);
     } else if (flag.compare("-test") == 0) {
       runA2Tests();  // run the latest tests
+    } else if (flag.compare("-a3") == 0) {
+      runA3Tests();  // run the a2 tests
     } else if (flag.compare("-a2") == 0) {
       runA2Tests();  // run the a2 tests
     } else if (flag.compare("-a1") == 0) {
