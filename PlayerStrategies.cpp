@@ -111,6 +111,7 @@ bool BenevolentPlayerStrategy::issueOrder(){
         //TODO: Add Advance implementation
         //TODO: Add Airlift implementation
         //TODO: Add Diplomacy implementation
+        //TODO: Add Reinforcement card implementation
 
     return false;
 }
