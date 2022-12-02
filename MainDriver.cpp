@@ -14,6 +14,7 @@
 using std::cout;
 using std::string;
 using std::vector;
+using std::stoi;
 
 // Inits and Starts GameEngine given a command processor
 void startGame(CommandProcessor* commandProcessor) {
@@ -94,7 +95,8 @@ int main(int argc, char* argv[]) {
   CommandProcessor* commandProcessor;
   bool isDebug = false;  // Manually toggle
   vector<string> supportedFlags{
-      "-console", "-file <filename>", "-test", "-help", "-a1", "-a2", "-a3"};
+      "-console", "-file <filename>", "-test", "-help", "-a1", "-a2", "-a3", "-tournament", "-M", "-P", "-G", "-D"};
+
 
   if (argc == 1) {
     // Run without any arguments
@@ -107,6 +109,14 @@ int main(int argc, char* argv[]) {
   } else if (argc >= 2) {
     // cast to string
     string flag(argv[1]);
+    string flag2(argv[2]);
+    string arg1(argv[3]);
+    string flag3(argv[4]);
+    string arg2(argv[5]);
+    string flag4(argv[6]);
+    string arg3(argv[7]);
+    string flag5(argv[8]);
+    string arg4(argv[9]);
 
     if (flag.compare("-help") == 0) {
       showHelp(supportedFlags);
@@ -122,6 +132,12 @@ int main(int argc, char* argv[]) {
       // Run using console input
       commandProcessor = new CommandProcessor();
       startGame(commandProcessor);
+    } else if (flag.compare("-tournament") == 0 && flag2.compare("-M") == 0 && flag3.compare("-P") == 0 && flag4.compare("-G") == 0 && flag5.compare("-D") == 0) {
+      // Run using tournament mode
+      int listOfMapFiles = std::stoi(arg1);
+      int listOfPlayersStrategies = std::stoi(arg2);
+      int numberOfGames = std::stoi(arg3);
+      int numberOfTurns = std::stoi(arg4);
     } else if (flag.compare("-file") == 0) {
       // Massage to get filename
       std::string filename;
