@@ -1,10 +1,13 @@
 #include "PlayerStrategies.h"
 #include <vector>
+using std::vector;
 #include <algorithm>
+#include <iostream>
+using std::cout;
+using std::endl;
 #include "Map.h"
 #include "Player.h"
-
-using std::vector;
+#include "Orders.h"
 
 PlayerStrategy::PlayerStrategy(Player* p){
     this->p = p;
@@ -83,15 +86,26 @@ vector<Territory*> AggressivePlayerStrategy::toDefend(){
 
 // ============ Benevolent Player ==============
 
-//TODO: Implement this issueOrder.
+//TODO: Finish this issueOrder.
 bool BenevolentPlayerStrategy::issueOrder(){
 
-    vector<Territory*> terriToDefend = toDefend();
+    Territory* territory = toDefend().front();
+    int reinforcements = p->getReinforcements();
 
+    // Create Deploy order, adding all territories to its weakest territory 
+    if (reinforcements > 0){
+        p->getOrderList()->add(new Deploy(territory, p, reinforcements));
+        p->addReinforcements(reinforcements * -1);
+        //TODO JOHN: Once merged with mainGameLoopFix, Add Player Name
+        cout << "Player is issuing a Deploy Order: " << reinforcements << " armies to territory " << territory->name << "." << endl;
+        return true;
+    }
 
-    //TODO: Deploy reinforcements on weakest territories.
+        //TODO: Add Advance implementation
+        //TODO: Add Airlift implementation
+        //TODO: Add Diplomacy implementation
 
-    return true;
+    return false;
 }
 
 // This method is never Used

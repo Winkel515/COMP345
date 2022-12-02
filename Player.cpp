@@ -355,3 +355,4 @@ void Player::setStrategy(PlayerStrategy* newStrategy){
 PlayerStrategy* Player::getStrategy(){
   return strategy;
 };
+ int Player::getReinforcements(){return reinforcementPool;}
