@@ -37,7 +37,7 @@ const map<string, GameStateEnum> GameEngineFSA::commandToStateMap{
 
 // Map from state to set of valid commands
 const map<GameStateEnum, set<string>> GameEngineFSA::commandsPerStateMap{
-    {S_START, {"loadmap"}},
+    {S_START, {"loadmap", "tournament"}},
     {S_MAP_LOADED, {"loadmap", "validatemap"}},
     {S_MAP_VALIDATED, {"addplayer"}},
     {S_PLAYERS_ADDED, {"addplayer", "gamestart"}},
@@ -84,7 +84,9 @@ string GameState::getLabel(GameStateEnum state) {
 };
 
 // Default Constructor for GameEngine
-GameEngine::GameEngine() : GameEngine(new CommandProcessor()) {}
+GameEngine::GameEngine() : GameEngine(new CommandProcessor()) {
+  cout << "default game engine constructor" << endl;
+}
 
 // Constructor with command processor
 GameEngine::GameEngine(CommandProcessor *cProcessor) {
@@ -382,7 +384,7 @@ void GameEngine::issueOrdersPhase() {
   // Global flag
   bool stillIssuingOrders = true;
   // Create a flag for each player to determine if they are done issuing orders.
-  bool playerStillIssuing[players.size()];
+  bool playerStillIssuing[players.size()]; //TODO: what's that? change to public players?
 
   for (int i = 0; i < players.size(); i++) {
     playerStillIssuing[i] = true;
@@ -441,17 +443,176 @@ void GameEngine::startupPhase() {
   while (true) {
     printCommands();
     Command &result = commandProcessor->getCommand();
-    if (result.param.size() == 0)
-      handleEffect("Enter a file name in the format loadmap <filename>", result,
-                   logObserver);
-    else {
-      string loadMapEffect = mapLoader->loadMap(result.param);
-      if (loadMapEffect.size() == 0) {
-        loadMapEffect = "\"" + result.param + "\" has been loaded";
-        setState(GameEngineFSA::commandToStateMap.at("loadmap"));
-        break;
+    if (result.param.size() == 0){
+      if(result.command == "loadmap"){
+        handleEffect("Enter a file name in the format loadmap <filename>", result,
+                    logObserver);
       }
-      handleEffect(loadMapEffect, result, logObserver);
+      else if(result.command == "tournament"){
+        handleEffect("Enter with the format tournament -M <listofmapfiles> -P <listofplayerstrategies> -G <numberofgames> -D <maxnumberofturns>", result,
+                    logObserver);
+      }
+    }
+    else {
+      if(result.command == "loadmap"){
+        string loadMapEffect = mapLoader->loadMap(result.param);
+        if (loadMapEffect.size() == 0) {
+          loadMapEffect = "\"" + result.param + "\" has been loaded";
+          setState(GameEngineFSA::commandToStateMap.at("loadmap"));
+          break;
+        }
+        handleEffect(loadMapEffect, result, logObserver);
+        
+      }
+      else if(result.command == "tournament"){
+        vector<string> parameters = splitString(result.param, " ");
+        vector<string> map_list;
+        vector<string> player_strategy;
+        int num_game = 0;
+        int num_turn = 0;
+        int param_idx, M_idx, P_idx, G_idx, D_idx;
+        param_idx = M_idx = P_idx = G_idx = D_idx = 0;
+        
+        /*
+        for(int i = 0; i < parameters.size(); i++){
+          cout << "param" << parameters.at(i) << endl;
+        }*/
+
+        for(int i = 0; i < parameters.size(); i++){
+          //cout << "in M P G F for loop" << endl;
+          
+          if(parameters.at(i) == "-M" && param_idx == 0){
+            //cout << "in M" << endl;
+            param_idx++;
+            M_idx = i;
+          }
+
+          if(parameters.at(i) == "-P" && param_idx == 1){
+            //cout << "in P" << endl;
+            param_idx++;
+            P_idx = i;
+          }
+
+          if(parameters.at(i) == "-G" && param_idx == 2){
+            //cout << "in G" << endl;
+            param_idx++;
+            G_idx = i;
+            //cout << " G check 0" << endl;
+            if(i == parameters.size() - 1){
+              //cout << " G check 1" << endl;
+              break;
+            }
+            else if(parameters.at(i+1) == "-D"){
+              //cout << " G check 2" << endl;
+              break;
+            }
+            else{
+              //cout << " G check 3 before " << endl;
+              bool nan = false;
+              for(int j = 0; j < parameters.at(i+1).size(); j++){
+                if(!isdigit(parameters.at(i+1)[j])){
+                  //cout << " G check 3 param: " << parameters[i+1] << endl;
+                  nan = true;
+                  break;
+                }
+              }
+              if(nan == true){
+                break;
+              }
+              //cout << " G check 3 after " << endl;
+
+            }
+          }
+
+          if(parameters.at(i) == "-D" && param_idx == 3){
+            //cout << "in D" << endl;
+            if(i == parameters.size() - 1){
+              //cout << " D check 1" << endl;
+              break;
+            }
+            else{
+              //cout << " D check 2 before " << endl;
+              bool nan = false;
+              for(int j = 0; j < parameters.at(i+1).size(); j++){
+                if(!isdigit(parameters.at(i+1)[j])){
+                  //cout << " D check 2 param: " << parameters[i+1] << endl;
+                  nan = true;
+                  break;
+                }
+              }
+              if(nan == true){
+                break;
+              }
+              //cout << " D check 2 after " << endl;
+
+            }
+            param_idx++;
+            D_idx = i;
+            break;
+          }
+
+        }
+
+        if(param_idx != 4){
+          cout << "in param_idx != 4" << endl;
+          handleEffect("Enter with the format tournament -M <listofmapfiles> -P <listofplayerstrategies> -G <numberofgames> -D <maxnumberofturns>", result,
+                    logObserver);
+        }
+        else{
+          
+          if(P_idx - M_idx == 1 || P_idx - M_idx > 5){
+            handleEffect("Enter with the format tournament -M <listofmapfiles> -P <listofplayerstrategies> -G <numberofgames> -D <maxnumberofturns>, you can have between 1 and 5 maps", result,
+                    logObserver);
+
+          }
+          else if(G_idx - P_idx < 2 || G_idx - P_idx > 4){
+            handleEffect("Enter with the format tournament -M <listofmapfiles> -P <listofplayerstrategies> -G <numberofgames> -D <maxnumberofturns>, you can have between 2 and 4 strategies", result,
+                    logObserver);
+          }
+          else if(stoi(parameters.at(G_idx + 1)) < 1 || stoi(parameters.at(G_idx + 1)) > 5){
+            handleEffect("Enter with the format tournament -M <listofmapfiles> -P <listofplayerstrategies> -G <numberofgames> -D <maxnumberofturns>, you can have between 1 and 5 games per map", result,
+                    logObserver);
+          }
+          else if(stoi(parameters.at(D_idx + 1)) < 10 || stoi(parameters.at(D_idx + 1)) > 50){
+            handleEffect("Enter with the format tournament -M <listofmapfiles> -P <listofplayerstrategies> -G <numberofgames> -D <maxnumberofturns>, you can have between 10 and 50 turns per game", result,
+                    logObserver);
+          }
+          else{
+            num_game = stoi(parameters.at(G_idx + 1));
+            num_turn = stoi(parameters.at(D_idx + 1));
+            //cout <<  "before player strat loop gidx " << G_idx << " pidx " << P_idx << endl;
+
+            for(int i = P_idx + 1; i < G_idx; i++){
+              //cout << " in player strat loop " << i << " " << parameters.at(i) << endl;
+              player_strategy.push_back(parameters.at(i));
+            }
+
+            for(int i = M_idx + 1; i < P_idx; i++){
+              map_list.push_back(parameters.at(i));
+            }
+
+            cout << "num_game: " << num_game << endl; 
+            cout << "num_turn: " << num_turn << endl;
+            cout << "map_list";
+            
+            for(int i = 0; i < map_list.size(); i++){
+              cout << " " << map_list[i];
+            }
+            cout << endl << "Player strategies";
+            
+            for(int i = 0; i < player_strategy.size(); i++){
+              cout << " " << player_strategy[i];
+            }
+
+            cout << endl << "tournament format is fine" << endl;
+          }
+
+        }
+
+        
+        cout << "In tournament command" << endl;
+        
+      }
     }
   }
 
