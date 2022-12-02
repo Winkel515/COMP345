@@ -13,6 +13,10 @@ PlayerStrategy::PlayerStrategy(Player* p){
     this->p = p;
 }
 
+// ============ Human Player ==============
+
+HumanPlayerStrategy::HumanPlayerStrategy(Player* p) : PlayerStrategy(p) {}
+
 bool HumanPlayerStrategy::issueOrder(){
 
     return true;
@@ -35,8 +39,7 @@ vector<Territory*> HumanPlayerStrategy::toDefend(){
 
 // ============ Cheater Player ==============
 
-CheaterPlayerStrategy::CheaterPlayerStrategy(Player* p) : PlayerStrategy(p) {
-}
+CheaterPlayerStrategy::CheaterPlayerStrategy(Player* p) : PlayerStrategy(p) {}
 
 bool CheaterPlayerStrategy::issueOrder(){
 
@@ -69,6 +72,8 @@ vector<Territory*> CheaterPlayerStrategy::toDefend(){
 
 // ============ Aggressive Player ==============
 
+AggressivePlayerStrategy::AggressivePlayerStrategy(Player* p) : PlayerStrategy(p) {}
+
 bool AggressivePlayerStrategy::issueOrder(){
 
     return true;
@@ -85,6 +90,8 @@ vector<Territory*> AggressivePlayerStrategy::toDefend(){
 }
 
 // ============ Benevolent Player ==============
+
+BenevolentPlayerStrategy::BenevolentPlayerStrategy(Player* p) : PlayerStrategy(p) {}
 
 //TODO: Finish this issueOrder.
 bool BenevolentPlayerStrategy::issueOrder(){
@@ -125,16 +132,22 @@ vector<Territory*> BenevolentPlayerStrategy::toDefend(){
 
 // ============ Neutral Player ==============
 
-bool NeutralPlayerStrategy::issueOrder(){
+//TODO: Somehow change to aggressive if attacked. Where should this be implemented?
 
-    return true;
+NeutralPlayerStrategy::NeutralPlayerStrategy(Player* p) : PlayerStrategy(p) {}
+
+//Never issues orders
+bool NeutralPlayerStrategy::issueOrder(){
+    return false;
 }
 
+//Never Used
 vector<Territory*> NeutralPlayerStrategy::toAttack(){
     vector<Territory*> terri;
     return terri;
 }
 
+//Never Used
 vector<Territory*> NeutralPlayerStrategy::toDefend(){
     vector<Territory*> terri;
     return terri;
