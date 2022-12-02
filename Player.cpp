@@ -43,7 +43,16 @@ Player::Player(const Player& player) {
   reinforcementPool = player.reinforcementPool;
   ConqueredTerritoryFlag = false;
   //TODO: strategy = player.strategy;
+}
 
+Player::Player(string name, PlayerStrategy* strategy){
+  issueOrdersCount = 0;
+  this->name = name;
+  reinforcementPool = 0;
+  cards = new Hand();
+  orders = new OrdersList();
+  ConqueredTerritoryFlag = false;
+  this->strategy = strategy;
 }
 
 // Destructor
@@ -109,6 +118,35 @@ vector<Territory*> Player::toAttack() { //TODO: implement strategy
   return territoriesToAttack;
 };
 
+// Returns a list of Territories to Attack
+vector<Territory*> Player::getAdjacentTerritories() { //TODO: implement strategy
+  vector<Territory*> territoriesToAttack;
+  // Find all neighbouring territories
+  for (std::vector<Territory*>::iterator it1 = territories.begin();
+       it1 != territories.end(); ++it1) {
+    vector<Territory*> neighbours = (*it1)->adj;
+
+    // Check if neighbour territories are attackable.
+    for (std::vector<Territory*>::iterator it2 = neighbours.begin();
+         it2 != neighbours.end(); ++it2) {
+      // // Check if already in toAttack list.
+      bool notInToAttack = true;
+      for (std::vector<Territory*>::iterator it3 = territoriesToAttack.begin();
+           it3 != territoriesToAttack.end(); ++it3) {
+        if (*it2 == *it3) {
+          notInToAttack = false;
+        }
+      }
+
+      // Add territory if it's not already in our list and we aren't the owner
+      if (notInToAttack && (**it2).getOwner() != this) {
+        territoriesToAttack.push_back(*it2);
+      }
+    }
+  }
+  return territoriesToAttack;
+};
+
 // Returns a list of Territories to Defend (All of the player's currently owned
 // territories)
 vector<Territory*> Player::toDefend() { return territories; }; //TODO: implement strategy
@@ -139,121 +177,128 @@ Territory* getRandomTerritory(vector<Territory*> territories) {
   return territories.at(index);
 }
 
-// Returns true if player issues an order, false if they are done issuing orders
-bool Player::issueOrder() { //TODO: implement strategy
-  // Deploy all Reinforcements
-  if (reinforcementPool > 0) {
-    // Hardcoded to deploy in rounds of 10 to random territory
-    int numOfArmies = 10;
-    if (numOfArmies > reinforcementPool) {
-      numOfArmies = reinforcementPool;
-    }
-    Territory* target = getRandomTerritory(toDefend());
-    orders->add(new Deploy(target, this, numOfArmies));
-    reinforcementPool -= numOfArmies;
-    cout << (*this).name << " deployed " << numOfArmies << " to "
-         << target->getName() << " territory \n";
-    return true;
-  }
+// Old issueOrder() implementation for deliverable 2.
 
-  else if (issueOrdersCount == 0) {
-    // Demonstrate Advance using toDefend()
-    Territory* target = getRandomTerritory(toDefend());
-    Territory* source = NULL;
-    vector<Territory*> adjacent = target->adj;
-    // Find an adjacent territory that is owned by the calling player.
-    for (vector<Territory*>::iterator it = adjacent.begin();
-         it != adjacent.end(); ++it) {
-      if ((*it)->owner == this) {
-        source = *it;
-      }
-    }
-    if (source != NULL) {
-      // Move 2 armies from source to target
-      orders->add(new Advance(target, source, this, 2));
-      cout << (*this).name << " advanced 2 armies from " << source->getName()
-           << " to " << target->getName() << "\n";
-    }
-    issueOrdersCount++;
-    return true;
-  }
+// // Returns true if player issues an order, false if they are done issuing orders
+// bool Player::issueOrder() { //TODO: implement strategy
+//   // Deploy all Reinforcements
+//   if (reinforcementPool > 0) {
+//     // Hardcoded to deploy in rounds of 10 to random territory
+//     int numOfArmies = 10;
+//     if (numOfArmies > reinforcementPool) {
+//       numOfArmies = reinforcementPool;
+//     }
+//     Territory* target = getRandomTerritory(toDefend());
+//     orders->add(new Deploy(target, this, numOfArmies));
+//     reinforcementPool -= numOfArmies;
+//     cout << (*this).name << " deployed " << numOfArmies << " to "
+//          << target->getName() << " territory \n";
+//     return true;
+//   }
 
-  else if (issueOrdersCount == 1) {
-    // Demonstrate Advance using toAttack()
-    Territory* target = getRandomTerritory(toAttack());
-    Territory* source = NULL;
-    vector<Territory*> adjacent = target->adj;
-    // Find an adjacent territory that is owned by the calling player.
-    for (auto it = adjacent.begin(); it != adjacent.end(); ++it) {
-      if ((*it)->owner == this) {
-        source = *it;
-      }
-    }
-    // Move 2 armies from source to target
-    if (source != NULL) {
-      orders->add(new Advance(target, source, this, 2));
-      cout << (*this).name << " advanced 2 armies from " << source->getName()
-           << " to " << target->getName() << "\n";
-    }
-    issueOrdersCount++;
-    return true;
-  }
-  // Hardcoded at 4 to demonstrate multiple cards
-  else if (issueOrdersCount < 4 || cards->getCards().size() != 0) {
-    // Cards functionality
-    vector<Card*> hand = cards->getCards();
-    Card* cardToPlay = hand.back();
-    Deck* deck = cards->getDeck();
+//   else if (issueOrdersCount == 0) {
+//     // Demonstrate Advance using toDefend()
+//     Territory* target = getRandomTerritory(toDefend());
+//     Territory* source = NULL;
+//     vector<Territory*> adjacent = target->adj;
+//     // Find an adjacent territory that is owned by the calling player.
+//     for (vector<Territory*>::iterator it = adjacent.begin();
+//          it != adjacent.end(); ++it) {
+//       if ((*it)->owner == this) {
+//         source = *it;
+//       }
+//     }
+//     if (source != NULL) {
+//       // Move 2 armies from source to target
+//       orders->add(new Advance(target, source, this, 2));
+//       cout << (*this).name << " advanced 2 armies from " << source->getName()
+//            << " to " << target->getName() << "\n";
+//     }
+//     issueOrdersCount++;
+//     return true;
+//   }
 
-    // Compare Card::CardType() to it's enum values.
-    if (cardToPlay->GetType() == 1) {
-      cout << (*this).name << " played a bomb card \n";
-      Territory* target = getRandomTerritory(toAttack());
-      orders->add(new Bomb(target, this));
-      issueOrdersCount++;
-      return playCard(cardToPlay, hand, deck);
-    } /*else if (cardToPlay->GetType() == 2) {
-      // TODO JOHN: Now that reinforcementPool > 0, do we have to deploy?
-      cout << (*this).name << " played a reinforcement card \n";
-      reinforcementPool += 5;
-      return playCard(cardToPlay, hand, deck);
-    }*/ else if (cardToPlay->GetType() == 3) {
-      // Blockade implementation
-      cout << (*this).name << " played a blockade card \n";
-      Territory* target = getRandomTerritory(toDefend());
-      orders->add(new Blockade(target, this, neutralPlayer));
-      issueOrdersCount++;
-      return playCard(cardToPlay, hand, deck);
-    } else if (cardToPlay->GetType() == 4) {
-      // Airlift Implementation
-      cout << (*this).name << " played an Airlift card \n";
-      int numArmiesToMove = 2;
-      Territory* target = getRandomTerritory(toDefend());
-      Territory* source = getRandomTerritory(toDefend());
-      // Ensure source and target are different
-      while (source == target) {
-        source = getRandomTerritory(toDefend());
-      }
-      orders->add(new Airlift(target, source, this, numArmiesToMove));
-      issueOrdersCount++;
-      return playCard(cardToPlay, hand, deck);
-    } else if (cardToPlay->GetType() == 5) {
-      // Diplomacy Implementation
-      cout << (*this).name << " played a Diplomacy card \n";
-      Territory* target = getRandomTerritory(toAttack());
-      orders->add(new Negotiate(target, this));
-      issueOrdersCount++;
-      return playCard(cardToPlay, hand, deck);
-    }
-    issueOrdersCount = 0;
-    return false;
-  }
+//   else if (issueOrdersCount == 1) {
+//     // Demonstrate Advance using toAttack()
+//     Territory* target = getRandomTerritory(toAttack());
+//     Territory* source = NULL;
+//     vector<Territory*> adjacent = target->adj;
+//     // Find an adjacent territory that is owned by the calling player.
+//     for (auto it = adjacent.begin(); it != adjacent.end(); ++it) {
+//       if ((*it)->owner == this) {
+//         source = *it;
+//       }
+//     }
+//     // Move 2 armies from source to target
+//     if (source != NULL) {
+//       orders->add(new Advance(target, source, this, 2));
+//       cout << (*this).name << " advanced 2 armies from " << source->getName()
+//            << " to " << target->getName() << "\n";
+//     }
+//     issueOrdersCount++;
+//     return true;
+//   }
+//   // Hardcoded at 4 to demonstrate multiple cards
+//   else if (issueOrdersCount < 4 || cards->getCards().size() != 0) {
+//     // Cards functionality
+//     vector<Card*> hand = cards->getCards();
+//     Card* cardToPlay = hand.back();
+//     Deck* deck = cards->getDeck();
 
-  // LogObserver *orderView = new LogObserver(newOrder);
+//     // Compare Card::CardType() to it's enum values.
+//     if (cardToPlay->GetType() == 1) {
+//       cout << (*this).name << " played a bomb card \n";
+//       Territory* target = getRandomTerritory(toAttack());
+//       orders->add(new Bomb(target, this));
+//       issueOrdersCount++;
+//       return playCard(cardToPlay, hand, deck);
+//     } /*else if (cardToPlay->GetType() == 2) {
+//       // TODO JOHN: Now that reinforcementPool > 0, do we have to deploy?
+//       cout << (*this).name << " played a reinforcement card \n";
+//       reinforcementPool += 5;
+//       return playCard(cardToPlay, hand, deck);
+//     }*/ else if (cardToPlay->GetType() == 3) {
+//       // Blockade implementation
+//       cout << (*this).name << " played a blockade card \n";
+//       Territory* target = getRandomTerritory(toDefend());
+//       orders->add(new Blockade(target, this, neutralPlayer));
+//       issueOrdersCount++;
+//       return playCard(cardToPlay, hand, deck);
+//     } else if (cardToPlay->GetType() == 4) {
+//       // Airlift Implementation
+//       cout << (*this).name << " played an Airlift card \n";
+//       int numArmiesToMove = 2;
+//       Territory* target = getRandomTerritory(toDefend());
+//       Territory* source = getRandomTerritory(toDefend());
+//       // Ensure source and target are different
+//       while (source == target) {
+//         source = getRandomTerritory(toDefend());
+//       }
+//       orders->add(new Airlift(target, source, this, numArmiesToMove));
+//       issueOrdersCount++;
+//       return playCard(cardToPlay, hand, deck);
+//     } else if (cardToPlay->GetType() == 5) {
+//       // Diplomacy Implementation
+//       cout << (*this).name << " played a Diplomacy card \n";
+//       Territory* target = getRandomTerritory(toAttack());
+//       orders->add(new Negotiate(target, this));
+//       issueOrdersCount++;
+//       return playCard(cardToPlay, hand, deck);
+//     }
+//     issueOrdersCount = 0;
+//     return false;
+//   }
 
-  // No order Issued
-  issueOrdersCount = 0;
-  return false;
+//   // LogObserver *orderView = new LogObserver(newOrder);
+
+//   // No order Issued
+//   issueOrdersCount = 0;
+//   return false;
+// }
+
+// New Implementation of issueOrder() using Strategies
+bool Player::issueOrder() {
+  return strategy->issueOrder();
 }
 
 // Helper method to create territory list
@@ -268,6 +313,18 @@ std::vector<Territory*> Player::createTerritoryList(int nTerritories) {
   }
 
   return territories;
+}
+
+//Given a territory pointer, remove that territory from player if it is in territory list. 
+void Player::removeTerritory(Territory* t){
+  // remove territory from territories vector
+  vector<Territory*> terr = this->getTerritories();
+  terr.erase(find(terr.begin(),terr.end(), t), terr.end());
+  this->setTerritories(terr);
+}
+
+void Player::setTerritories(vector<Territory*> territories){
+  this->territories = territories;
 }
 
 void Player::addReinforcements(int n) { reinforcementPool += n; }
@@ -294,3 +351,7 @@ OrdersList* Player::getOrderList() { return orders; }
 void Player::setStrategy(PlayerStrategy* newStrategy){
   this->strategy = newStrategy;
 }
+
+PlayerStrategy* Player::getStrategy(){
+  return strategy;
+};

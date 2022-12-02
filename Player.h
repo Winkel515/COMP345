@@ -29,6 +29,7 @@ class Player {
   Player();
   Player(int nTerritories, int nCards, int nOrders);
   Player(string name);
+  Player(string name, PlayerStrategy* strategy);
   Player(const Player& player);
   ~Player();
   std::vector<Territory*> toDefend(); //TODO: change for strategy
@@ -49,5 +50,8 @@ class Player {
   void clearDiplomaticAllies();
   std::vector<Territory*> createTerritoryList(int nTerritories);
   void setStrategy(PlayerStrategy* newStrategy);
-
+  PlayerStrategy* getStrategy();
+  std::vector<Territory*> getAdjacentTerritories();
+  void removeTerritory(Territory*);
+  void setTerritories(vector<Territory*>);
 };
