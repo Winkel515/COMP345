@@ -97,6 +97,7 @@ std::ostream &operator<<(std::ostream &out, const OrdersList &ol) {
 // execute all orders in the list
 void OrdersList::executeOrders() {
   for (Order *order : ListOfOrders) {
+    cout << "Executing: " << *order << endl;
     order->execute();
     delete order;
   }
@@ -123,7 +124,7 @@ Territory *Deploy::GetTarget() { return Target; }
 
 void Deploy::Print(std::ostream &output) const{
   output << "\nDeploy order: "
-         << "\n\tOwner: " << *(this->Owner) << "\n\tTarget" << *(this->Target)
+         << "\n\tOwner: " << this->Owner->getName() << "\n\tTarget" << *(this->Target)
          << "\n\tNum of armies: " << this->NumOfArmies << std::endl;
 }
 
@@ -177,7 +178,7 @@ Territory *Advance::GetTarget() { return Target; }
 // output stream overload
 void Advance::Print(std::ostream &output) const {
   output << "\nAdvance order: "
-         << "\n\tOwner: " << *(this->Owner) << "\n\tTarget" << this->Target
+         << "\n\tOwner: " << this->Owner->getName() << "\n\tTarget" << this->Target
          << "\n\tNum of armies:" << this->NumOfArmies;
   output << "\n\tSource: " << *(this->Source) << std::endl;
 }
@@ -269,10 +270,11 @@ void Advance::execute() {
 
       } else {
         // attack was successful
-        this->Source->setOwner(this->Owner);
-        this->Source->setNumArmies(numAttackArmies);
+        this->Target->setOwner(this->Owner);
+        this->Target->setNumArmies(numAttackArmies);
 
-        //TODO: Add territory to conquering player's territory list, and remove from conquered player's territory list.
+        //TODO: Remove territory from conquered player's territory list.
+        this->Owner->addTerritory(Target);
 
         // check if this is the first territory concquered by the player this
         // turn, if yes, player draws card
@@ -385,7 +387,7 @@ void Bomb::execute() {
 }
 
 void Bomb::Print(std::ostream &output) const {
-  output << "Bomb Order:\n\tOwner:  " << *(this->Owner) << "\n\tTarget: " << *(this->Target)
+  output << "Bomb Order:\n\tOwner:  " << this->Owner->getName() << "\n\tTarget: " << *(this->Target)
          << std::endl;
 }
 
@@ -428,7 +430,7 @@ void Blockade::execute() {
 }
 
 void Blockade::Print(std::ostream &output) const {
-  output << "Blockade Order:\n\t" << *(this->Owner) << "\n\tTarget: " << *(this->Target)
+  output << "Blockade Order:\n\t" << this->Owner->getName() << "\n\tTarget: " << *(this->Target)
          << std::endl;
 }
 
@@ -467,7 +469,7 @@ void Negotiate::execute() {
 
 void Negotiate::Print(std::ostream &output) const {
   output << "Negotiate Order:\n\tTarget: " << *(this->Target)
-         << "\n\tOwner: " << *(this->Owner) << std::endl;
+         << "\n\tOwner: " << this->Owner->getName() << std::endl;
 }
 
 // end of negotiate order implementation
