@@ -272,6 +272,8 @@ void Advance::execute() {
         this->Source->setOwner(this->Owner);
         this->Source->setNumArmies(numAttackArmies);
 
+        //TODO: Add territory to conquering player's territory list, and remove from conquered player's territory list.
+
         // check if this is the first territory concquered by the player this
         // turn, if yes, player draws card
         if (this->Source->getOwner()->getConcqueredFlag() == false) {
