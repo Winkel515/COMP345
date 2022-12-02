@@ -83,17 +83,15 @@ void OrdersList::add(Order *order) {
 }
 
 // Stream insertion operator
-std::ostream &operator<<(std::ostream &o, const OrdersList &ol) {
-  std::stringstream ss;
-
-  ss << "Order list:" << std::endl;
+std::ostream &operator<<(std::ostream &out, const OrdersList &ol) {
+  out << "Order list:" << std::endl;
 
   for (Order *order : ol.ListOfOrders) {
-    ss << "\t"
+    out << "\t"
        << "Order " << *(order) << " is present in the list,\n";
   }
 
-  return o << ss.str() << std::endl;
+  return out << std::endl;
 }
 
 // execute all orders in the list

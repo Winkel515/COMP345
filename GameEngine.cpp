@@ -583,11 +583,13 @@ void GameEngine::mainGameLoop() {
     cout << endl << "-------- Issue Orders Phase --------"<< endl << endl;
     issueOrdersPhase();
 
-    cout << endl << "-------- Printing Players before execute orders Phase -------- " << endl;
+    //cout << endl << "-------- Printing Players before execute orders Phase -------- " << endl;
     //TODO: Remove after ordersList works properly
+    /*
     for(Player* p : players){
         cout << *p << endl;
     }
+    */
     cout << endl << "-------- Execute Orders Phase --------"<< endl << endl;
     executeOrdersPhase();
     // Check all players
