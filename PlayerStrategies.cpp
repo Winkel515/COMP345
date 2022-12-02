@@ -76,16 +76,37 @@ AggressivePlayerStrategy::AggressivePlayerStrategy(Player* p) : PlayerStrategy(p
 
 bool AggressivePlayerStrategy::issueOrder(){
 
-    return true;
+    vector<Territory*> territories = toDefend();
+    Territory* strongestTerri = territories.front();
+    int reinforcements = p->getReinforcements();
+
+    if(reinforcements > 0){
+        p->getOrderList()->add(new Deploy(strongestTerri, p, reinforcements));
+        p->addReinforcements(reinforcements * -1);
+        //TODO JOHN: Once merged with mainGameLoopFix, Add Player Name
+        cout << "Player is issuing a Deploy Order: " << reinforcements << " armies to territory " << strongestTerri->name << "." << endl;
+        return true;
+    }
+
+    //TODO: Implement Advance Orders (Check if it can advance into an enemy territory. If not, advance towards an enemy territory)
+    //TODO: Implement Bomb Orders
+    //TODO: Implement Airlift Order
+
+    return false;
 }
 
 vector<Territory*> AggressivePlayerStrategy::toAttack(){
+
+    //TODO: return the strongest territory's adjacent territories
     vector<Territory*> terri;
     return terri;
 }
 
+// Returns vector of territories from strongest to weakest
 vector<Territory*> AggressivePlayerStrategy::toDefend(){
-    vector<Territory*> terri;
+    vector<Territory*> terri = p->getTerritories();
+    //TODO: Check that this sorts the territory vector according to number of armies present on each territory
+    std::sort(terri.begin(), terri.end(), [](Territory* one, Territory* two ){return (one->getNumArmies() > two -> getNumArmies());});
     return terri;
 }
 
@@ -96,15 +117,17 @@ BenevolentPlayerStrategy::BenevolentPlayerStrategy(Player* p) : PlayerStrategy(p
 //TODO: Finish this issueOrder.
 bool BenevolentPlayerStrategy::issueOrder(){
 
-    Territory* territory = toDefend().front();
+    vector<Territory*> territories = toDefend();
+
+    Territory* weakestTerri = territories.front();
     int reinforcements = p->getReinforcements();
 
     // Create Deploy order, adding all territories to its weakest territory 
     if (reinforcements > 0){
-        p->getOrderList()->add(new Deploy(territory, p, reinforcements));
+        p->getOrderList()->add(new Deploy(weakestTerri, p, reinforcements));
         p->addReinforcements(reinforcements * -1);
         //TODO JOHN: Once merged with mainGameLoopFix, Add Player Name
-        cout << "Player is issuing a Deploy Order: " << reinforcements << " armies to territory " << territory->name << "." << endl;
+        cout << "Player is issuing a Deploy Order: " << reinforcements << " armies to territory " << weakestTerri->name << "." << endl;
         return true;
     }
 
