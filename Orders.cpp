@@ -270,11 +270,15 @@ void Advance::execute() {
 
       } else {
         // attack was successful
-        this->Target->setOwner(this->Owner);
-        this->Target->setNumArmies(numAttackArmies);
+        //Remove territory from conquered player's territory list.
+        this->Target->getOwner()->removeTerritory(this->GetTarget());
 
-        //TODO: Remove territory from conquered player's territory list.
+        //reassign territory
+        this->Target->setOwner(this->Owner);
+        //add territory to owner
         this->Owner->addTerritory(Target);
+        //set number of armies
+        this->Target->setNumArmies(numAttackArmies);
 
         // check if this is the first territory concquered by the player this
         // turn, if yes, player draws card

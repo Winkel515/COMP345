@@ -281,6 +281,18 @@ std::vector<Territory*> Player::createTerritoryList(int nTerritories) {
   return territories;
 }
 
+//remove specific territory from player territories
+Territory* Player::removeTerritory(Territory* obj){
+  //get position of territory in vector
+  for(int i = 0; i < territories.size(); i++){
+    if(territories[i] == obj){
+      territories.erase(territories.begin() + i);
+      
+    }
+  }
+  return obj;
+}
+
 void Player::addReinforcements(int n) { reinforcementPool += n; }
 
 Hand* Player::getHand() { return cards; }

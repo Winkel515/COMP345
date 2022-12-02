@@ -48,5 +48,6 @@ class Player {
   void addDiplomaticAlly(Player* ally);
   void clearDiplomaticAllies();
   std::vector<Territory*> createTerritoryList(int nTerritories);
+  Territory* removeTerritory(Territory* obj);
 
 };
