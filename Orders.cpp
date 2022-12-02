@@ -278,7 +278,7 @@ void Advance::execute() {
         // turn, if yes, player draws card
         if (this->Source->getOwner()->getConcqueredFlag() == false) {
           this->Source->getOwner()->setConcqueredFlag(true);
-          Owner->getHand()->drawCard();
+          //Owner->getHand()->drawCard();  removed --> done in main game loop instead
         }
       }
     }
