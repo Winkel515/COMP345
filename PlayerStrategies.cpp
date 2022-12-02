@@ -1,5 +1,6 @@
 #include "PlayerStrategies.h"
 #include <vector>
+#include <algorithm>
 #include "Map.h"
 #include "Player.h"
 
@@ -19,8 +20,13 @@ vector<Territory*> HumanPlayerStrategy::toAttack(){
     return terri;
 }
 
+//Sorts territory vector from least armies to most
 vector<Territory*> HumanPlayerStrategy::toDefend(){
-    vector<Territory*> terri;
+    vector<Territory*> terri = p->getTerritories();
+
+    //TODO: Check that this sorts the territory vector according to number of armies present on each territory
+    std::sort(terri.begin(), terri.end(), [](Territory* one, Territory* two ){return (one->getNumArmies() < two -> getNumArmies());});
+
     return terri;
 }
 
@@ -77,18 +83,29 @@ vector<Territory*> AggressivePlayerStrategy::toDefend(){
 
 // ============ Benevolent Player ==============
 
+//TODO: Implement this issueOrder.
 bool BenevolentPlayerStrategy::issueOrder(){
+
+    vector<Territory*> terriToDefend = toDefend();
+
+
+    //TODO: Deploy reinforcements on weakest territories.
 
     return true;
 }
 
+// This method is never Used
 vector<Territory*> BenevolentPlayerStrategy::toAttack(){
     vector<Territory*> terri;
     return terri;
 }
 
+//Sorts territory vector from least armies to most
 vector<Territory*> BenevolentPlayerStrategy::toDefend(){
-    vector<Territory*> terri;
+    vector<Territory*> terri = p->getTerritories();
+
+    //TODO: Check that this sorts the territory vector according to number of armies present on each territory
+    std::sort(terri.begin(), terri.end(), [](Territory* one, Territory* two ){return (one->getNumArmies() < two -> getNumArmies());});
     return terri;
 }
 
