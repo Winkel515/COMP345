@@ -7,6 +7,7 @@
 #include <random>
 #include <set>
 #include <string>
+#include <fstream>
 
 #include "CommandProcessing.h"
 #include "LoggingObserver.h"
@@ -566,8 +567,8 @@ void GameEngine::startupPhase() {
           }
 
         }
-        /*
-        cout << "check if strategies are valid" << endl;
+        
+        //cout << "check if strategies are valid" << " pidx " << P_idx << " gidx " << G_idx << " didx " << D_idx << " param size " << parameters.size() << endl;
         vector<string> allowed_strategy{"cheater", "aggressive", "neutral", "benevolent"};
         for(int i = P_idx + 1; i < G_idx; i++){
           if(parameters.at(i) != allowed_strategy[0] && parameters.at(i) != allowed_strategy[1] && 
@@ -579,30 +580,43 @@ void GameEngine::startupPhase() {
               D_idx--;
           }
         }
-        cout << "finished checking startegies" << endl;*/
-        /*
+        //cout << "finished checking startegies" << " pidx " << P_idx << " gidx " << G_idx << " didx " << D_idx << " param size " << parameters.size() << endl;
+        //cout << "check if maps are valid" << " midx " << M_idx << " pidx " << P_idx << " gidx " << G_idx << " didx " << D_idx << " param size " << parameters.size() << endl;
+        
         for(int i = M_idx + 1; i < P_idx; i++){
-          string loadMapEffect = mapLoader->loadMap(parameters.at(i));
-          if (loadMapEffect.size() != 0) {
-            parameters.erase(parameters.begin() + i);
-              i--;
-              P_idx--;
+          cout << " param size " << parameters.size() << " param at " << i << " " << parameters.at(i) << endl;
+          string fileName = "./map/" + parameters.at(i);
+          ifstream MyReadFile(fileName);
+
+          if(MyReadFile){
           }
-        }*/
+          else{
+            //cout << "in if" << endl;
+            parameters.erase(parameters.begin() + i);
+            //cout << "after erase" << endl;
+            i--;
+            P_idx--;
+            G_idx--;
+            D_idx--;
+            //cout << "after idx decrease" << endl;
+          }
+        }
+
+        //cout << "finished checking maps" << " midx " << M_idx << " pidx " << P_idx << " gidx " << G_idx << " didx " << D_idx << " param size " << parameters.size() << endl;
 
         if(param_idx != 4){
-          cout << "in param_idx != 4" << endl;
+          //cout << "in param_idx != 4" << endl;
           handleEffect("Enter with the format tournament -M <listofmapfiles> -P <listofplayerstrategies> -G <numberofgames> -D <maxnumberofturns>", result,
                     logObserver);
         }
         else{
           
-          if(P_idx - M_idx == 1 || P_idx - M_idx > 5){
+          if(P_idx - (M_idx + 1) < 1 || P_idx - (M_idx + 1) > 5){
             handleEffect("Enter with the format tournament -M <listofmapfiles> -P <listofplayerstrategies> -G <numberofgames> -D <maxnumberofturns>, you can have between 1 and 5 maps", result,
                     logObserver);
 
           }
-          else if(G_idx - P_idx < 2 || G_idx - P_idx > 4){
+          else if(G_idx - (P_idx + 1) < 2 || G_idx - (P_idx + 1) > 4){
             handleEffect("Enter with the format tournament -M <listofmapfiles> -P <listofplayerstrategies> -G <numberofgames> -D <maxnumberofturns>, you can have between 2 and 4 strategies", result,
                     logObserver);
           }
