@@ -87,19 +87,38 @@ bool AggressivePlayerStrategy::issueOrder(){
         cout << "Player is issuing a Deploy Order: " << reinforcements << " armies to territory " << strongestTerri->name << "." << endl;
         return true;
     }
+    else{
+        vector<Territory*> strAdjacent = strongestTerri->adj;
+        
 
-    //TODO: Implement Advance Orders (Check if it can advance into an enemy territory. If not, advance towards an enemy territory)
-    //TODO: Implement Bomb Orders
-    //TODO: Implement Airlift Order
+        //TODO: Implement Advance Orders (Check if it can advance into an enemy territory. If not, advance towards an enemy territory)
+    }
+
+    
+    
+    //TODO: Implement Bomb Orders (Optional)
+    //TODO: Implement Airlift Order From second strongest to Strongest
 
     return false;
 }
 
+//Returns the strongest territories neighbours which are owned by another player
 vector<Territory*> AggressivePlayerStrategy::toAttack(){
 
-    //TODO: return the strongest territory's adjacent territories
-    vector<Territory*> terri;
-    return terri;
+    vector<Territory*> territories = toDefend();
+    Territory* strongestTerri = territories.front();
+    vector<Territory*> strAdjacent = strongestTerri->adj;
+
+    // Removes territories which are owned by current player.
+    // TODO: Test that this works
+    strAdjacent.erase(std::remove_if(
+        strAdjacent.begin(), 
+        strAdjacent.end(), 
+        [this] (Territory* t) {return t->getOwner() == p;}
+        ), 
+        strAdjacent.end());
+
+    return strAdjacent;
 }
 
 // Returns vector of territories from strongest to weakest
