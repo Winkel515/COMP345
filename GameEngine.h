@@ -84,6 +84,9 @@ class GameEngine : public Subject, public ILoggable {
   void startupPhase();
   void mainGameLoop();
   void issueOrdersPhase();
+  void tournamentMode(int num_game, int num_turn, vector<string> map_list, vector<string> player_strategy);
+  void startupPhaseTournament(string map, vector<string> player_strategy);
+  void mainGameLoopTournament(int num_turn);
 };
 
 void handleEffect(string&, Command&, Observer*);

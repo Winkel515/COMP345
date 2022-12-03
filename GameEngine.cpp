@@ -438,6 +438,20 @@ void handleEffect(string &s, Command &command, Observer *obs) {
   cout << s << std::endl;
 }
 
+void GameEngine::tournamentMode(int num_game, int num_turn, vector<string> map_list, vector<string> player_strategy){
+  
+  
+  cout << "in tournament mode" << endl;
+  CommandProcessor* cp = this->commandProcessor;
+
+  for (int i = 0; i < map_list.size(); i++) {
+      for (int j = 0; j < num_game; j++) {
+        this-> startupPhaseTournament(map_list[i], player_strategy);
+        this-> mainGameLoopTournament(num_turn);
+      } 
+  }
+}
+
 void GameEngine::startupPhase() {
   // S_START state loading a map
   while (true) {
@@ -552,6 +566,29 @@ void GameEngine::startupPhase() {
           }
 
         }
+        /*
+        cout << "check if strategies are valid" << endl;
+        vector<string> allowed_strategy{"cheater", "aggressive", "neutral", "benevolent"};
+        for(int i = P_idx + 1; i < G_idx; i++){
+          if(parameters.at(i) != allowed_strategy[0] && parameters.at(i) != allowed_strategy[1] && 
+            parameters.at(i) != allowed_strategy[2] && parameters.at(i) != allowed_strategy[3]){
+
+              parameters.erase(parameters.begin() + i);
+              i--;
+              G_idx--;
+              D_idx--;
+          }
+        }
+        cout << "finished checking startegies" << endl;*/
+        /*
+        for(int i = M_idx + 1; i < P_idx; i++){
+          string loadMapEffect = mapLoader->loadMap(parameters.at(i));
+          if (loadMapEffect.size() != 0) {
+            parameters.erase(parameters.begin() + i);
+              i--;
+              P_idx--;
+          }
+        }*/
 
         if(param_idx != 4){
           cout << "in param_idx != 4" << endl;
@@ -581,11 +618,15 @@ void GameEngine::startupPhase() {
             num_game = stoi(parameters.at(G_idx + 1));
             num_turn = stoi(parameters.at(D_idx + 1));
             //cout <<  "before player strat loop gidx " << G_idx << " pidx " << P_idx << endl;
+            
+            vector<string> allowed_strategy{"cheater", "aggressive", "neutral", "benevolent"};
 
             for(int i = P_idx + 1; i < G_idx; i++){
               //cout << " in player strat loop " << i << " " << parameters.at(i) << endl;
-              player_strategy.push_back(parameters.at(i));
+                player_strategy.push_back(parameters.at(i));
+                
             }
+            
 
             for(int i = M_idx + 1; i < P_idx; i++){
               map_list.push_back(parameters.at(i));
@@ -603,8 +644,8 @@ void GameEngine::startupPhase() {
             for(int i = 0; i < player_strategy.size(); i++){
               cout << " " << player_strategy[i];
             }
-
             cout << endl << "tournament format is fine" << endl;
+            tournamentMode(num_game, num_turn, map_list, player_strategy);
           }
 
         }
@@ -747,6 +788,100 @@ void GameEngine::mainGameLoop() {
         players.at(i)->clearDiplomaticAllies();
       }
     }
+  }
+}
+
+void GameEngine::mainGameLoopTournament(int num_turn) {
+  cout << " PLAYER SIZE: " << players.size() << endl;
+  // Stop loop if there is only 1 player left
+  int count = 0;
+  while (players.size() > 1) {
+    if (count == num_turn) {
+      cout << "THE GAME IS A DRAW: " << endl;
+      break;
+    }
+    count++;
+    reinforcementPhase();
+    issueOrdersPhase();
+    executeOrdersPhase();
+    // Check all players
+    for (int i = 0; i < players.size(); i++) {
+      // Remove players with less than 1 territory
+      if (players.at(i)->getTerritories().size() < 1) {
+        players.erase(players.begin() + i);
+        cout << "DELETED" << endl;
+      }
+      // check if player should draw a new card
+      if (players.at(i)->getConcqueredFlag() == true) {
+        players.at(i)->getHand()->drawCard();
+        players.at(i)->setConcqueredFlag(false);
+      }
+      // reset diplomatic allies
+      if (!players.at(i)->getDiplomaticAllies().empty()) {
+        players.at(i)->clearDiplomaticAllies();
+      }
+    }
+  }
+
+  cout << "WINNER IS : " << players.at(0) << endl;
+}
+
+void GameEngine::startupPhaseTournament(string map, vector<string> player_strategy) {
+  // S_MAP_LOADED state, load map or validate map
+  // transition to S_MAP_VALIDATED validate is successful
+  //  Command &result = commandProcessor->getCommand();
+
+    // 2 possible commands: loadmap/validatemap
+    string loadMapEffect = mapLoader->loadMap(map);
+    if (loadMapEffect.size() == 0) {
+    loadMapEffect = "\"" + map + "\" has been loaded";
+    //handleEffect(loadMapEffect, result, logObserver);
+    }
+    string validateMapEffect;
+    if (mapLoader->getMap()->validate()) {
+      //handleEffect(
+      //    "The map passed all the tests and is a valid map to be used.",
+      //    result, logObserver);
+      setState(GameEngineFSA::commandToStateMap.at("validatemap"));
+    } else {
+      //handleEffect(
+      //    "The map has failed at least one test and is not a valid map. "
+      //    "Try loading another map.",
+      //    result, logObserver);
+          return;
+      }
+
+  // addPlayer implementation:
+  setState(GameEngineFSA::commandToStateMap.at("addplayer"));
+  for (int i =0; i < player_strategy.size(); i++) {
+    players.push_back(new Player(player_strategy[i]));
+    cout << "Player named " << player_strategy[i] << " has been added." << endl;
+  }
+
+  setState(GameEngineFSA::commandToStateMap.at("gamestart"));
+
+  // gamestart phase:
+
+  cout << "Before MAP LOADER" << endl;
+  mapLoader->getMap()->distributeTerritories(players);
+  cout << "After MAP LOADER" << endl;
+
+  //  Randomly shuffle player vector to determine player order.
+  unsigned seed = std::chrono::system_clock::now().time_since_epoch().count();
+  shuffle(this->players.begin(), this->players.end(),
+          std::default_random_engine(seed));
+
+  // Each player gets 50 reincforcements and draws 2 cards
+  for (int i = 0; i < players.size(); i++) {
+    players.at(i)->addReinforcements(50);
+    players.at(i)->getHand()->setDeck(deck);
+    players.at(i)->getHand()->drawCard();
+    players.at(i)->getHand()->drawCard();
+    players.at(i)->getOrderList()->Attach(logObserver);
+  }
+
+  for (int i = 0; i < players.size(); i++) {
+    cout << "Player " << i + 1 << ": " << *players.at(i) << endl;
   }
 }
 
