@@ -96,12 +96,14 @@ std::ostream &operator<<(std::ostream &out, const OrdersList &ol) {
 
 // execute all orders in the list
 void OrdersList::executeOrders() {
-  for (Order *order : ListOfOrders) {
-    cout << "Executing: " << *order << endl;
-    order->execute();
-    delete order;
+  for(int i = 0; i < ListOfOrders.size(); i++){
+    cout<< "Executing " << *(ListOfOrders[i]) << endl;
+    ListOfOrders[i]->execute();
+    delete ListOfOrders[i];
+
+    //remove object from orderlist
+    ListOfOrders.erase(ListOfOrders.begin() + i);
   }
-  this->ListOfOrders.clear();
 }
 
 // subclasses of Order
@@ -132,8 +134,8 @@ bool Deploy::validate() {
   // If the target territory does not belong to the player that issued the
   // order, the order is invalid
   if (this->GetTarget()->getOwner() != this->GetOwner()) {
-    std::cout << "Deploy Order invalid: player must own the target territory " << std::endl << *(this->GetTarget()->getOwner())
-              << *(this->GetOwner()) << std::endl;
+    std::cout << "Deploy Order invalid: player must own the target territory " << std::endl << this->GetTarget()->getOwner()->getName()
+              << this->GetOwner()->getName() << std::endl;
     return false;
   } else {
     return true;
@@ -178,7 +180,7 @@ Territory *Advance::GetTarget() { return Target; }
 // output stream overload
 void Advance::Print(std::ostream &output) const {
   output << "\nAdvance order: "
-         << "\n\tOwner: " << this->Owner->getName() << "\n\tTarget" << this->Target
+         << "\n\tOwner: " << this->Owner->getName() << "\n\tTarget: " << *(this->Target)
          << "\n\tNum of armies:" << this->NumOfArmies;
   output << "\n\tSource: " << *(this->Source) << std::endl;
 }
@@ -189,20 +191,17 @@ bool Advance::validate() {
   if (this->GetSource()->getOwner() != this->GetOwner()) {
     std::cout << "Advance: "
               << "Invalid Order: Source not owned by player." 
-              << "Source: " << *(this->GetSource()->getOwner())
-              << "Owner: " << *(this->GetOwner())
+              << "Source: " << this->GetSource()->getOwner()->getName()
+              << "Owner: " << this->GetOwner()->getName()
               << std::endl;
     return false;
   }
   // make sure the target is not a diplomatic ally
-  std::vector<Player *>::iterator alliesIterate =
-      Target->getOwner()->getDiplomaticAllies().begin();
+  std::vector<Player *>::iterator alliesIterate;
   // check if players are allies
-  for (alliesIterate;
-       alliesIterate != Target->getOwner()->getDiplomaticAllies().end();
-       alliesIterate++) {
-    if (*alliesIterate == Owner) {
-      std::cout << "Advance: "
+  for(int i = 0 ; i < Target->getOwner()->getDiplomaticAllies().size(); i++){
+    if(Target->getOwner()->getDiplomaticAllies()[i] == Owner){
+            std::cout << "Advance: "
                 << "Invalid order: Target is a diplomatic Ally till the end of "
                    "this turn." << endl
                 << " Diplomatic Allies: " << endl
@@ -270,6 +269,8 @@ void Advance::execute() {
 
       } else {
         // attack was successful
+        std::cout << "Successful attack!" << std::endl;
+
         //Remove territory from conquered player's territory list.
         this->Target->getOwner()->removeTerritory(this->GetTarget());
 
@@ -351,6 +352,16 @@ bool Bomb::validate() {
   std::vector<Player *>::iterator alliesIterate =
       Target->getOwner()->getDiplomaticAllies().begin();
   // check if players are allies
+
+  for(int i = 0; i < Target->getOwner()->getDiplomaticAllies().size(); i++){
+    if(Target->getOwner()->getDiplomaticAllies()[i] == Owner){
+      std::cout << "Bomb: "
+                << "Invalid order: Target is a diplomatic Ally till the end of "
+                   "this turn."
+                << std::endl;
+      return false;
+    }
+  }
   for (alliesIterate;
        alliesIterate != Target->getOwner()->getDiplomaticAllies().end();
        alliesIterate++) {
