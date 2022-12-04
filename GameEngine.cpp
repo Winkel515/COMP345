@@ -730,7 +730,8 @@ void GameEngine::startupPhase() {
             result, logObserver);
         continue;
       }
-      players.push_back(new Player(result.param));
+      std::string playerName = result.param + std::to_string(nPlayers + 1);
+      players.push_back(new Player(playerName));
       nPlayers++;
       cout << "Player named " << result.param << " has been added." << endl;
     } else if (result.command == "gamestart") {
@@ -811,17 +812,16 @@ void GameEngine::mainGameLoopTournament(int num_turn) {
   int count = 0;
   while (players.size() > 1) {
 
-    cout << "========== turn " << count + 1 << " ==========" << endl << endl;
-
     if (count == num_turn) {
       cout << "THE GAME IS A DRAW: " << endl;
       break;
     }
     count++;
 
+cout << "========== turn " << count << " ==========" << endl << endl;
     cout << "Printing Players before turn"<< endl << endl;
     for (int i = 0; i < players.size(); i++){
-      cout << players[i] << endl;
+      cout << *players[i] << endl;
     }
 
     cout << "----- Reinforcement Phase -----" << endl << endl;
@@ -830,12 +830,19 @@ void GameEngine::mainGameLoopTournament(int num_turn) {
     issueOrdersPhase();
     cout << "----- Execute Orders Phase -----" << endl << endl;
     executeOrdersPhase();
+
+    cout << "Printing Players after turn"<< endl << endl;
+    for (int i = 0; i < players.size(); i++){
+      cout << *players[i] << endl;
+    }
+
     // Check all players
     for (int i = 0; i < players.size(); i++) {
       // Remove players with less than 1 territory
+      //TODO: Fix this method, it isn't deleting correctly
       if (players.at(i)->getTerritories().size() < 1) {
+        cout << "DELETING PLAYER " << players.at(i)->getName() << endl;
         players.erase(players.begin() + i);
-        cout << "DELETED" << endl;
       }
       // check if player should draw a new card
       if (players.at(i)->getConcqueredFlag() == true) {
@@ -881,34 +888,28 @@ void GameEngine::startupPhaseTournament(string map, vector<string> player_strate
   // addPlayer implementation:
   setState(GameEngineFSA::commandToStateMap.at("addplayer"));
   for (int i =0; i < player_strategy.size(); i++) {
-    players.push_back(new Player(std::to_string(i + 1)));
+    string playerName = player_strategy[i] + std::to_string(i + 1);
+    players.push_back(new Player(playerName));
 
-    for( int i = 0; i < players.size(); i++){
-
-      PlayerStrategy* type;
-
-      if(player_strategy[i] == "cheater"){
-        type = new CheaterPlayerStrategy(players[i]);
-      }
-      else if (player_strategy[i] == "benevolent"){
-        type = new BenevolentPlayerStrategy(players[i]);
-      }
-      else if (player_strategy[i] == "neutral"){
-        type = new NeutralPlayerStrategy(players[i]);
-      }
-      else if (player_strategy[i] == "aggressive"){
-        type = new AggressivePlayerStrategy(players[i]);
-      }
-      else if (player_strategy[i] == "human"){
-        type = new HumanPlayerStrategy(players[i]);
-      }
-      
-      players[i]->setStrategy(type);
+    PlayerStrategy* type;
+    if(player_strategy[i] == "cheater"){
+      type = new CheaterPlayerStrategy(players[i]);
     }
-    
-    //Player constructor would have to be of the form below:
-    //players.push_back(new Player(name, new CheaterPlayerStrategy()));
-    cout << "Player named " << player_strategy[i] << " has been added." << endl;
+    else if (player_strategy[i] == "benevolent"){
+      type = new BenevolentPlayerStrategy(players[i]);
+    }
+    else if (player_strategy[i] == "neutral"){
+      type = new NeutralPlayerStrategy(players[i]);
+    }
+    else if (player_strategy[i] == "aggressive"){
+      type = new AggressivePlayerStrategy(players[i]);
+    }
+    else if (player_strategy[i] == "human"){
+      type = new HumanPlayerStrategy(players[i]);
+    }
+    players[i]->setStrategy(type);
+
+    cout << "Player named " << playerName << " has been added." << endl;
   }
 
   setState(GameEngineFSA::commandToStateMap.at("gamestart"));
