@@ -23,13 +23,34 @@ bool HumanPlayerStrategy::issueOrder(){
 }
 
 vector<Territory*> HumanPlayerStrategy::toAttack(){
-    vector<Territory*> terri;
-    return terri;
+    vector<Territory*> terri = p->getTerritories();
+
+    //sort territories from strongest to weakest
+    std::sort(terri.begin(), terri.end(), [](Territory* one, Territory* two){return (one->getNumArmies() > two->getNumArmies());});
+
+    //get adjacent territories from enemies
+    vector<Territory*> attackableTerritories;
+    for(int i = 0; i < terri.size(); i++){
+        for(int j = 0; j < terri.at(i)->adj.size(); j++){
+            if(terri.at(i)->adj.at(j)->getOwner() != p){
+                attackableTerritories.push_back(terri.at(i)->adj.at(j));
+            }
+        }
+    }
+
+    //sort enemy territories from weakest to strongest
+    std::sort(terri.begin(), terri.end(), [](Territory* one, Territory* two){return (one->getNumArmies() < two->getNumArmies());});
+
+    return attackableTerritories;
 }
 
 //Sorts territory vector from least armies to most
 vector<Territory*> HumanPlayerStrategy::toDefend(){
-    vector<Territory*> terri;
+    vector<Territory*> terri = p->getTerritories();
+
+    //sort players by number of armies
+    std::sort(terri.begin(), terri.end(), [](Territory* one, Territory* two){return (one->getNumArmies() < two->getNumArmies());});
+
     return terri;
 }
 
