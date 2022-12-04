@@ -446,7 +446,7 @@ void GameEngine::tournamentMode(int num_game, int num_turn, vector<string> map_l
   
   cout << "in tournament mode" << endl;
   vector<string> winners_list;
-  int winners_count;
+  int winners_count = 0;
 
   for (int i = 0; i < map_list.size(); i++) {
       for (int j = 0; j < num_game; j++) {
@@ -473,26 +473,25 @@ void GameEngine::tournamentMode(int num_game, int num_turn, vector<string> map_l
       }
   }
   // Output winners for each game on each map
-  for (int i; i < map_list.size(); i++) {
+  for (int i = 0; i < (map_list.size() + 1); i++) {
     cout << endl;
-    for (int j; j < (num_game + 1); j++) {
-      // first column
-      if (j == 0) {
-        // first row
-        if (i == 0) {
-          cout << "          | ";
-        }
-        // other rows
-        else {
-          cout << "Map " << i << "     | ";
-        }
+    for (int j = 0; j < (num_game + 1); j++) {
+      // first column first row
+      if (j == 0 && i == 0) {
+        cout << "          | ";
+      }
+      else if (i == 0) {
+        cout << "Game " << j << "     | ";
+      }
+      else if (j == 0) {
+        cout << "Map " << i << "     | ";
       }
       // other columns
       else {
         // print winners on other columns
         cout << winners_list[winners_count];
         // add spaces for alignment
-        for (int k = 0; k < (10 - winners_list[winners_count].size()); k++) {
+        for (int k = 0; k < (11 - winners_list[winners_count].size()); k++) {
           cout << " ";
         }
         cout << "| ";
@@ -500,6 +499,7 @@ void GameEngine::tournamentMode(int num_game, int num_turn, vector<string> map_l
       }
     }
   }
+  cout << endl;
 }
 
 void GameEngine::startupPhase() {
@@ -710,9 +710,8 @@ void GameEngine::startupPhase() {
           }
 
         }
-
         
-        cout << "In tournament command" << endl;
+        cout << "TOURNAMENT ENDED" << endl;
         
       }
     }
