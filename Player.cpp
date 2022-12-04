@@ -59,6 +59,7 @@ Player::Player(string name, PlayerStrategy* strategy){
 Player::~Player() {
   delete orders;
   delete cards;
+  delete strategy;
 }
 
 // Overloaded stream insertion operator

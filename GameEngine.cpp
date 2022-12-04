@@ -858,8 +858,6 @@ void GameEngine::mainGameLoopTournament(int num_turn) {
   int count = 0;
   while (players.size() > 1) {
 
-    cout << "========== turn " << count + 1 << " ==========" << endl << endl;
-
     if (count == num_turn) {
       cout << "THE GAME IS A DRAW: " << endl;
       break;
@@ -889,11 +887,18 @@ cout << "========== turn " << count << " ==========" << endl << endl;
       // Remove players with less than 1 territory
       //TODO: Fix this method, it isn't deleting correctly
       if (players.at(i)->getTerritories().size() < 1) {
-        delete players.at(i)->getStrategy();
-        delete players.at(i);
         cout << "DELETING PLAYER " << players.at(i)->getName() << endl;
-        players.erase(players.begin() + i);
+        delete players.at(i);
+        players.at(i) = nullptr;
       }
+    }
+
+    players.erase(std::remove(players.begin(), players.end(), nullptr),
+             players.end());
+
+    //TODO: Delete null pointers from vector
+
+    for (int i = 0; i < players.size(); i++) {  
       // check if player should draw a new card
       if (players.at(i)->getConcqueredFlag() == true) {
         players.at(i)->getHand()->drawCard();
