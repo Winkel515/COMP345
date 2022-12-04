@@ -445,13 +445,58 @@ void GameEngine::tournamentMode(int num_game, int num_turn, vector<string> map_l
   
   
   cout << "in tournament mode" << endl;
-  CommandProcessor* cp = this->commandProcessor;
+  vector<string> winners_list;
+  int winners_count;
 
   for (int i = 0; i < map_list.size(); i++) {
       for (int j = 0; j < num_game; j++) {
         this-> startupPhaseTournament(map_list[i], player_strategy);
         this-> mainGameLoopTournament(num_turn);
-      } 
+
+        // Add winner or draw to the list of winners
+        if (players.size() < 1) {
+          winners_list.push_back(players.at(0)->getName());
+        }
+        else {
+          winners_list.push_back("draw");
+        }
+
+        // Erase all players 
+        for (int i; i < players.size() ; i++) {
+            cout << "ERASING PLAYERS FOR NEXT GAME : " << players.at(i)->getName() << endl;
+            delete players.at(i)->getStrategy();
+            delete players.at(i);
+            players.erase(players.begin() + i);
+        }
+      }
+  }
+  // Output winners for each game on each map
+  for (int i; i < map_list.size(); i++) {
+    cout << endl;
+    for (int j; j < (num_game + 1); j++) {
+      // first column
+      if (j == 0) {
+        // first row
+        if (i == 0) {
+          cout << "          | ";
+        }
+        // other rows
+        else {
+          cout << "Map " << i << "     | ";
+        }
+      }
+      // other columns
+      else {
+        // print winners on other columns
+        cout << winners_list[winners_count];
+        // add spaces for alignment
+        for (int k = 0; k < (10 - winners_list[winners_count].size()); k++) {
+          cout << " ";
+        }
+        cout << "| ";
+        winners_count++;
+      }
+    }
   }
 }
 
@@ -790,6 +835,7 @@ void GameEngine::mainGameLoop() {
     for (int i = 0; i < players.size(); i++) {
       // Remove players with||ess than 1 territory
       if (players.at(i)->getTerritories().size() < 1) {
+        delete players.at(i);
         players.erase(players.begin() + i);
         cout << "DELETED" << endl;
       }
@@ -811,6 +857,8 @@ void GameEngine::mainGameLoopTournament(int num_turn) {
   // Stop loop if there is only 1 player left
   int count = 0;
   while (players.size() > 1) {
+
+    cout << "========== turn " << count + 1 << " ==========" << endl << endl;
 
     if (count == num_turn) {
       cout << "THE GAME IS A DRAW: " << endl;
@@ -841,6 +889,8 @@ cout << "========== turn " << count << " ==========" << endl << endl;
       // Remove players with less than 1 territory
       //TODO: Fix this method, it isn't deleting correctly
       if (players.at(i)->getTerritories().size() < 1) {
+        delete players.at(i)->getStrategy();
+        delete players.at(i);
         cout << "DELETING PLAYER " << players.at(i)->getName() << endl;
         players.erase(players.begin() + i);
       }
