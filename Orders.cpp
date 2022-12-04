@@ -348,24 +348,10 @@ bool Bomb::validate() {
     std::cout << "Order invalid: territory belongs to owner" << std::endl;
     return false;
   }
+  
   // make sure the target is not a diplomatic ally
-  std::vector<Player *>::iterator alliesIterate =
-      Target->getOwner()->getDiplomaticAllies().begin();
-  // check if players are allies
-
   for(int i = 0; i < Target->getOwner()->getDiplomaticAllies().size(); i++){
     if(Target->getOwner()->getDiplomaticAllies()[i] == Owner){
-      std::cout << "Bomb: "
-                << "Invalid order: Target is a diplomatic Ally till the end of "
-                   "this turn."
-                << std::endl;
-      return false;
-    }
-  }
-  for (alliesIterate;
-       alliesIterate != Target->getOwner()->getDiplomaticAllies().end();
-       alliesIterate++) {
-    if (*alliesIterate == Owner) {
       std::cout << "Bomb: "
                 << "Invalid order: Target is a diplomatic Ally till the end of "
                    "this turn."
