@@ -1,7 +1,8 @@
 #include <iostream>
 #include "PlayerStrategies.h"
 #include "Player.h"
-using std::cout, std::endl;
+using std::cout;
+using std::endl;
 
 void testPlayerStrategies(){
 

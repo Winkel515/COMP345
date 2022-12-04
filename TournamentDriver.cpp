@@ -1,7 +1,8 @@
 #include "TournamentDriver.h"
 #include "GameEngine.h"
 #include <iostream>
-using std::cout, std::endl;
+using std::cout;
+using std::endl;
 
 void testTournament(){
 
