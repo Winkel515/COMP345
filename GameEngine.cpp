@@ -454,20 +454,22 @@ void GameEngine::tournamentMode(int num_game, int num_turn, vector<string> map_l
         this-> mainGameLoopTournament(num_turn);
 
         // Add winner or draw to the list of winners
-        if (players.size() < 1) {
+        if (players.size() < 2) {
           winners_list.push_back(players.at(0)->getName());
         }
         else {
           winners_list.push_back("draw");
         }
 
-        // Erase all players 
-        for (int i; i < players.size() ; i++) {
-            cout << "ERASING PLAYERS FOR NEXT GAME : " << players.at(i)->getName() << endl;
-            delete players.at(i)->getStrategy();
+            // Check all players
+        for (int i = 0; i < players.size(); i++) {
+          // Remove players with less than 1 territory
+            cout << "DELETING PLAYER " << players.at(i)->getName() << endl;
             delete players.at(i);
-            players.erase(players.begin() + i);
-        }
+            players.at(i) = nullptr;          
+        }   
+
+        players.clear();
       }
   }
   // Output winners for each game on each map
