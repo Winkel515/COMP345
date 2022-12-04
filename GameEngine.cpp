@@ -567,7 +567,7 @@ void GameEngine::mainGameLoop() {
   int turnCounter = 1;
   // Stop loop if there is only 1 player left
   //TODO: remove "if turnCounter >= 10" --> added to stop infinity loop
-  while (players.size() > 1 or turnCounter >= 10) {
+  while (players.size() > 1 || turnCounter >= 10) {
 
     cout << "================ Beginning of turn " << turnCounter << " ================" << endl;
     
