@@ -138,7 +138,9 @@ bool BenevolentPlayerStrategy::issueOrder(){
 
     vector<Territory*> territories = toDefend();
 
-    Territory* weakestTerri = territories.front();
+    if(territories.size() > 0){
+
+    Territory* weakestTerri = territories.at(0);
     int reinforcements = p->getReinforcements();
 
     // Create Deploy order, adding all territories to its weakest territory 
@@ -149,6 +151,8 @@ bool BenevolentPlayerStrategy::issueOrder(){
         cout << "Player is issuing a Deploy Order: " << reinforcements << " armies to territory " << weakestTerri->name << "." << endl;
         return true;
     }
+    }
+
 
         //TODO: Add Advance implementation
         //TODO: Add Airlift implementation

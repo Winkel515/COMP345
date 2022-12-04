@@ -386,12 +386,17 @@ void GameEngine::issueOrdersPhase() {
   bool stillIssuingOrders = true;
   // Create a flag for each player to determine if they are done issuing orders.
   bool* playerStillIssuing = new bool[players.size()];
+  
+  //initialize all values to true
+  for(int i = 0; i < players.size() ; i++){
+    playerStillIssuing[i] = true;
+  }
 
   while (stillIssuingOrders) {
     // Reset global flag
     stillIssuingOrders = false;
-
     for (int i = 0; i < players.size(); i++) {
+
       // Issue order and set player's flag. issueOrder() returns true if player
       // issues an order and flase if player signifies they are done.
       if (playerStillIssuing[i]) {
@@ -401,6 +406,7 @@ void GameEngine::issueOrdersPhase() {
       }
     }
   }
+  delete[] playerStillIssuing;
 }
 
 // Execute Execute Orders state

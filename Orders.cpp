@@ -273,7 +273,9 @@ void Advance::execute() {
 
         //Remove territory from conquered player's territory list.
         this->Target->getOwner()->removeTerritory(this->GetTarget());
-
+        
+        //verify if owner still has any territories
+        
         //reassign territory
         this->Target->setOwner(this->Owner);
         //add territory to owner
