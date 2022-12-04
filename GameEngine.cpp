@@ -385,11 +385,7 @@ void GameEngine::issueOrdersPhase() {
   // Global flag
   bool stillIssuingOrders = true;
   // Create a flag for each player to determine if they are done issuing orders.
-  bool playerStillIssuing[players.size()]; //TODO: what's that? change to public players?
-
-  for (int i = 0; i < players.size(); i++) {
-    playerStillIssuing[i] = true;
-  }
+  bool* playerStillIssuing = new bool[players.size()];
 
   while (stillIssuingOrders) {
     // Reset global flag
@@ -569,7 +565,7 @@ void GameEngine::startupPhase() {
         }
         
         //cout << "check if strategies are valid" << " pidx " << P_idx << " gidx " << G_idx << " didx " << D_idx << " param size " << parameters.size() << endl;
-        vector<string> allowed_strategy{"cheater", "aggressive", "neutral", "benevolent"};
+        vector<string> allowed_strategy{"cheater", "aggressive", "neutral", "benevolent", "human"};
         for(int i = P_idx + 1; i < G_idx; i++){
           if(parameters.at(i) != allowed_strategy[0] && parameters.at(i) != allowed_strategy[1] && 
             parameters.at(i) != allowed_strategy[2] && parameters.at(i) != allowed_strategy[3]){
@@ -637,10 +633,8 @@ void GameEngine::startupPhase() {
 
             for(int i = P_idx + 1; i < G_idx; i++){
               //cout << " in player strat loop " << i << " " << parameters.at(i) << endl;
-                player_strategy.push_back(parameters.at(i));
-                
+              player_strategy.push_back(parameters.at(i));
             }
-            
 
             for(int i = M_idx + 1; i < P_idx; i++){
               map_list.push_back(parameters.at(i));
@@ -787,7 +781,7 @@ void GameEngine::mainGameLoop() {
     executeOrdersPhase();
     // Check all players
     for (int i = 0; i < players.size(); i++) {
-      // Remove players with less than 1 territory
+      // Remove players with||ess than 1 territory
       if (players.at(i)->getTerritories().size() < 1) {
         players.erase(players.begin() + i);
         cout << "DELETED" << endl;
@@ -868,7 +862,33 @@ void GameEngine::startupPhaseTournament(string map, vector<string> player_strate
   // addPlayer implementation:
   setState(GameEngineFSA::commandToStateMap.at("addplayer"));
   for (int i =0; i < player_strategy.size(); i++) {
-    players.push_back(new Player(player_strategy[i]));
+    players.push_back(new Player(std::to_string(i + 1)));
+
+    for( int i = 0; i < players.size(); i++){
+
+      PlayerStrategy* type;
+
+      if(player_strategy[i] == "cheater"){
+        type = new CheaterPlayerStrategy(players[i]);
+      }
+      else if (player_strategy[i] == "benevolent"){
+        type = new BenevolentPlayerStrategy(players[i]);
+      }
+      else if (player_strategy[i] == "neutral"){
+        type = new NeutralPlayerStrategy(players[i]);
+      }
+      else if (player_strategy[i] == "aggressive"){
+        type = new AggressivePlayerStrategy(players[i]);
+      }
+      else if (player_strategy[i] == "human"){
+        type = new HumanPlayerStrategy(players[i]);
+      }
+      
+      players[i]->setStrategy(type);
+    }
+    
+    //Player constructor would have to be of the form below:
+    //players.push_back(new Player(name, new CheaterPlayerStrategy()));
     cout << "Player named " << player_strategy[i] << " has been added." << endl;
   }
 

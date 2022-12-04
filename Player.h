@@ -20,7 +20,6 @@ class Player {
     std::vector<Player*> diplomaticAllies;
     int issueOrdersCount;
     static Player* neutralPlayer;
-
     
 
  public:
@@ -35,10 +34,12 @@ class Player {
   bool issueOrder(); //TODO: change for strategy
   void testListOrder();
   Player& operator=(const Player& player);
-  friend std::ostream& operator<<(std::ostream& strm, Player& pl);
+  friend std::ostream& operator<<(std::ostream& strm, const Player& player);
   void addTerritory(Territory*);
   void addReinforcements(int);
   Hand* getHand();
+  void setHand(Hand*);
+  string getName();
   std::vector<Territory*> getTerritories();
   OrdersList* getOrderList();
   bool getConcqueredFlag();
