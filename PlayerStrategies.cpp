@@ -29,11 +29,7 @@ vector<Territory*> HumanPlayerStrategy::toAttack(){
 
 //Sorts territory vector from least armies to most
 vector<Territory*> HumanPlayerStrategy::toDefend(){
-    vector<Territory*> terri = p->getTerritories();
-
-    //TODO: Check that this sorts the territory vector according to number of armies present on each territory
-    std::sort(terri.begin(), terri.end(), [](Territory* one, Territory* two ){return (one->getNumArmies() < two -> getNumArmies());});
-
+    vector<Territory*> terri;
     return terri;
 }
 
@@ -140,17 +136,17 @@ bool BenevolentPlayerStrategy::issueOrder(){
 
     if(territories.size() > 0){
 
-    Territory* weakestTerri = territories.at(0);
-    int reinforcements = p->getReinforcements();
+        Territory* weakestTerri = territories.at(0);
+        int reinforcements = p->getReinforcements();
 
-    // Create Deploy order, adding all territories to its weakest territory 
-    if (reinforcements > 0){
-        p->getOrderList()->add(new Deploy(weakestTerri, p, reinforcements));
-        p->addReinforcements(reinforcements * -1);
-        //TODO JOHN: Once merged with mainGameLoopFix, Add Player Name
-        cout << "Player is issuing a Deploy Order: " << reinforcements << " armies to territory " << weakestTerri->name << "." << endl;
-        return true;
-    }
+        // Create Deploy order, adding all territories to its weakest territory 
+        if (reinforcements > 0){
+            p->getOrderList()->add(new Deploy(weakestTerri, p, reinforcements));
+            p->addReinforcements(reinforcements * -1);
+            //TODO JOHN: Once merged with mainGameLoopFix, Add Player Name
+            cout << "Player is issuing a Deploy Order: " << reinforcements << " armies to territory " << weakestTerri->name << "." << endl;
+            return true;
+        }
     }
 
 

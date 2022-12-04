@@ -810,13 +810,25 @@ void GameEngine::mainGameLoopTournament(int num_turn) {
   // Stop loop if there is only 1 player left
   int count = 0;
   while (players.size() > 1) {
+
+    cout << "========== turn " << count + 1 << " ==========" << endl << endl;
+
     if (count == num_turn) {
       cout << "THE GAME IS A DRAW: " << endl;
       break;
     }
     count++;
+
+    cout << "Printing Players before turn"<< endl << endl;
+    for (int i = 0; i < players.size(); i++){
+      cout << players[i] << endl;
+    }
+
+    cout << "----- Reinforcement Phase -----" << endl << endl;
     reinforcementPhase();
+    cout << "----- Issue Orders Phase -----" << endl << endl;
     issueOrdersPhase();
+    cout << "----- Execute Orders Phase -----" << endl << endl;
     executeOrdersPhase();
     // Check all players
     for (int i = 0; i < players.size(); i++) {
@@ -835,9 +847,10 @@ void GameEngine::mainGameLoopTournament(int num_turn) {
         players.at(i)->clearDiplomaticAllies();
       }
     }
+    cout << "========== End of turn " << count << " ==========" << endl << endl;
   }
 
-  cout << "WINNER IS : " << players.at(0) << endl;
+  cout << "WINNER IS : " << *(players.at(0)) << endl;
 }
 
 void GameEngine::startupPhaseTournament(string map, vector<string> player_strategy) {
