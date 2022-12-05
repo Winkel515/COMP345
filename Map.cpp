@@ -78,7 +78,7 @@ ostream& operator<<(
     ostream& strm,
     const Territory& n) {  // overloading stream insertion operator
 
-  return strm << " Territory: " << n.name << ", Armies: " << n.numArmies <<", Adj: "
+  return strm << " Territory: " << n.name << ", Armies: " << n.numArmies <<", Owner: " << n.owner->getName() <<", Adj: "
               << convertAdjToString(n.adj) << ", continent: " << n.continent  << endl;
 }
 
