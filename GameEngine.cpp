@@ -537,45 +537,32 @@ void GameEngine::startupPhase() {
         int param_idx, M_idx, P_idx, G_idx, D_idx;
         param_idx = M_idx = P_idx = G_idx = D_idx = 0;
         
-        /*
-        for(int i = 0; i < parameters.size(); i++){
-          cout << "param" << parameters.at(i) << endl;
-        }*/
 
         for(int i = 0; i < parameters.size(); i++){
-          //cout << "in M P G F for loop" << endl;
           
           if(parameters.at(i) == "-M" && param_idx == 0){
-            //cout << "in M" << endl;
             param_idx++;
             M_idx = i;
           }
 
           if(parameters.at(i) == "-P" && param_idx == 1){
-            //cout << "in P" << endl;
             param_idx++;
             P_idx = i;
           }
 
           if(parameters.at(i) == "-G" && param_idx == 2){
-            //cout << "in G" << endl;
             param_idx++;
             G_idx = i;
-            //cout << " G check 0" << endl;
             if(i == parameters.size() - 1){
-              //cout << " G check 1" << endl;
               break;
             }
             else if(parameters.at(i+1) == "-D"){
-              //cout << " G check 2" << endl;
               break;
             }
             else{
-              //cout << " G check 3 before " << endl;
               bool nan = false;
               for(int j = 0; j < parameters.at(i+1).size(); j++){
                 if(!isdigit(parameters.at(i+1)[j])){
-                  //cout << " G check 3 param: " << parameters[i+1] << endl;
                   nan = true;
                   break;
                 }
@@ -583,23 +570,18 @@ void GameEngine::startupPhase() {
               if(nan == true){
                 break;
               }
-              //cout << " G check 3 after " << endl;
-
             }
           }
 
           if(parameters.at(i) == "-D" && param_idx == 3){
-            //cout << "in D" << endl;
             if(i == parameters.size() - 1){
-              //cout << " D check 1" << endl;
               break;
             }
             else{
-              //cout << " D check 2 before " << endl;
               bool nan = false;
               for(int j = 0; j < parameters.at(i+1).size(); j++){
                 if(!isdigit(parameters.at(i+1)[j])){
-                  //cout << " D check 2 param: " << parameters[i+1] << endl;
+
                   nan = true;
                   break;
                 }
@@ -607,7 +589,7 @@ void GameEngine::startupPhase() {
               if(nan == true){
                 break;
               }
-              //cout << " D check 2 after " << endl;
+
 
             }
             param_idx++;
@@ -617,8 +599,8 @@ void GameEngine::startupPhase() {
 
         }
         
-        //cout << "check if strategies are valid" << " pidx " << P_idx << " gidx " << G_idx << " didx " << D_idx << " param size " << parameters.size() << endl;
-        vector<string> allowed_strategy{"cheater", "aggressive", "neutral", "benevolent", "human"};
+        
+        vector<string> allowed_strategy{"cheater", "aggressive", "neutral", "benevolent"};
         for(int i = P_idx + 1; i < G_idx; i++){
           if(parameters.at(i) != allowed_strategy[0] && parameters.at(i) != allowed_strategy[1] && 
             parameters.at(i) != allowed_strategy[2] && parameters.at(i) != allowed_strategy[3]){
@@ -629,8 +611,7 @@ void GameEngine::startupPhase() {
               D_idx--;
           }
         }
-        //cout << "finished checking startegies" << " pidx " << P_idx << " gidx " << G_idx << " didx " << D_idx << " param size " << parameters.size() << endl;
-        //cout << "check if maps are valid" << " midx " << M_idx << " pidx " << P_idx << " gidx " << G_idx << " didx " << D_idx << " param size " << parameters.size() << endl;
+        
         
         for(int i = M_idx + 1; i < P_idx; i++){
           cout << " param size " << parameters.size() << " param at " << i << " " << parameters.at(i) << endl;
@@ -638,23 +619,26 @@ void GameEngine::startupPhase() {
           ifstream MyReadFile(fileName);
 
           if(MyReadFile){
+
+            
+
           }
           else{
-            //cout << "in if" << endl;
+
             parameters.erase(parameters.begin() + i);
-            //cout << "after erase" << endl;
+
             i--;
             P_idx--;
             G_idx--;
             D_idx--;
-            //cout << "after idx decrease" << endl;
+
           }
         }
 
-        //cout << "finished checking maps" << " midx " << M_idx << " pidx " << P_idx << " gidx " << G_idx << " didx " << D_idx << " param size " << parameters.size() << endl;
+        
 
         if(param_idx != 4){
-          //cout << "in param_idx != 4" << endl;
+
           handleEffect("Enter with the format tournament -M <listofmapfiles> -P <listofplayerstrategies> -G <numberofgames> -D <maxnumberofturns>", result,
                     logObserver);
         }
@@ -680,12 +664,9 @@ void GameEngine::startupPhase() {
           else{
             num_game = stoi(parameters.at(G_idx + 1));
             num_turn = stoi(parameters.at(D_idx + 1));
-            //cout <<  "before player strat loop gidx " << G_idx << " pidx " << P_idx << endl;
-            
-            vector<string> allowed_strategy{"cheater", "aggressive", "neutral", "benevolent"};
 
             for(int i = P_idx + 1; i < G_idx; i++){
-              //cout << " in player strat loop " << i << " " << parameters.at(i) << endl;
+
               player_strategy.push_back(parameters.at(i));
             }
 
