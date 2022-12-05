@@ -8,6 +8,7 @@ using std::endl;
 #include "Map.h"
 #include "Player.h"
 #include "Orders.h"
+#include "Cards.h"
 
 PlayerStrategy::PlayerStrategy(Player* p){
     this->p = p;
@@ -112,25 +113,44 @@ bool AggressivePlayerStrategy::issueOrder(){
         cout << "Player " << p->getName() << " is issuing a Deploy Order: " << reinforcements << " armies to territory " << strongestTerri->name << "." << endl;
         return true;
     }
-    else{
-        //Advance
-        vector<Territory*> strAdjacent = strongestTerri->adj;
 
-        if(strongestTerri->getNumArmies() != 0){
-            //Choose a territory to advance to.
-            Territory* toAdvanceTo = strAdjacent.at(0);
-            for(Territory* t : strAdjacent){
-                if(!(t->getOwner() == p)){
-                    toAdvanceTo = t;
-                }
-            }
-            //Advance once only
-            cout << "Player " << p->getName() << " is issuing an Advance Order: " << strongestTerri->getNumArmies()
-            << " armies to territory " << toAdvanceTo->name << " from " << strongestTerri->name << "." << endl;
-            p->getOrderList()->add(new Advance(toAdvanceTo, strongestTerri, p, strongestTerri->getNumArmies()));
+    //Bomb check
+    vector<Card*> hand = p->getHand()->getCards();
+    for(Card* c : hand){
+        //if a card is a bomb, play it
+        if (c->GetType() == 0){
+
+            vector<Territory*> targets = p->getAdjacentTerritories();
+            Territory* target = targets.at(0);
+            p->getOrderList()->add(new Bomb(target, p));
+            cout << p->getName() << " is bombing " << *target << endl;
+
+            //Play card, remove from hand
+            c->play(p->getHand()->getDeck());
+            hand.erase(find(hand.begin(),hand.end(), c), hand.end());
+            p->getHand()->setCards(hand);
+
+            return true;
         }
-        return false;
     }
+
+    
+    //Advance only once
+    vector<Territory*> strAdjacent = strongestTerri->adj;
+    if(strongestTerri->getNumArmies() != 0){
+        //Choose a territory to advance to.
+        Territory* toAdvanceTo = strAdjacent.at(0);
+        for(Territory* t : strAdjacent){
+            if(!(t->getOwner() == p)){
+                toAdvanceTo = t;
+            }
+        }
+        //Advance once only
+        cout << "Player " << p->getName() << " is issuing an Advance Order: " << strongestTerri->getNumArmies()
+        << " armies to territory " << toAdvanceTo->name << " from " << strongestTerri->name << "." << endl;
+        p->getOrderList()->add(new Advance(toAdvanceTo, strongestTerri, p, strongestTerri->getNumArmies()));
+    }
+    return false;
 }
 
 //Returns the strongest territories neighbours which are owned by another player
