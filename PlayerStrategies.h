@@ -1,7 +1,8 @@
 #pragma once
 #include <vector>
-
 using std::vector;
+#include <string>
+using std::string;
 
 class Player;
 class Territory;
@@ -14,6 +15,7 @@ class PlayerStrategy {
         virtual vector<Territory*> toDefend() = 0;
         virtual vector<Territory*> toAttack() = 0;
         virtual bool issueOrder() = 0;
+        virtual string getStrategyString() = 0;
 };
 
 class HumanPlayerStrategy : public PlayerStrategy {
@@ -22,6 +24,7 @@ class HumanPlayerStrategy : public PlayerStrategy {
         vector<Territory*> toAttack();
         bool issueOrder();
         HumanPlayerStrategy(Player*);
+        string getStrategyString();
 };
 
 class CheaterPlayerStrategy : public PlayerStrategy {
@@ -30,6 +33,7 @@ class CheaterPlayerStrategy : public PlayerStrategy {
         vector<Territory*> toAttack();
         bool issueOrder();
         CheaterPlayerStrategy(Player*);
+        string getStrategyString();
 };
 
 class AggressivePlayerStrategy : public PlayerStrategy {
@@ -38,6 +42,7 @@ class AggressivePlayerStrategy : public PlayerStrategy {
         vector<Territory*> toAttack();
         bool issueOrder();
         AggressivePlayerStrategy(Player*);
+        string getStrategyString();
 };
 
 class BenevolentPlayerStrategy : public PlayerStrategy {
@@ -46,6 +51,7 @@ class BenevolentPlayerStrategy : public PlayerStrategy {
         vector<Territory*> toAttack();
         bool issueOrder();
         BenevolentPlayerStrategy(Player*);
+        string getStrategyString();
 };
 
 class NeutralPlayerStrategy : public PlayerStrategy {
@@ -54,5 +60,6 @@ class NeutralPlayerStrategy : public PlayerStrategy {
         vector<Territory*> toAttack();
         bool issueOrder();
         NeutralPlayerStrategy(Player*);
+        string getStrategyString();
 };
 

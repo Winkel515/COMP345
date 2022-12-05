@@ -9,6 +9,7 @@ using std::endl;
 #include "Map.h"
 #include "Player.h"
 #include "Orders.h"
+#include "Cards.h"
 
 PlayerStrategy::PlayerStrategy(Player* p){
     this->p = p;
@@ -408,6 +409,10 @@ vector<Territory*> HumanPlayerStrategy::toDefend(){
     return terri;
 }
 
+string HumanPlayerStrategy::getStrategyString(){
+    return "human";
+}
+
 // ============ Cheater Player ==============
 
 CheaterPlayerStrategy::CheaterPlayerStrategy(Player* p) : PlayerStrategy(p) {}
@@ -441,6 +446,10 @@ vector<Territory*> CheaterPlayerStrategy::toDefend(){
     return terri;
 }
 
+string CheaterPlayerStrategy::getStrategyString(){
+    return "cheater";
+}
+
 // ============ Aggressive Player ==============
 
 AggressivePlayerStrategy::AggressivePlayerStrategy(Player* p) : PlayerStrategy(p) {}
@@ -452,24 +461,49 @@ bool AggressivePlayerStrategy::issueOrder(){
     int reinforcements = p->getReinforcements();
 
     if(reinforcements > 0){
+        //Deploy Reinforcements
         p->getOrderList()->add(new Deploy(strongestTerri, p, reinforcements));
         p->addReinforcements(reinforcements * -1);
-        //TODO JOHN: Once merged with mainGameLoopFix, Add Player Name
-        cout << "Player is issuing a Deploy Order: " << reinforcements << " armies to territory " << strongestTerri->name << "." << endl;
+        cout << "Player " << p->getName() << " is issuing a Deploy Order: " << reinforcements << " armies to territory " << strongestTerri->name << "." << endl;
         return true;
     }
-    else{
-        vector<Territory*> strAdjacent = strongestTerri->adj;
-        
 
-        //TODO: Implement Advance Orders (Check if it can advance into an enemy territory. If not, advance towards an enemy territory)
+    //Bomb check
+    vector<Card*> hand = p->getHand()->getCards();
+    for(Card* c : hand){
+        //if a card is a bomb, play it
+        if (c->GetType() == 0){
+
+            vector<Territory*> targets = p->getAdjacentTerritories();
+            Territory* target = targets.at(0);
+            p->getOrderList()->add(new Bomb(target, p));
+            cout << p->getName() << " is bombing " << *target << endl;
+
+            //Play card, remove from hand
+            c->play(p->getHand()->getDeck());
+            hand.erase(find(hand.begin(),hand.end(), c), hand.end());
+            p->getHand()->setCards(hand);
+
+            return true;
+        }
     }
 
     
-    
-    //TODO: Implement Bomb Orders (Optional)
-    //TODO: Implement Airlift Order From second strongest to Strongest
-
+    //Advance only once
+    vector<Territory*> strAdjacent = strongestTerri->adj;
+    if(strongestTerri->getNumArmies() != 0){
+        //Choose a territory to advance to.
+        Territory* toAdvanceTo = strAdjacent.at(0);
+        for(Territory* t : strAdjacent){
+            if(!(t->getOwner() == p)){
+                toAdvanceTo = t;
+            }
+        }
+        //Advance once only
+        cout << "Player " << p->getName() << " is issuing an Advance Order: " << strongestTerri->getNumArmies()
+        << " armies to territory " << toAdvanceTo->name << " from " << strongestTerri->name << "." << endl;
+        p->getOrderList()->add(new Advance(toAdvanceTo, strongestTerri, p, strongestTerri->getNumArmies()));
+    }
     return false;
 }
 
@@ -500,6 +534,10 @@ vector<Territory*> AggressivePlayerStrategy::toDefend(){
     return terri;
 }
 
+string AggressivePlayerStrategy::getStrategyString(){
+    return "aggressive";
+}
+
 // ============ Benevolent Player ==============
 
 BenevolentPlayerStrategy::BenevolentPlayerStrategy(Player* p) : PlayerStrategy(p) {}
@@ -519,10 +557,12 @@ bool BenevolentPlayerStrategy::issueOrder(){
             p->getOrderList()->add(new Deploy(weakestTerri, p, reinforcements));
             p->addReinforcements(reinforcements * -1);
             //TODO JOHN: Once merged with mainGameLoopFix, Add Player Name
-            cout << "Player is issuing a Deploy Order: " << reinforcements << " armies to territory " << weakestTerri->name << "." << endl;
+            cout << "Player " << p->getName() << " is issuing a Deploy Order: " << reinforcements << " armies to territory " << weakestTerri->name << "." << endl;
             return true;
         }
     }
+
+
 
 
         //TODO: Add Advance implementation
@@ -548,6 +588,10 @@ vector<Territory*> BenevolentPlayerStrategy::toDefend(){
     return terri;
 }
 
+string BenevolentPlayerStrategy::getStrategyString(){
+    return "benevolent";
+}
+
 // ============ Neutral Player ==============
 
 //TODO: Somehow change to aggressive if attacked. Where should this be implemented?
@@ -569,4 +613,8 @@ vector<Territory*> NeutralPlayerStrategy::toAttack(){
 vector<Territory*> NeutralPlayerStrategy::toDefend(){
     vector<Territory*> terri;
     return terri;
+}
+
+string NeutralPlayerStrategy::getStrategyString(){
+    return "neutral";
 }

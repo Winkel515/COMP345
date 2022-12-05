@@ -712,7 +712,7 @@ void GameEngine::startupPhase() {
         }
         
         cout << "TOURNAMENT ENDED" << endl;
-        
+        setState(S_START);
       }
     }
   }

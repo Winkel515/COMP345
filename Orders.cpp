@@ -4,9 +4,12 @@
 
 #include <cmath>  //floor()
 #include <sstream>
+#include <typeinfo>
+#include <string>
 
 #include "Cards.h"
 #include "Player.h"
+#include "PlayerStrategies.h"
 
 // default constructor
 Order::Order() {}
@@ -241,6 +244,17 @@ void Advance::execute() {
     } else {
       // target and source are not owner by the same player, this means they go
       // to war
+
+      //If attacked player is neutral, change to aggressive since it was attacked
+      Player* attackedPlayer = this->Target->getOwner();
+      string stratType = attackedPlayer->getStrategy()->getStrategyString();
+      if(stratType == "neutral"){
+        cout << "Changing attacked player's strategy from Netural to Aggressive." << endl;
+        delete attackedPlayer->getStrategy();
+        attackedPlayer->setStrategy(new AggressivePlayerStrategy(attackedPlayer));
+      }
+
+
       int numAttackArmies = this->NumOfArmies;
       int numDefendArmies = this->GetTarget()->getNumArmies();
 

@@ -66,18 +66,19 @@ Player::~Player() {
 std::ostream& operator<<(std::ostream& strm, const Player& player) {
 
   strm << endl << "         Player: " << player.name << endl << endl;
-  strm << "List of player's territories: " << endl;
+  strm << "Strategy: " << player.strategy->getStrategyString() << endl;
+  strm << endl << "List of player's territories: " << endl;
 
   for(int i =0; i < player.territories.size(); i++){
-    strm << *(player.territories[i]);
+    strm << "\t" << *(player.territories[i]);
   }
 
   strm << endl << "List of player's cards: " << endl;
 
-  strm << *(player.cards);
+  strm << "\t" << *(player.cards);
 
   strm << endl << "List of player's orders: " << endl;
-  strm << *(player.orders);
+  strm << "\t" << *(player.orders);
 
   return strm;
 }
