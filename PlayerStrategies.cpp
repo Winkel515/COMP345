@@ -198,24 +198,20 @@ bool BenevolentPlayerStrategy::issueOrder(){
         Territory* weakestTerri = territories.at(0);
         int reinforcements = p->getReinforcements();
 
+        //Deploy in rounds of 5 or less if less than 5.
+        int numToDeploy = 5;
+        if (reinforcements < 5){
+            numToDeploy = reinforcements % 5;
+        }
+
         // Create Deploy order, adding all territories to its weakest territory 
         if (reinforcements > 0){
-            p->getOrderList()->add(new Deploy(weakestTerri, p, reinforcements));
+            p->getOrderList()->add(new Deploy(weakestTerri, p, numToDeploy));
             p->addReinforcements(reinforcements * -1);
-            //TODO JOHN: Once merged with mainGameLoopFix, Add Player Name
             cout << "Player " << p->getName() << " is issuing a Deploy Order: " << reinforcements << " armies to territory " << weakestTerri->name << "." << endl;
             return true;
         }
     }
-
-
-
-
-        //TODO: Add Advance implementation
-        //TODO: Add Airlift implementation
-        //TODO: Add Diplomacy implementation
-        //TODO: Add Reinforcement card implementation
-
     return false;
 }
 
