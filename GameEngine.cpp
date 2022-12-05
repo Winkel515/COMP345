@@ -949,19 +949,19 @@ void GameEngine::startupPhaseTournament(string map, vector<string> player_strate
 
     PlayerStrategy* type;
     if(player_strategy[i] == "cheater"){
-      type = new CheaterPlayerStrategy(players[i]);
+      type = new CheaterPlayerStrategy(players.at(i));
     }
     else if (player_strategy[i] == "benevolent"){
-      type = new BenevolentPlayerStrategy(players[i]);
+      type = new BenevolentPlayerStrategy(players.at(i));
     }
     else if (player_strategy[i] == "neutral"){
-      type = new NeutralPlayerStrategy(players[i]);
+      type = new NeutralPlayerStrategy(players.at(i));
     }
     else if (player_strategy[i] == "aggressive"){
-      type = new AggressivePlayerStrategy(players[i]);
+      type = new AggressivePlayerStrategy(players.at(i));
     }
     else if (player_strategy[i] == "human"){
-      type = new HumanPlayerStrategy(players[i]);
+      type = new HumanPlayerStrategy(players.at(i));
     }
     players[i]->setStrategy(type);
 

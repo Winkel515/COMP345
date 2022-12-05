@@ -99,13 +99,15 @@ std::ostream &operator<<(std::ostream &out, const OrdersList &ol) {
 
 // execute all orders in the list
 void OrdersList::executeOrders() {
-  for(int i = 0; i < ListOfOrders.size(); i++){
+
+  int size = ListOfOrders.size();
+  for(int i = 0; i < size; i++){
     cout<< "Executing " << *(ListOfOrders[i]) << endl;
     ListOfOrders[i]->execute();
     delete ListOfOrders[i];
 
     //remove object from orderlist
-    ListOfOrders.erase(ListOfOrders.begin() + i);
+    ListOfOrders.erase(ListOfOrders.begin());
   }
 }
 
@@ -279,7 +281,8 @@ void Advance::execute() {
         // attack failed -> defendants keep territory
         // set new number of armies
         this->Target->setNumArmies(numDefendArmies);
-        this->Source->addNumArmies(this->NumOfArmies * -1);
+        int currentArmies = Source->getNumArmies() - this->NumOfArmies;
+        this->Source->setNumArmies(currentArmies);
 
       } else {
         // attack was successful

@@ -470,25 +470,25 @@ bool AggressivePlayerStrategy::issueOrder(){
         return true;
     }
 
-    //Bomb check
-    vector<Card*> hand = p->getHand()->getCards();
-    for(Card* c : hand){
-        //if a card is a bomb, play it
-        if (c->GetType() == 0){
+    // //Bomb check
+    // vector<Card*> hand = p->getHand()->getCards();
+    // for(Card* c : hand){
+    //     //if a card is a bomb, play it
+    //     if (c->GetType() == 0){
 
-            vector<Territory*> targets = p->getAdjacentTerritories();
-            Territory* target = targets.at(0);
-            p->getOrderList()->add(new Bomb(target, p));
-            cout << p->getName() << " is bombing " << *target << endl;
+    //         vector<Territory*> targets = p->getAdjacentTerritories();
+    //         Territory* target = targets.at(0);
+    //         p->getOrderList()->add(new Bomb(target, p));
+    //         cout << p->getName() << " is bombing " << *target << endl;
 
-            //Play card, remove from hand
-            c->play(p->getHand()->getDeck());
-            hand.erase(find(hand.begin(),hand.end(), c), hand.end());
-            p->getHand()->setCards(hand);
+    //         //Play card, remove from hand
+    //         c->play(p->getHand()->getDeck());
+    //         hand.erase(find(hand.begin(),hand.end(), c), hand.end());
+    //         p->getHand()->setCards(hand);
 
-            return true;
-        }
-    }
+    //         return true;
+    //     }
+    // }
 
     
     //Advance only once
