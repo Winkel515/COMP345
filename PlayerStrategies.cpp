@@ -20,20 +20,20 @@ PlayerStrategy::PlayerStrategy(Player* p){
 HumanPlayerStrategy::HumanPlayerStrategy(Player* p) : PlayerStrategy(p) {}
 
 bool HumanPlayerStrategy::issueOrder(){
-    cout << "Issue order menu: \nPlease choose an option (enter 1-6):\n" << endl;
-    cout << "\n\t1: Deploy Order" << "\n\t2: Advance Order" << "\n\t3: Airlift Order" << "\n\t4: Bomb Order" << "\n\t5: Blockade Order" << "\n\t6: Negotiate Order" << endl;
+    cout << "Issue order menu: \nPlease choose an option (enter 1-7):\n" << endl;
+    cout << "\n\t1: Deploy Order" << "\n\t2: Advance Order" << "\n\t3: Airlift Order" << "\n\t4: Bomb Order" << "\n\t5: Blockade Order" << "\n\t6: Negotiate Order" << "\n\t7: End issuing orders" << endl;
 
     int choice; 
     bool validChoice = false;
     while(!validChoice){
         cin >> choice;
-        if(choice < 6 and choice > 1){
+        if(choice < 8 and choice > 0){
             validChoice = true;
         }
     }
     //Deploy Order
     if(choice == 1){
-        cout << "Deploy Order chosen: " << p->getReinforcements() << "available units" << endl;
+        cout << "Deploy Order chosen: " << p->getReinforcements() << " available units" << endl;
         vector<Territory*> territoriesToDefend = toDefend();
         cout << "Choose one of the following territories (enter territory #): " << endl;
         for(int i = 0; i < territoriesToDefend.size(); i++){
@@ -56,7 +56,7 @@ bool HumanPlayerStrategy::issueOrder(){
         validChoice = false;
         while(!validChoice){
             cin >> tNum;
-            if(tNum >= 0 and tNum < p->getReinforcements()){
+            if(tNum >= 0 and tNum <= p->getReinforcements()){
                 validChoice = true;
             } else {
                 cout << "invalid choice!! try again" << endl;
@@ -105,9 +105,11 @@ bool HumanPlayerStrategy::issueOrder(){
             //attack advance
             int attackchoice;
             cout << "Choose territory to attack (enter territory #): " << endl;
-            vector<Territory*> attackable = toAttack();
+            vector<Territory*> attackable = advanceTerritory->adj;
             for(int i = 0; i < attackable.size(); i++){
-                cout << "Territory # " << i << ": " << *(attackable.at(i)) << endl;
+                if(attackable.at(i)->getOwner() != p){
+                    cout << "Territory # " << i << ": " << *(attackable.at(i)) << endl;
+                }
             }
             Territory* attackTerr;
             validChoice = false;
@@ -371,6 +373,8 @@ bool HumanPlayerStrategy::issueOrder(){
             return false;
         }
 
+    } else if(choice == 7){
+            return false;
     } else {
         cout << "Invalid order" << endl;
         return false;
@@ -459,7 +463,7 @@ AggressivePlayerStrategy::AggressivePlayerStrategy(Player* p) : PlayerStrategy(p
 bool AggressivePlayerStrategy::issueOrder(){
 
     vector<Territory*> territories = toDefend();
-    Territory* strongestTerri = territories.front();
+    Territory* strongestTerri = territories.at(0);
     int reinforcements = p->getReinforcements();
 
     if(reinforcements > 0){
@@ -467,53 +471,69 @@ bool AggressivePlayerStrategy::issueOrder(){
         p->getOrderList()->add(new Deploy(strongestTerri, p, reinforcements));
         p->addReinforcements(reinforcements * -1);
         cout << "Player " << p->getName() << " is issuing a Deploy Order: " << reinforcements << " armies to territory " << strongestTerri->name << "." << endl;
-        return true;
     }
 
-    // //Bomb check
-    // vector<Card*> hand = p->getHand()->getCards();
-    // for(Card* c : hand){
-    //     //if a card is a bomb, play it
-    //     if (c->GetType() == 0){
+     //Bomb check
+     vector<Card*> hand = p->getHand()->getCards();
+    for(Card* c : hand){
+         //if a card is a bomb, play it
+        if (c->GetType() == Card::Bomb){
 
-    //         vector<Territory*> targets = p->getAdjacentTerritories();
-    //         Territory* target = targets.at(0);
-    //         p->getOrderList()->add(new Bomb(target, p));
-    //         cout << p->getName() << " is bombing " << *target << endl;
+             vector<Territory*> targets = toAttack();
+             Territory* target = targets.at(0);
+             p->getOrderList()->add(new Bomb(target, p));
+             cout << p->getName() << " is bombing " << *target << endl;
 
-    //         //Play card, remove from hand
-    //         c->play(p->getHand()->getDeck());
-    //         hand.erase(find(hand.begin(),hand.end(), c), hand.end());
-    //         p->getHand()->setCards(hand);
+             //Play card, remove from hand
+             c->play(p->getHand()->getDeck());
+             hand.erase(find(hand.begin(),hand.end(), c), hand.end());
+             p->getHand()->setCards(hand);
+         }
+     }
 
-    //         return true;
-    //     }
-    // }
-
-    
-    //Advance only once
-    vector<Territory*> strAdjacent = strongestTerri->adj;
-    if(strongestTerri->getNumArmies() != 0){
-        //Choose a territory to advance to.
-        Territory* toAdvanceTo = strAdjacent.at(0);
-        for(Territory* t : strAdjacent){
-            if(!(t->getOwner() == p)){
-                toAdvanceTo = t;
+     //advance all territories onto weakest territory
+     vector<Territory*> terris = p->getTerritories();
+     for(int i = 0; i < terris.size(); i++){
+        if(terris.at(i)->getNumArmies() > 0){
+            //attack any enemy adj territory
+            for(int j = 0; j < terris.at(i)->adj.size(); j++){
+                if(terris.at(i)->adj.at(j)->getOwner() != p){
+                    cout << "Player " << p->getName() << " is issuing an Advance Order: " << terris.at(i)->getNumArmies()
+                    << " armies to territory " << terris.at(i)->adj.at(j) << " from " << terris.at(i)->name << "." << endl;
+                    p->getOrderList()->add(new Advance(terris.at(i)->adj.at(j), terris.at(i), p, terris.at(i)->getNumArmies()));
+                }
             }
         }
-        //Advance once only
-        cout << "Player " << p->getName() << " is issuing an Advance Order: " << strongestTerri->getNumArmies()
-        << " armies to territory " << toAdvanceTo->name << " from " << strongestTerri->name << "." << endl;
-        p->getOrderList()->add(new Advance(toAdvanceTo, strongestTerri, p, strongestTerri->getNumArmies()));
-    }
+     }
+
     return false;
 }
 
 //Returns the strongest territories neighbours which are owned by another player
 vector<Territory*> AggressivePlayerStrategy::toAttack(){
+    vector<Territory*> terri = p->getTerritories();
 
+    //sort territories from strongest to weakest
+    std::sort(terri.begin(), terri.end(), [](Territory* one, Territory* two){return (one->getNumArmies() > two->getNumArmies());});
+
+    //get adjacent territories from enemies
+    vector<Territory*> attackableTerritories;
+    for(int i = 0; i < terri.size(); i++){
+        for(int j = 0; j < terri.at(i)->adj.size(); j++){
+            if(terri.at(i)->adj.at(j)->getOwner() != p){
+                attackableTerritories.push_back(terri.at(i)->adj.at(j));
+            }
+        }
+    }
+
+    //sort enemy territories from weakest to strongest
+    std::sort(terri.begin(), terri.end(), [](Territory* one, Territory* two){return (one->getNumArmies() < two->getNumArmies());});
+
+    return attackableTerritories;
+
+    /*
     vector<Territory*> territories = toDefend();
-    Territory* strongestTerri = territories.front();
+    Territory* strongestTerri = territories.at(0);
     vector<Territory*> strAdjacent = strongestTerri->adj;
 
     // Removes territories which are owned by current player.
@@ -526,6 +546,7 @@ vector<Territory*> AggressivePlayerStrategy::toAttack(){
         strAdjacent.end());
 
     return strAdjacent;
+    */
 }
 
 // Returns vector of territories from strongest to weakest

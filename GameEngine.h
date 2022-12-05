@@ -45,7 +45,6 @@ class GameEngine : public Subject, public ILoggable {
   // Attributes
   GameState::GameStateEnum state;
   std::set<std::string> commands;
-  std::vector<Player*> players;
   Deck* deck;
   MapLoader* mapLoader;
   LogObserver* logObserver;
@@ -61,6 +60,7 @@ class GameEngine : public Subject, public ILoggable {
   void execEnd();
 
  public:
+  std::vector<Player*> players;
   CommandProcessor* commandProcessor;
   void start();
   void run();

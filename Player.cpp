@@ -158,6 +158,7 @@ vector<Territory*> Player::toDefend() { return territories; }; //TODO: implement
 
 void Player::addTerritory(Territory* territory) {
   territories.push_back(territory);
+  this->setTerritories(territories);
 }
 
 // Helper function for issueOrder()
@@ -448,8 +449,10 @@ std::vector<Territory*> Player::createTerritoryList(int nTerritories) {
 void Player::removeTerritory(Territory* t){
   // remove territory from territories vector
   vector<Territory*> terr = this->getTerritories();
+
   terr.erase(find(terr.begin(),terr.end(), t), terr.end());
   this->setTerritories(terr);
+  
 }
 
 void Player::setTerritories(vector<Territory*> territories){

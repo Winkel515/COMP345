@@ -48,7 +48,7 @@ string getFileName(int argc, char* argv[]) {
 
 void runA3Tests() {
   cout << "====== Testing Player Strategies ======\n";
-  testPlayerStrategies();
+  //testPlayerStrategies();
   cout << "====== Testing Tournament Mode ======\n";
   testTournament();
 

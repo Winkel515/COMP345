@@ -240,9 +240,10 @@ void Advance::execute() {
     // if source and target are owned by same player, move players without war;
     if (this->Owner == this->Target->getOwner()) {
       // remove army from source
-      this->Source->addNumArmies(this->NumOfArmies * -1);
+      int numArmies = Source->getNumArmies() - NumOfArmies;
+      this->Source->setNumArmies(numArmies);
       // add them to target territory
-      this->Target->addNumArmies(this->NumOfArmies);
+      this->Target->addNumArmies(NumOfArmies);
     } else {
       // target and source are not owner by the same player, this means they go
       // to war
@@ -299,6 +300,8 @@ void Advance::execute() {
         this->Owner->addTerritory(Target);
         //set number of armies
         this->Target->setNumArmies(numAttackArmies);
+        int currentArmies = Source->getNumArmies() - this->NumOfArmies;
+        this->Source->setNumArmies(currentArmies);
 
         // check if this is the first territory concquered by the player this
         // turn, if yes, player draws card

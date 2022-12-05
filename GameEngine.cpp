@@ -442,12 +442,11 @@ void handleEffect(string &s, Command &command, Observer *obs) {
 }
 
 void GameEngine::tournamentMode(int num_game, int num_turn, vector<string> map_list, vector<string> player_strategy){
-  
-  
   cout << "in tournament mode" << endl;
   vector<string> winners_list;
   int winners_count = 0;
 
+  // play all tournament games
   for (int i = 0; i < map_list.size(); i++) {
       for (int j = 0; j < num_game; j++) {
         this-> startupPhaseTournament(map_list[i], player_strategy);
@@ -461,10 +460,10 @@ void GameEngine::tournamentMode(int num_game, int num_turn, vector<string> map_l
           winners_list.push_back("draw");
         }
 
-            // Check all players
+        // Check all players
         for (int i = 0; i < players.size(); i++) {
-          // Remove players with less than 1 territory
-            cout << "DELETING PLAYER " << players.at(i)->getName() << endl;
+          // Remove all remaining players
+            cout << "DELETING REMAINING PLAYER " << players.at(i)->getName() << endl;
             delete players.at(i);
             players.at(i) = nullptr;          
         }   
@@ -472,34 +471,63 @@ void GameEngine::tournamentMode(int num_game, int num_turn, vector<string> map_l
         players.clear();
       }
   }
+  //open output stream and output game results
+  ofstream output;
+  output.open("gamelog.txt", std::ios_base::app);
+  output << "TournamentMode:" << endl;
+  output << "M: ";
+  for(int i = 0; i < map_list.size(); i++){
+    output << map_list[i] << " | ";
+  }
+  output << endl;
+  
+  output << "P: ";
+  for(int i = 0; i < player_strategy.size(); i++){
+    output << player_strategy[i] << " | ";
+  }
+
+  output << endl;
+  output << "G: " << num_game << endl;
+  output << "D: " << num_turn << endl;
+  output << endl;
+
   // Output winners for each game on each map
   for (int i = 0; i < (map_list.size() + 1); i++) {
     cout << endl;
+    output << endl;
     for (int j = 0; j < (num_game + 1); j++) {
       // first column first row
       if (j == 0 && i == 0) {
         cout << "          | ";
+        output << "          | ";
       }
       else if (i == 0) {
         cout << "Game " << j << "     | ";
+        output << "Game " << j << "     | ";
       }
       else if (j == 0) {
         cout << "Map " << i << "     | ";
+        output << "Map " << i << "     | ";
       }
       // other columns
       else {
         // print winners on other columns
         cout << winners_list[winners_count];
+        output << winners_list[winners_count];
         // add spaces for alignment
         for (int k = 0; k < (11 - winners_list[winners_count].size()); k++) {
           cout << " ";
+          output << " ";
         }
         cout << "| ";
+        output << "| ";
         winners_count++;
       }
     }
   }
   cout << endl;
+  output << endl;
+  output.close();
 }
 
 void GameEngine::startupPhase() {
@@ -529,15 +557,17 @@ void GameEngine::startupPhase() {
         
       }
       else if(result.command == "tournament"){
-        vector<string> parameters = splitString(result.param, " ");
+        vector<string> parameters = splitString(result.param, " "); //get all parameters
+        //variables to store maps, players, the number of games, and turns
         vector<string> map_list;
         vector<string> player_strategy;
         int num_game = 0;
         int num_turn = 0;
+        //indexes to keep tracks of where correct parameters are
         int param_idx, M_idx, P_idx, G_idx, D_idx;
         param_idx = M_idx = P_idx = G_idx = D_idx = 0;
         
-
+        //makes sure all tags are present
         for(int i = 0; i < parameters.size(); i++){
           
           if(parameters.at(i) == "-M" && param_idx == 0){
@@ -599,11 +629,11 @@ void GameEngine::startupPhase() {
 
         }
         
-        
-        vector<string> allowed_strategy{"cheater", "aggressive", "neutral", "benevolent"};
+        //removes invalid strategies
+        vector<string> allowed_strategy{"cheater", "aggressive", "neutral", "benevolent", "human"};
         for(int i = P_idx + 1; i < G_idx; i++){
           if(parameters.at(i) != allowed_strategy[0] && parameters.at(i) != allowed_strategy[1] && 
-            parameters.at(i) != allowed_strategy[2] && parameters.at(i) != allowed_strategy[3]){
+            parameters.at(i) != allowed_strategy[2] && parameters.at(i) != allowed_strategy[3] && parameters.at(i) != allowed_strategy[4]){
 
               parameters.erase(parameters.begin() + i);
               i--;
@@ -612,7 +642,7 @@ void GameEngine::startupPhase() {
           }
         }
         
-        
+        //removes invalid maps
         for(int i = M_idx + 1; i < P_idx; i++){
           cout << " param size " << parameters.size() << " param at " << i << " " << parameters.at(i) << endl;
           string fileName = "./map/" + parameters.at(i);
@@ -636,7 +666,7 @@ void GameEngine::startupPhase() {
         }
 
         
-
+        //display error messages for each type of error
         if(param_idx != 4){
 
           handleEffect("Enter with the format tournament -M <listofmapfiles> -P <listofplayerstrategies> -G <numberofgames> -D <maxnumberofturns>", result,
@@ -662,6 +692,7 @@ void GameEngine::startupPhase() {
                     logObserver);
           }
           else{
+            //if the command is valid stores the values
             num_game = stoi(parameters.at(G_idx + 1));
             num_turn = stoi(parameters.at(D_idx + 1));
 
@@ -673,25 +704,14 @@ void GameEngine::startupPhase() {
             for(int i = M_idx + 1; i < P_idx; i++){
               map_list.push_back(parameters.at(i));
             }
-
-            cout << "num_game: " << num_game << endl; 
-            cout << "num_turn: " << num_turn << endl;
-            cout << "map_list";
             
-            for(int i = 0; i < map_list.size(); i++){
-              cout << " " << map_list[i];
-            }
-            cout << endl << "Player strategies";
-            
-            for(int i = 0; i < player_strategy.size(); i++){
-              cout << " " << player_strategy[i];
-            }
-            cout << endl << "tournament format is fine" << endl;
+            //goes in tournament mode
             tournamentMode(num_game, num_turn, map_list, player_strategy);
           }
 
         }
         
+        //tournament is done and program asks for next inputs
         cout << "TOURNAMENT ENDED" << endl;
         setState(S_START);
       }

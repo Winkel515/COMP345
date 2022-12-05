@@ -17,7 +17,4 @@ void testTournament(){
 
     // delete fileGameEngine;
     delete runningGameEngine;
-
-    cout << "bla from tournament" << endl;
-
 }
