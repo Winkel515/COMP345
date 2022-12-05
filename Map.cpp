@@ -78,8 +78,8 @@ ostream& operator<<(
     ostream& strm,
     const Territory& n) {  // overloading stream insertion operator
 
-  return strm << "continent: " << n.continent << " Territory: " << n.name << " "
-              << convertAdjToString(n.adj) << endl;
+  return strm << " Territory: " << n.name << ", Armies: " << n.numArmies <<", Owner: " << n.owner->getName() <<", Adj: "
+              << convertAdjToString(n.adj) << ", continent: " << n.continent  << endl;
 }
 
 // Get Territory Name
@@ -456,11 +456,13 @@ string MapLoader::loadMap(string fileName) {
   vector<Territory*> territories;
   vector<Territory*> territoriesCopy;
   string output = "";
+  cout << "in loadmap: " << fileName << endl;
 
   if (map != NULL) delete map;
 
   // parse files data
   if (MyReadFile) {
+    cout << "in loadmap if " << endl;
     try {
       bool foundTerritory = false;
       while (getline(MyReadFile, myText)) {
@@ -520,6 +522,7 @@ string MapLoader::loadMap(string fileName) {
       return output;
     }
   } else {
+    cout << "in loadmap else " << fileName << endl;
     output = "\"" + fileName + "\" map file does not exist.";
     return output;
   }

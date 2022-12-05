@@ -1,0 +1,2 @@
+tournament -M 3D.map 4D_Hypercube.map 005_I72_V-22.map -P benevolent neutral aggressive -G 3 -D 30
+tournament -M 3D.map 002_I72_X-29.map 003_I72_Fairchild T-31.map -P cheater cheater cheater -G 3 -D 30

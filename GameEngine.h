@@ -45,7 +45,6 @@ class GameEngine : public Subject, public ILoggable {
   // Attributes
   GameState::GameStateEnum state;
   std::set<std::string> commands;
-  std::vector<Player*> players;
   Deck* deck;
   MapLoader* mapLoader;
   LogObserver* logObserver;
@@ -61,6 +60,7 @@ class GameEngine : public Subject, public ILoggable {
   void execEnd();
 
  public:
+  std::vector<Player*> players;
   CommandProcessor* commandProcessor;
   void start();
   void run();
@@ -84,6 +84,9 @@ class GameEngine : public Subject, public ILoggable {
   void startupPhase();
   void mainGameLoop();
   void issueOrdersPhase();
+  void tournamentMode(int num_game, int num_turn, vector<string> map_list, vector<string> player_strategy);
+  void startupPhaseTournament(string map, vector<string> player_strategy);
+  void mainGameLoopTournament(int num_turn);
 };
 
 void handleEffect(string&, Command&, Observer*);

@@ -101,7 +101,7 @@ bool CommandProcessor::validate(vector<string>& result) {
   string command = result.at(0);
   // Checks if valid command
   if (validCommands->find(command) == validCommands->end()) {
-    string invalidEffect = "is an invalid Command.";
+    string invalidEffect = " is an invalid Command.";
     saveCommand(result).saveEffect(invalidEffect);
     cout << command << invalidEffect << std::endl;
     printCommands(*validCommands);
@@ -131,7 +131,16 @@ Command::Command(vector<string>& result) {
   this->param = "";
 
   if (result.size() > 1) {
-    this->param = result.at(1);
+    for(int i = 1; i < result.size(); i++){
+      if(i == result.size() - 1){
+        this->param += result.at(i);
+      }
+      else{
+        this->param += result.at(i) + " ";
+      }
+      
+    }
+    
   }
 }
 

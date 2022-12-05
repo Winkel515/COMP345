@@ -23,6 +23,7 @@ class Order : public Subject, public ILoggable {
 
  private:
   std::string orderEffect;
+  virtual void Print(std::ostream& out) const =0; //allowing subclasses to overload the operator<< of the base class
 };
 
 // subclasses of Order
@@ -35,9 +36,9 @@ class Deploy : public Order {
   Player* GetOwner();
   Territory* GetTarget();
   string stringToLog();
-  friend std::ostream& operator<<(std::ostream& output, const Deploy& o);
 
  private:
+ void Print(std::ostream& out) const;
   Territory* Target;
   Player* Owner;
   int NumOfArmies;
@@ -53,9 +54,9 @@ class Advance : public Order {
   Territory* GetTarget();
   Territory* GetSource();
   string stringToLog();
-  friend std::ostream& operator<<(std::ostream& output, const Advance& o);
 
  private:
+ void Print(std::ostream& out) const;
   Territory* Source;
   Territory* Target;
   Player* Owner;
@@ -67,10 +68,10 @@ class Bomb : public Order {
   Bomb(Territory* target, Player* owner);
   void execute();
   bool validate();
-  friend std::ostream& operator<<(std::ostream& output, const Bomb& o);
   string stringToLog();
 
  private:
+ void Print(std::ostream& out) const;
   Player* Owner;
   Territory* Target;
 };
@@ -80,10 +81,10 @@ class Blockade : public Order {
   Blockade(Territory* target, Player* owner, Player* neutral);
   void execute();
   bool validate();
-  friend std::ostream& operator<<(std::ostream& output, const Blockade& o);
   string stringToLog();
 
  private:
+ void Print(std::ostream& out) const;
   Territory* Target;
   Player* Owner;
   Player* NeutralPlayer = NULL;
@@ -94,10 +95,10 @@ class Airlift : public Order {
   Airlift(Territory* target, Territory* source, Player* owner, int numOfArmies);
   void execute();
   bool validate();
-  friend std::ostream& operator<<(std::ostream& output, const Airlift& o);
   string stringToLog();
 
  private:
+ void Print(std::ostream& out) const;
   Territory* Source;
   Territory* Target;
   int NumOfArmies;
@@ -109,10 +110,10 @@ class Negotiate : public Order {
   Negotiate(Territory* target, Player* owner);
   void execute();
   bool validate();
-  friend std::ostream& operator<<(std::ostream& output, const Negotiate& o);
   string stringToLog();
 
  private:
+ void Print(std::ostream& out) const;
   Territory* Target;
   Player* Owner;
 };
