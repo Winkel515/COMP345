@@ -375,6 +375,8 @@ bool HumanPlayerStrategy::issueOrder(){
         cout << "Invalid order" << endl;
         return false;
     }
+
+    return false;
 }
 
 vector<Territory*> HumanPlayerStrategy::toAttack(){
