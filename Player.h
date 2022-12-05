@@ -19,7 +19,7 @@ class Player {
     int reinforcementPool;
     std::vector<Player*> diplomaticAllies;
     int issueOrdersCount;
-    static Player* neutralPlayer;
+
     
 
  public:
@@ -54,4 +54,5 @@ class Player {
   void removeTerritory(Territory*);
   void setTerritories(vector<Territory*>);
   int getReinforcements();
+  static Player* neutralPlayer;
 };
